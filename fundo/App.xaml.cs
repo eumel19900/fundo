@@ -46,5 +46,7 @@ namespace fundo
             _window = new MainWindow();
             _window.Activate();
         }
+
+
     }
 }

@@ -1,3 +1,4 @@
+using fundo.gui;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,33 @@ namespace fundo
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void FilterNavigationView_SelectionChanged(
+            NavigationView sender,
+            NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItemContainer is NavigationViewItem item)
+            {
+                switch (item.Tag?.ToString())
+                {
+                    case "date":
+                        ContentFrame.Navigate(typeof(DateFilterPage));
+                        break;
+
+                    case "size":
+                        ContentFrame.Navigate(typeof(SizeFilterPage));
+                        break;
+
+                    case "attributes":
+                        ContentFrame.Navigate(typeof(AttributeFilterPage));
+                        break;
+
+                    case "extensions":
+                        ContentFrame.Navigate(typeof(FileExtensionFilterPage));
+                        break;
+                }
+            }
         }
     }
 }

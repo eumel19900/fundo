@@ -13,7 +13,51 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid>
+    <Grid Padding="20" RowSpacing="15">
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Dateiname -->
+        <StackPanel Spacing="5">
+            <TextBlock Text="Dateiname" FontWeight="SemiBold"/>
+            <TextBox x:Name="FileNameTextBox"
+                 PlaceholderText="z.B. *.txt oder bericht"/>
+        </StackPanel>
+
+        <!-- Verzeichnis -->
+        <StackPanel Grid.Row="1" Spacing="5">
+            <TextBlock Text="Suchverzeichnis" FontWeight="SemiBold"/>
+            <TextBox x:Name="DirectoryTextBox"
+                 PlaceholderText="z.B. C:\Dokumente"/>
+        </StackPanel>
+
+        <!-- NavigationView für Filter -->
+        <NavigationView Grid.Row="2"
+                    x:Name="FilterNavigationView"
+                    PaneDisplayMode="Left"
+                    IsSettingsVisible="False"
+                    SelectionChanged="FilterNavigationView_SelectionChanged">
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Datum" Tag="date" Icon="Calendar"/>
+                <NavigationViewItem Content="Dateigröße" Tag="size" Icon="Page"/>
+                <NavigationViewItem Content="Dateiflags" Tag="attributes" Icon="Tag"/>
+                <NavigationViewItem Content="Dateierweiterungen" Tag="extensions" Icon="Document"/>
+            </NavigationView.MenuItems>
+
+            <Frame x:Name="ContentFrame"/>
+        </NavigationView>
+
+        <!-- Suchbutton -->
+        <Button Grid.Row="3"
+            Content="Suche starten"
+            HorizontalAlignment="Right"
+            Padding="20,8"/>
     </Grid>
+
 </Window>
