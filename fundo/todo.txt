@@ -1,0 +1,16 @@
+Suchkriterien:
+	- Dateinamen
+	- Datum von bis
+		- letzter Zugriff
+		- erstellt am
+		- geändert am
+	- Dateinamen mit Regex
+	- Dateigröße von bis
+	- Liste an Dateitypen
+	- Dateiflags/attribute: versteckt, system, archiv, ...
+	- Dateibesitzer
+	- Volltextsuche
+		- case sensitive
+		- regex
+		- ganzes wort
+		- enthält nicht?
