@@ -26,5 +26,6 @@ public sealed partial class AttributeFilterPage : Page
     public AttributeFilterPage()
     {
         InitializeComponent();
+
     }
 }

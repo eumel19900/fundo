@@ -1,6 +1,9 @@
 using fundo.gui;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Windowing;
+using WinRT.Interop;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
@@ -27,6 +30,8 @@ namespace fundo
         public MainWindow()
         {
             InitializeComponent();
+
+            AppWindow.Resize(new Windows.Graphics.SizeInt32(1200, 1600));
         }
 
         private void FilterNavigationView_SelectionChanged(
@@ -49,8 +54,8 @@ namespace fundo
                         ContentFrame.Navigate(typeof(AttributeFilterPage));
                         break;
 
-                    case "extensions":
-                        ContentFrame.Navigate(typeof(FileExtensionFilterPage));
+                    case "content":
+                        ContentFrame.Navigate(typeof(FileContentFilterPage));
                         break;
                 }
             }

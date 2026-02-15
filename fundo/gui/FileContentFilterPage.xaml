@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Page
-    x:Class="fundo.gui.SizeFilterPage"
+    x:Class="fundo.gui.FileContentFilterPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:fundo.gui"
@@ -14,22 +14,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <CheckBox x:Name="FilterBySizeCheckbox" Content="Filter by filesize" Grid.Row="0"/>
+        <CheckBox x:Name="FilterByContentCheckbox" Content="Filter by filecontent" Grid.Row="0"/>
 
         <StackPanel Spacing="5" Grid.Row="1" Orientation="Horizontal" x:Name="FileSizeTypeCombobox">
-            <ComboBox PlaceholderText="" Header="How to compare" Width="200" SelectedIndex="2">
-                <x:String>Equals</x:String>
-                <x:String>Bigger than</x:String>
-                <x:String>Smaller than</x:String>
-            </ComboBox>
-            <NumberBox
-                x:Name="FileSizeValueNumberbox"
-                Header="Filesize in KiB"
-                Value="10000"
-                SpinButtonPlacementMode="Inline"
-                SmallChange="10"
-                LargeChange="100"
-                Width="200"/>
+            <TextBox x:Name="FileContentTextbox" Header="Filecontent to search for" PlaceholderText="Enter some text here..." />
         </StackPanel>
     </Grid>
 </Page>

@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="fundo">
+    Title="Fundo">
 
     <Window.SystemBackdrop>
         <MicaBackdrop />
@@ -18,46 +18,82 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Dateiname -->
+        <!-- filename -->
         <StackPanel Spacing="5">
-            <TextBlock Text="Dateiname" FontWeight="SemiBold"/>
+            <TextBlock Text="Filename" FontWeight="SemiBold"/>
             <TextBox x:Name="FileNameTextBox"
-                 PlaceholderText="z.B. *.txt oder bericht"/>
+                 PlaceholderText="*.jpeg"/>
         </StackPanel>
 
-        <!-- Verzeichnis -->
+        <!-- seach location -->
         <StackPanel Grid.Row="1" Spacing="5">
-            <TextBlock Text="Suchverzeichnis" FontWeight="SemiBold"/>
+            <TextBlock Text="SearchLocation" FontWeight="SemiBold"/>
             <TextBox x:Name="DirectoryTextBox"
-                 PlaceholderText="z.B. C:\Dokumente"/>
+                 PlaceholderText="C:\"/>
         </StackPanel>
 
-        <!-- NavigationView für Filter -->
+        <!-- filter tabs -->
         <NavigationView Grid.Row="2"
                     x:Name="FilterNavigationView"
-                    PaneDisplayMode="Left"
+                    PaneDisplayMode="Top"
                     IsSettingsVisible="False"
+                    IsBackButtonVisible="Collapsed"
                     SelectionChanged="FilterNavigationView_SelectionChanged">
 
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Datum" Tag="date" Icon="Calendar"/>
-                <NavigationViewItem Content="Dateigröße" Tag="size" Icon="Page"/>
-                <NavigationViewItem Content="Dateiflags" Tag="attributes" Icon="Tag"/>
-                <NavigationViewItem Content="Dateierweiterungen" Tag="extensions" Icon="Document"/>
+                <NavigationViewItem x:Name="DateFilterNav" Content="Filter by date" Tag="date" Icon="Calendar" IsSelected="True" />
+                <NavigationViewItem x:Name="FilesizeFilterNav" Content="Filter by filesize" Tag="size" Icon="Page"/>
+                <NavigationViewItem x:Name="FileAttributesFilterNav" Content="Filter by file attributes" Tag="attributes" Icon="Tag"/>
+                <NavigationViewItem x:Name="FilterContentFilterNav" Content="Filter by file content" Tag="content" Icon="Document"/>
             </NavigationView.MenuItems>
 
             <Frame x:Name="ContentFrame"/>
         </NavigationView>
 
-        <!-- Suchbutton -->
+        <!-- searchbutton -->
         <Button Grid.Row="3"
-            Content="Suche starten"
+            Content="Start search"
             HorizontalAlignment="Right"
             Padding="20,8"/>
+
+        
+        <Border
+            Padding="20,8"
+            Background="{ThemeResource LayerFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            Grid.Row="4">
+            <ListView x:Name="SearchResultListView" SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE76E;" Margin="0,0,4,0"/>
+                            <TextBlock Text="{Binding}"
+                               FontSize="24" Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListView.Items>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.1</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.2</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.3</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.4</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.5</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.6</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.7</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.8</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.9</ListViewItem>
+                    <ListViewItem>C:\testverzeichnis\dummy.suchergebnis.10</ListViewItem>
+                </ListView.Items>
+            </ListView>
+        </Border>
+
     </Grid>
 
 </Window>
