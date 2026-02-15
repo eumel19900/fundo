@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace fundo.core.Search
 {
@@ -13,5 +11,13 @@ namespace fundo.core.Search
         public string FileName { get => fileName; set => fileName = value; }
         public int FileSize { get => fileSize; set => fileSize = value; }
         public DateTime FileDate { get => fileDate; set => fileDate = value; }
+
+
+        public SearchResult(String fileName, int fileSize, DateTime fileDate)
+        {
+            this.fileName = fileName;
+            this.fileSize = fileSize;
+            this.fileDate = fileDate;
+        }
     }
 }

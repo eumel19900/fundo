@@ -69,16 +69,18 @@ namespace fundo
             }
         }
 
-        private void SeachButton_Clicked(object sender, RoutedEventArgs e)
+        private async void SeachButton_Clicked(object sender, RoutedEventArgs e)
         {
-            
+            await StartSearchAsync();
         }
 
         public async Task StartSearchAsync()
         {
-            await foreach (var result in currentSearchEngine.SearchAsync(new DirectoryInfo(@"C:\\"), _cts.Token))
+            SearchResultListView.Items.Clear();
+
+            await foreach (SearchResult result in currentSearchEngine.SearchAsync(new DirectoryInfo(@"C:\\"), _cts.Token))
             {
-                //Results.Add(result);
+                SearchResultListView.Items.Add(result.FileName);
             }
         }
     }

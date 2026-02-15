@@ -12,7 +12,16 @@ namespace fundo.core.Search
     {
         async IAsyncEnumerable<SearchResult> SearchEngine.SearchAsync(DirectoryInfo startDirectory, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            foreach (var file in Directory.EnumerateFiles("C:\\", "*", SearchOption.AllDirectories))
+            for(int i = 0; i < 100000; i++)
+            {
+                await Task.Yield();
+
+                yield return new SearchResult("C:\\RobertsDatei." + i + ".txt", i, new DateTime());
+
+                //await Task.Delay(250, cancellationToken);
+            }
+
+            /*foreach (var file in Directory.EnumerateFiles("C:\\", "*", SearchOption.AllDirectories))
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -23,8 +32,7 @@ namespace fundo.core.Search
 
                 // optional: async work simulieren
                 await Task.Yield();
-            }
+            }*/
         }
-    }
     }
 }
