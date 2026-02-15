@@ -57,6 +57,8 @@
 
         <!-- searchbutton -->
         <Button Grid.Row="3"
+            x:Name="SearchButton"
+            Click="SeachButton_Clicked"
             Content="Start search"
             HorizontalAlignment="Right"
             Padding="20,8"/>

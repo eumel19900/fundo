@@ -17,7 +17,7 @@
         <CheckBox x:Name="FilterByContentCheckbox" Content="Filter by filecontent" Grid.Row="0"/>
 
         <StackPanel Spacing="5" Grid.Row="1" Orientation="Horizontal" x:Name="FileSizeTypeCombobox">
-            <TextBox x:Name="FileContentTextbox" Header="Filecontent to search for" PlaceholderText="Enter some text here..." />
+            <TextBox x:Name="FileContentTextbox" Header="Filecontent to search for" PlaceholderText="Enter some text here..." Width="600" />
         </StackPanel>
     </Grid>
 </Page>
