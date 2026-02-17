@@ -50,6 +50,10 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="gui\page\" />
+  </ItemGroup>
+
     <!-- Publish Properties -->
   <PropertyGroup>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>

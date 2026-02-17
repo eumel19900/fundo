@@ -10,29 +10,106 @@ namespace fundo.core.Search
 {
     internal class NativeSearchEngine : SearchEngine
     {
-        async IAsyncEnumerable<SearchResult> SearchEngine.SearchAsync(DirectoryInfo startDirectory, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SearchResult> SearchAsync(DirectoryInfo startDirectory, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            for(int i = 0; i < 100000; i++)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            // Enumerate files and create SearchResult objects on a background thread
+            List<SearchResult> fileResults;
+            try
             {
-                await Task.Yield();
+                fileResults = await Task.Run(() =>
+                {
+                    var list = new List<SearchResult>();
 
-                yield return new SearchResult("C:\\RobertsDatei." + i + ".txt", i, new DateTime());
+                    IEnumerable<FileInfo> files;
+                    try
+                    {
+                        files = startDirectory.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        return list;
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        return list;
+                    }
+                    catch (IOException)
+                    {
+                        return list;
+                    }
 
-                //await Task.Delay(250, cancellationToken);
+                    foreach (var file in files)
+                    {
+                        if (cancellationToken.IsCancellationRequested) break;
+
+                        try
+                        {
+                            list.Add(new SearchResult(file.FullName, file.Length, file.CreationTime));
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                            continue;
+                        }
+                        catch (IOException)
+                        {
+                            continue;
+                        }
+                    }
+
+                    return list;
+                }, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                yield break;
             }
 
-            /*foreach (var file in Directory.EnumerateFiles("C:\\", "*", SearchOption.AllDirectories))
+            foreach (var result in fileResults)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                yield return result;
+            }
+
+            // Enumerate directories on a background thread to avoid blocking the UI
+            List<DirectoryInfo> directories;
+            try
+            {
+                directories = await Task.Run(() =>
+                {
+                    try
+                    {
+                        return new List<DirectoryInfo>(startDirectory.EnumerateDirectories("*", SearchOption.TopDirectoryOnly));
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        return new List<DirectoryInfo>();
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        return new List<DirectoryInfo>();
+                    }
+                    catch (IOException)
+                    {
+                        return new List<DirectoryInfo>();
+                    }
+                }, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                yield break;
+            }
+
+            foreach (var directory in directories)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (file.Contains("blablub"))
+                await foreach (var result in SearchAsync(directory, cancellationToken))
                 {
-                    yield return new SearchResult();
+                    yield return result;
                 }
-
-                // optional: async work simulieren
-                await Task.Yield();
-            }*/
+            }
         }
     }
 }

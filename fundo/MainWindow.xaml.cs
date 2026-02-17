@@ -1,5 +1,6 @@
 using fundo.core.Search;
 using fundo.gui;
+using fundo.gui.tool;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -37,10 +38,31 @@ namespace fundo
         public MainWindow()
         {
             InitializeComponent();
-
-
-            AppWindow.Resize(new Windows.Graphics.SizeInt32(1200, 1600));
+            // Defer sizing until the window content is loaded so UI elements (like NavigationView) are available
+            if (Content is FrameworkElement root)
+            {
+                root.Loaded += MainWindow_Loaded;
+            }
         }
+
+    private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (Content is FrameworkElement)
+            {
+                // Use the helper to place and size the window in a DPI-aware way
+                WindowPlacementHelper.PlacePortraitWindowEnsureNavTabsVisible(this, AppWindow, FilterNavigationView, 0.8);
+            }
+        }
+        finally
+        {
+            if (Content is FrameworkElement root2)
+            {
+                root2.Loaded -= MainWindow_Loaded;
+            }
+        }
+    }
 
         private void FilterNavigationView_SelectionChanged(
             NavigationView sender,
