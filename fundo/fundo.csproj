@@ -1,10 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>fundo</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Application icon file (ICO). Place a proper 'fundo.ico' file in the project root. -->
+    <ApplicationIcon>fundo.ico</ApplicationIcon>
     <Platforms>x86;x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
@@ -15,6 +17,9 @@
     <None Remove="gui\AttributeFilterPage.xaml" />
     <None Remove="gui\DateFilterPage.xaml" />
     <None Remove="gui\SizeFilterPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fundo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,5 +65,6 @@
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+    <ApplicationIcon>fundo.ico</ApplicationIcon>
   </PropertyGroup>
 </Project>
