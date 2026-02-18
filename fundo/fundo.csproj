@@ -15,6 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="gui\AttributeFilterPage.xaml" />
+    <None Remove="gui\control\LocationControl.xaml" />
     <None Remove="gui\DateFilterPage.xaml" />
     <None Remove="gui\SizeFilterPage.xaml" />
   </ItemGroup>
@@ -57,6 +58,12 @@
 
   <ItemGroup>
     <Folder Include="gui\page\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="gui\control\LocationControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
     <!-- Publish Properties -->

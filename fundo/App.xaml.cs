@@ -28,6 +28,9 @@ namespace fundo
     {
         private Window? _window;
 
+        // Static accessor to the application's main window instance
+        public static MainWindow? MainWindowInstance { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -44,6 +47,8 @@ namespace fundo
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
             _window = new MainWindow();
+            // keep a static reference to the strongly-typed MainWindow
+            MainWindowInstance = _window as MainWindow;
             _window.Activate();
         }
 

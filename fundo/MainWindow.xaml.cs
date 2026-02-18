@@ -34,6 +34,7 @@ namespace fundo
     {
         private SearchEngine currentSearchEngine = new NativeSearchEngine();
         private CancellationTokenSource _cts = new();
+        private DirectoryInfo rootSearchDirectoryInfo = null;
 
         public MainWindow()
         {
@@ -43,6 +44,7 @@ namespace fundo
             {
                 root.Loaded += MainWindow_Loaded;
             }
+            LocationControl_SelectedDirectoryChanged(null, null);
         }
 
         private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -100,10 +102,34 @@ namespace fundo
         {
             SearchResultListView.Items.Clear();
 
-            await foreach (SearchResult result in currentSearchEngine.SearchAsync(new DirectoryInfo(@"C:\\"), _cts.Token))
+            await foreach (SearchResult result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token))
             {
                 SearchResultListView.Items.Add(result.FileName);
             }
+        }
+
+
+        private void LocationControl_SelectedDirectoryChanged(object sender, TextChangedEventArgs e)
+        {
+            rootSearchDirectoryInfo = null;
+            try
+            {
+                rootSearchDirectoryInfo = new DirectoryInfo(LocationControl.SelectedDirectory);
+            }
+            catch { }
+            bool searchButtonEnabled = rootSearchDirectoryInfo != null && rootSearchDirectoryInfo.Exists;
+            ToolTip toolTip = new ToolTip();
+            if (searchButtonEnabled)
+            {
+                toolTip.Content = "Click here to start search";
+            }
+            else
+            {
+                //this does not work because the SearchButton is disabled, but it shows the idea of providing user feedback on why the button is disabled (comment by copilot :-))
+                toolTip.Content = "Please enter a valid directory path";
+            }
+            ToolTipService.SetToolTip(SearchButton, toolTip);
+            SearchButton.IsEnabled = searchButtonEnabled;
         }
     }
 }
