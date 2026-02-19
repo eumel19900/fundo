@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace fundo.core.Search
 {
@@ -7,17 +8,20 @@ namespace fundo.core.Search
         private String fileName;
         private long fileSize;
         private DateTime fileDate;
+        private FileInfo fileInfo;
 
         public string FileName { get => fileName; set => fileName = value; }
         public long FileSize { get => fileSize; set => fileSize = value; }
         public DateTime FileDate { get => fileDate; set => fileDate = value; }
+        public FileInfo FileInfo { get => fileInfo; set => fileInfo = value; }
 
 
-        public SearchResult(String fileName, long fileSize, DateTime fileDate)
+        public SearchResult(FileInfo fileInfo)
         {
-            this.fileName = fileName;
-            this.fileSize = fileSize;
-            this.fileDate = fileDate;
+            this.fileName = fileInfo.FullName;
+            this.fileSize = fileInfo.Length;
+            this.fileDate = fileInfo.CreationTime;
+            this.fileInfo = fileInfo;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -10,7 +11,9 @@ namespace fundo.core.Search
 {
     internal class NativeSearchEngine : SearchEngine
     {
-        public async IAsyncEnumerable<SearchResult> SearchAsync(DirectoryInfo startDirectory, [EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<SearchResult> SearchAsync(DirectoryInfo startDirectory,
+            [EnumeratorCancellation] CancellationToken cancellationToken,
+            List<SearchFilter> searchFilters)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -40,13 +43,13 @@ namespace fundo.core.Search
                         return list;
                     }
 
-                    foreach (var file in files)
+                    foreach (FileInfo file in files)
                     {
                         if (cancellationToken.IsCancellationRequested) break;
 
                         try
                         {
-                            list.Add(new SearchResult(file.FullName, file.Length, file.CreationTime));
+                            list.Add(new SearchResult(file));
                         }
                         catch (UnauthorizedAccessException)
                         {
@@ -66,10 +69,24 @@ namespace fundo.core.Search
                 yield break;
             }
 
-            foreach (var result in fileResults)
+            foreach (SearchResult result in fileResults)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                yield return result;
+
+                bool allowed = true;
+                foreach (SearchFilter filter in searchFilters)
+                {
+                    if (!filter.isAllowed(result.FileInfo))
+                    {
+                        allowed = false;
+                        break;
+                    }
+                }
+
+                if (allowed)
+                {
+                    yield return result;
+                }
             }
 
             // Enumerate directories on a background thread to avoid blocking the UI
@@ -105,7 +122,7 @@ namespace fundo.core.Search
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                await foreach (var result in SearchAsync(directory, cancellationToken))
+                await foreach (var result in SearchAsync(directory, cancellationToken, searchFilters))
                 {
                     yield return result;
                 }

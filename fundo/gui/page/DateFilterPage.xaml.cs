@@ -23,6 +23,23 @@ namespace fundo.gui;
 /// </summary>
 public sealed partial class DateFilterPage : Page
 {
+    public bool DateFilterEnabled => FilterByDateCheckbox.IsChecked == true;
+    public DateTime startTime
+    {
+        get
+        {
+            return new DateTime(DateOnly.FromDateTime(FromDatePicker.Date.UtcDateTime), TimeOnly.FromTimeSpan(FromTimePicker.Time));
+        }
+    }
+
+    public DateTime endTime
+    {
+        get
+        {
+            return new DateTime(DateOnly.FromDateTime(ToDatePicker.Date.UtcDateTime), TimeOnly.FromTimeSpan(ToTimePicker.Time));
+        }
+    }
+
     public DateFilterPage()
     {
         InitializeComponent();

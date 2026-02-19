@@ -35,6 +35,13 @@ namespace fundo
         private SearchEngine currentSearchEngine = new NativeSearchEngine();
         private CancellationTokenSource _cts = new();
         private DirectoryInfo rootSearchDirectoryInfo = null;
+        
+        //Filter pages
+        private DateFilterPage dateFilterPage;
+        private AttributeFilterPage attributeFilterPage;
+        private FileContentFilterPage fileContentFilterPage;
+        private SizeFilterPage sizeFilterPage;
+
 
         public MainWindow()
         {
@@ -45,6 +52,27 @@ namespace fundo
                 root.Loaded += MainWindow_Loaded;
             }
             LocationControl_SelectedDirectoryChanged(null, null);
+            ContentFrame.Navigated += ContentFrame_Navigated;
+        }
+
+        private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            if (e.SourcePageType == typeof(DateFilterPage))
+            {
+                dateFilterPage = e.Content as DateFilterPage;
+            }
+            else if (e.SourcePageType == typeof(AttributeFilterPage))
+            {
+                attributeFilterPage = e.Content as AttributeFilterPage;
+            }
+            else if (e.SourcePageType == typeof(FileContentFilterPage))
+            {
+                fileContentFilterPage = e.Content as FileContentFilterPage;
+            }
+            else if (e.SourcePageType == typeof(SizeFilterPage))
+            {
+                sizeFilterPage = e.Content as SizeFilterPage;
+            }
         }
 
         private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -102,7 +130,13 @@ namespace fundo
         {
             SearchResultListView.Items.Clear();
 
-            await foreach (SearchResult result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token))
+            List<SearchFilter> searchFilters = new();
+            if(dateFilterPage.DateFilterEnabled)
+            {
+                searchFilters.Add(new DateFilter(dateFilterPage.startTime, dateFilterPage.endTime));
+            }
+
+            await foreach (SearchResult result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token, searchFilters))
             {
                 SearchResultListView.Items.Add(result.FileName);
             }
