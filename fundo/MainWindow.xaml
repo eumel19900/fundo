@@ -69,7 +69,7 @@
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
             Grid.Row="4">
-            <ListView x:Name="SearchResultListView" SelectionMode="Single">
+            <ListView x:Name="SearchResultListView" SelectionMode="Single" DoubleTapped="SearchResultListView_DoubleTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="model:SearchResultItem">
                         <StackPanel Orientation="Horizontal" Margin="4" VerticalAlignment="Center">

@@ -166,5 +166,27 @@ namespace fundo
             ToolTipService.SetToolTip(SearchButton, toolTip);
             SearchButton.IsEnabled = searchButtonEnabled;
         }
+
+        private void SearchResultListView_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if(SearchResultListView.SelectedItem is SearchResultItem)
+            {
+                SearchResultItem selectedItem = (SearchResultItem)SearchResultListView.SelectedItem;
+                try
+                {
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                    {
+                        FileName = selectedItem.FileInfo.FullName,
+                        UseShellExecute = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions (e.g., file not found, no associated application)
+                    ToolTip toolTip = new ToolTip { Content = $"Unable to open file: {ex.Message}" };
+                    ToolTipService.SetToolTip(SearchResultListView, toolTip);
+                }
+            }
+        }
     }
 }
