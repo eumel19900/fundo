@@ -54,7 +54,7 @@ namespace fundo.core.Search
         {
             try
             {
-                var pngBytes = await fundo.gui.tool.FileIconLoader.GetPngBytesAsync(filePath, true).ConfigureAwait(false);
+                var pngBytes = await fundo.gui.tool.FileIconLoader.GetPngBytesAsync(filePath, false).ConfigureAwait(false);
                 if (pngBytes == null || pngBytes.Length == 0) return;
 
                 var disp = App.MainWindowInstance?.DispatcherQueue;

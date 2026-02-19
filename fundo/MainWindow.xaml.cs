@@ -129,8 +129,6 @@ namespace fundo
 
         public async Task StartSearchAsync()
         {
-            //SearchResultListView.Items.Clear();
-
             List<SearchFilter> searchFilters = new();
             if(dateFilterPage.DateFilterEnabled)
             {
