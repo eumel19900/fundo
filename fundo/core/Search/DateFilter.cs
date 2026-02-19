@@ -26,4 +26,4 @@ namespace fundo.core.Search
             return fileInfo.CreationTime >= startTime && fileInfo.CreationTime <= endTime;
         }
     }
-}
+} 

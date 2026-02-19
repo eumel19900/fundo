@@ -28,7 +28,7 @@ public sealed partial class DateFilterPage : Page
     {
         get
         {
-            return new DateTime(DateOnly.FromDateTime(FromDatePicker.Date.UtcDateTime), TimeOnly.FromTimeSpan(FromTimePicker.Time));
+            return new DateTime(DateOnly.FromDateTime(FromDatePicker.Date.LocalDateTime), TimeOnly.FromTimeSpan(FromTimePicker.Time));
         }
     }
 
@@ -36,7 +36,7 @@ public sealed partial class DateFilterPage : Page
     {
         get
         {
-            return new DateTime(DateOnly.FromDateTime(ToDatePicker.Date.UtcDateTime), TimeOnly.FromTimeSpan(ToTimePicker.Time));
+            return new DateTime(DateOnly.FromDateTime(ToDatePicker.Date.LocalDateTime), TimeOnly.FromTimeSpan(ToTimePicker.Time));
         }
     }
 

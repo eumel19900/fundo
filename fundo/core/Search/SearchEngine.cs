@@ -9,7 +9,7 @@ namespace fundo.core.Search
 {
     internal interface SearchEngine
     {
-        public IAsyncEnumerable<SearchResult> SearchAsync(DirectoryInfo startDirectory, 
+        public IAsyncEnumerable<SearchResultItem> SearchAsync(DirectoryInfo startDirectory, 
             CancellationToken cancellationToken, 
             List<SearchFilter> searchFilters);
 

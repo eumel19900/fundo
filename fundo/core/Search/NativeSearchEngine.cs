@@ -11,19 +11,19 @@ namespace fundo.core.Search
 {
     internal class NativeSearchEngine : SearchEngine
     {
-        public async IAsyncEnumerable<SearchResult> SearchAsync(DirectoryInfo startDirectory,
+        public async IAsyncEnumerable<SearchResultItem> SearchAsync(DirectoryInfo startDirectory,
             [EnumeratorCancellation] CancellationToken cancellationToken,
             List<SearchFilter> searchFilters)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             // Enumerate files and create SearchResult objects on a background thread
-            List<SearchResult> fileResults;
+            List<SearchResultItem> fileResults;
             try
             {
                 fileResults = await Task.Run(() =>
                 {
-                    var list = new List<SearchResult>();
+                    var list = new List<SearchResultItem>();
 
                     IEnumerable<FileInfo> files;
                     try
@@ -49,7 +49,7 @@ namespace fundo.core.Search
 
                         try
                         {
-                            list.Add(new SearchResult(file));
+                            list.Add(new SearchResultItem(file));
                         }
                         catch (UnauthorizedAccessException)
                         {
@@ -69,7 +69,7 @@ namespace fundo.core.Search
                 yield break;
             }
 
-            foreach (SearchResult result in fileResults)
+            foreach (SearchResultItem result in fileResults)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 

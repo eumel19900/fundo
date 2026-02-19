@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -136,9 +137,11 @@ namespace fundo
                 searchFilters.Add(new DateFilter(dateFilterPage.startTime, dateFilterPage.endTime));
             }
 
-            await foreach (SearchResult result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token, searchFilters))
+            ObservableCollection<SearchResultItem> searchResults = new ObservableCollection<SearchResultItem>();
+            SearchResultListView.ItemsSource = searchResults;
+            await foreach (SearchResultItem result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token, searchFilters))
             {
-                SearchResultListView.Items.Add(result.FileName);
+                searchResults.Add(result);
             }
         }
 

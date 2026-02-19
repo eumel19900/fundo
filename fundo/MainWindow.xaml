@@ -6,7 +6,7 @@
     xmlns:local="using:fundo"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:src="using:fundo.gui.control"
+    xmlns:src="using:fundo.gui.control" xmlns:model="using:fundo.core.Search"
     mc:Ignorable="d"
     Title="Fundo">
 
@@ -14,8 +14,8 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <Grid Padding="20" RowSpacing="15">
 
+    <Grid Padding="20" RowSpacing="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -63,7 +63,6 @@
             HorizontalAlignment="Right"
             Padding="20,8"/>
 
-        
         <Border
             Padding="20,8"
             Background="{ThemeResource LayerFillColorDefaultBrush}"
@@ -72,11 +71,17 @@
             Grid.Row="4">
             <ListView x:Name="SearchResultListView" SelectionMode="Single">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Glyph="&#xE76E;" Margin="0,0,4,0"/>
-                            <TextBlock Text="{Binding}"
-                               FontSize="24" Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                    <DataTemplate x:DataType="model:SearchResultItem">
+                        <StackPanel Orientation="Vertical" Margin="4">
+                            <!--<FontIcon Glyph="&#xE76E;" Margin="0,0,4,0"/>-->
+                            <TextBlock Text="{x:Bind FileName}"
+                               FontSize="18" Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                            <TextBlock Text="{x:Bind Path}"
+                                FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{x:Bind FileDate}"
+                                FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{x:Bind FileSizeString}"
+                                FontSize="10" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
