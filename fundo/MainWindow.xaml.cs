@@ -130,6 +130,8 @@ namespace fundo
 
         public async Task StartSearchAsync()
         {
+            SearchInfoTextBlock.Text = "Searching...";
+            SearchButton.IsEnabled = false;
             List<SearchFilter> searchFilters = new();
 
             if(SearchPatternTextBox.Text != "")
@@ -147,7 +149,13 @@ namespace fundo
             await foreach (SearchResultItem result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token, searchFilters))
             {
                 searchResults.Add(result);
+                if (currentSearchEngine is NativeSearchEngine)
+                {
+                    SearchInfoTextBlock.Text = "Searching... (looked already in " + (currentSearchEngine as NativeSearchEngine).DirectoriesSearched + " directories)";
+                }
             }
+            SearchButton.IsEnabled = true;
+            SearchInfoTextBlock.Text = "Finished search. Found " + searchResults.Count + " items";
         }
 
 

@@ -13,5 +13,9 @@ namespace fundo.core.Search.Native
             CancellationToken cancellationToken, 
             List<SearchFilter> searchFilters);
 
+        /// <summary>
+        /// This resets the engine and the search statics. Call this before calling SearchAsync.
+        /// </summary>
+        public void reset();
     }
 }

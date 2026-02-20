@@ -12,6 +12,15 @@ namespace fundo.core.Search.Native
 {
     internal class NativeSearchEngine : SearchEngine
     {
+        private int directoriesSearched = 0;
+
+        public int DirectoriesSearched { get => directoriesSearched; }
+
+        public void reset()
+        {
+            directoriesSearched = 0;
+        }
+
         public async IAsyncEnumerable<SearchResultItem> SearchAsync(DirectoryInfo startDirectory,
             [EnumeratorCancellation] CancellationToken cancellationToken,
             List<SearchFilter> searchFilters)
@@ -38,14 +47,15 @@ namespace fundo.core.Search.Native
             {
                 try
                 {
-                    var stack = new Stack<DirectoryInfo>();
-                    stack.Push(startDirectory);
+                    var directoriesStack = new Stack<DirectoryInfo>();
+                    directoriesStack.Push(startDirectory);
 
-                    while (stack.Count > 0)
+                    while (directoriesStack.Count > 0)
                     {
                         if (cancellationToken.IsCancellationRequested) break;
 
-                        var dir = stack.Pop();
+                        var dir = directoriesStack.Pop();
+                        directoriesSearched++;
 
                         // Enumerate files lazily
                         IEnumerable<FileInfo> files = null;
@@ -107,7 +117,7 @@ namespace fundo.core.Search.Native
                         foreach (var sd in subdirs)
                         {
                             if (cancellationToken.IsCancellationRequested) break;
-                            stack.Push(sd);
+                            directoriesStack.Push(sd);
                         }
                     }
                 }
