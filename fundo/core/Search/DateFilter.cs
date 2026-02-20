@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using fundo.core.Search.Native;
 
 namespace fundo.core.Search
 {

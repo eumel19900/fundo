@@ -1,4 +1,5 @@
 using fundo.core.Search;
+using fundo.core.Search.Native;
 using fundo.gui;
 using fundo.gui.tool;
 using Microsoft.UI;
@@ -130,6 +131,12 @@ namespace fundo
         public async Task StartSearchAsync()
         {
             List<SearchFilter> searchFilters = new();
+
+            if(SearchPatternTextBox.Text != "")
+            {
+                searchFilters.Add(new FileNameFilter(SearchPatternTextBox.Text));
+            }
+
             if(dateFilterPage.DateFilterEnabled)
             {
                 searchFilters.Add(new DateFilter(dateFilterPage.startTime, dateFilterPage.endTime));

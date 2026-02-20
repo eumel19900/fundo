@@ -17,8 +17,6 @@ namespace fundo.gui.tool
     /// </summary>
     internal static class FileIconLoader
     {
-        // cache icons per normalized extension (e.g. ".txt")
-        private static readonly ConcurrentDictionary<string, Icon> _iconCache = new();
         // cache generated PNG bytes per normalized extension to avoid repeated conversion
         private static readonly ConcurrentDictionary<string, byte[]> _pngCache = new();
 
@@ -65,11 +63,7 @@ namespace fundo.gui.tool
             // determine cache key: prefer extension (lowercase, with leading dot)
             string key = NormalizeKey(filePathOrExtension);
 
-            if (_iconCache.TryGetValue(key, out var cachedIcon))
-            {
-                // return a clone so the caller may dispose it independently
-                return (Icon)cachedIcon.Clone();
-            }
+            // no icon cache here to avoid lifetime issues with native handles
 
             uint flags = SHGFI_ICON | (smallIcon ? SHGFI_SMALLICON : SHGFI_LARGEICON);
             uint attributes = 0;
@@ -92,16 +86,7 @@ namespace fundo.gui.tool
                 using var iconFromHandle = Icon.FromHandle(shfi.hIcon);
                 var iconForCaller = (Icon)iconFromHandle.Clone();
 
-                // store a clone in the cache for future callers
-                try
-                {
-                    var cacheIcon = (Icon)iconForCaller.Clone();
-                    _iconCache.TryAdd(key, cacheIcon);
-                }
-                catch
-                {
-                    // ignore cache insertion failures
-                }
+                // do not cache Icon objects (native handle lifetime can be problematic)
 
                 return iconForCaller;
             }

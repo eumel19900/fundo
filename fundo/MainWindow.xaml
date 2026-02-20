@@ -27,7 +27,7 @@
         <!-- filename -->
         <StackPanel Spacing="5">
             <TextBlock Text="Filename" FontWeight="SemiBold"/>
-            <TextBox x:Name="FileNameTextBox"
+            <TextBox x:Name="SearchPatternTextBox"
                  PlaceholderText="*.jpeg"/>
         </StackPanel>
 
