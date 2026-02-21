@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace fundo.gui.tool
+namespace fundo.tool
 {
     /// <summary>
     /// Hilfsfunktionen zur Formatierung von Dateigrößen als menschenlesbare Strings

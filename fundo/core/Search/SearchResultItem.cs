@@ -1,10 +1,10 @@
-﻿using fundo.gui.tool;
-using System;
+﻿using System;
 using System.IO;
 using System.Drawing;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media;
+using fundo.tool;
 
 namespace fundo.core.Search
 {
@@ -54,7 +54,7 @@ namespace fundo.core.Search
         {
             try
             {
-                var pngBytes = await fundo.gui.tool.FileIconLoader.GetPngBytesAsync(filePath, false).ConfigureAwait(false);
+                var pngBytes = await FileIconLoader.GetPngBytesAsync(filePath, false).ConfigureAwait(false);
                 if (pngBytes == null || pngBytes.Length == 0) return;
 
                 var disp = App.MainWindowInstance?.DispatcherQueue;

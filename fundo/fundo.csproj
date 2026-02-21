@@ -17,6 +17,7 @@
     <None Remove="gui\AttributeFilterPage.xaml" />
     <None Remove="gui\control\LocationControl.xaml" />
     <None Remove="gui\DateFilterPage.xaml" />
+    <None Remove="gui\Dialog\ConfigureSearchIndexDlg.xaml" />
     <None Remove="gui\SizeFilterPage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +68,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="gui\Dialog\ConfigureSearchIndexDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="gui\control\LocationControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -79,5 +86,23 @@
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
     <ApplicationIcon>fundo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
+    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 </Project>

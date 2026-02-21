@@ -9,7 +9,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections.Concurrent;
 
-namespace fundo.gui.tool
+namespace fundo.tool
 {
     /// <summary>
     /// Lädt das in Windows registrierte Dateisymbol (Icon) für einen Dateinamen oder eine Dateiendung.

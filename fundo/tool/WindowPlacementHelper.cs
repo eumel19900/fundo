@@ -5,7 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using System;
 using WinRT.Interop;
 
-namespace fundo.gui.tool
+namespace fundo.tool
 {
     /// <summary>
     /// Helper utilities for placing and sizing application windows in a DPI-aware manner.

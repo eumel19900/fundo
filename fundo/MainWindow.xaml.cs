@@ -1,7 +1,7 @@
 using fundo.core.Search;
 using fundo.core.Search.Native;
 using fundo.gui;
-using fundo.gui.tool;
+using fundo.tool;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -202,6 +202,11 @@ namespace fundo
                     ToolTipService.SetToolTip(SearchResultListView, toolTip);
                 }
             }
+        }
+
+        private void OpenConfigureSearchIndexButton_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }
