@@ -32,7 +32,7 @@
         </StackPanel>
 
         <!-- search location -->
-        <StackPanel Grid.Row="1" Spacing="5" Orientation="Vertical">
+       <StackPanel Grid.Row="1" Spacing="5" Orientation="Vertical">
             <TextBlock Text="SearchLocation" FontWeight="SemiBold"/>
             <Grid ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
