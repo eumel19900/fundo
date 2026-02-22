@@ -8,7 +8,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Padding="20" RowSpacing="15">
+        <Border
+        Padding="24"
+        CornerRadius="8"
+        Background="{ThemeResource LayerFillColorDefaultBrush}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1">
 
+            <StackPanel Spacing="12">
+                <TextBlock Text="Fundo - Settings"
+                       FontSize="28"
+                       FontWeight="SemiBold" />
+
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

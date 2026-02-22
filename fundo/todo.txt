@@ -1,5 +1,6 @@
-Suchkriterien:
-	- Dateinamen
+- Suchkriterien:
+	- Dateinamen - ok
+		- Regex
 	- Datum von bis
 		- letzter Zugriff
 		- erstellt am
@@ -14,6 +15,10 @@ Suchkriterien:
 		- regex
 		- ganzes wort
 		- enthält nicht?
+ - Popupmenu in Ergebnisliste:
+	- Datei öffnen (selbe Aktion wie doppelklick)
+	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...)
+
 
 Bugs/Sonstiges:
 	- WindowPlacementHelper: Seit dem Refactoring mit der Hauptfensternavigation

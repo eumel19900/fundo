@@ -18,11 +18,11 @@
 
             <StackPanel Spacing="12">
                 <!-- App name and short description -->
-                <TextBlock Text="Fundo"
+                <TextBlock Text="Fundo v1.0"
                            FontSize="28"
                            FontWeight="SemiBold" />
 
-                <TextBlock Text="Fundo searches your files whether its in Filessystem or based on an index."
+                <TextBlock Text="Fundo searches your files whether you want it or not."
                            TextWrapping="WrapWholeWords"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
