@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="fundo.gui.page.AboutPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:fundo.gui.page"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="20" RowSpacing="15">
+        <Border
+            Padding="24"
+            CornerRadius="8"
+            Background="{ThemeResource LayerFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1">
+
+            <StackPanel Spacing="12">
+                <!-- App name and short description -->
+                <TextBlock Text="Fundo"
+                           FontSize="28"
+                           FontWeight="SemiBold" />
+
+                <TextBlock Text="Fundo searches your files whether its in Filessystem or based on an index."
+                           TextWrapping="WrapWholeWords"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                <Rectangle Height="1"
+                           Fill="{ThemeResource CardStrokeColorDefaultBrush}"
+                           Margin="0,8,0,0" />
+
+                <!-- Author information -->
+                <StackPanel Orientation="Vertical" Spacing="4">
+                    <TextBlock Text="Made in 2026"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="Robert Wermuth" />
+                    <TextBlock Text="robert.wermuth@gmail.com"
+                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

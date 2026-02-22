@@ -17,6 +17,9 @@
     <None Remove="gui\AttributeFilterPage.xaml" />
     <None Remove="gui\control\LocationControl.xaml" />
     <None Remove="gui\DateFilterPage.xaml" />
+    <None Remove="gui\page\AboutPage.xaml" />
+    <None Remove="gui\page\SearchPage.xaml" />
+    <None Remove="gui\page\SettingsPage.xaml" />
     <None Remove="gui\SizeFilterPage.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +39,19 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260209005" />
 	<PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="gui\page\AboutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Page Update="gui\page\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -63,8 +79,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="gui\Dialog\" />
-    <Folder Include="gui\page\" />
+    <Page Update="gui\page\SearchPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

@@ -14,3 +14,8 @@ Suchkriterien:
 		- regex
 		- ganzes wort
 		- enthält nicht?
+
+Bugs/Sonstiges:
+	- WindowPlacementHelper: Seit dem Refactoring mit der Hauptfensternavigation
+			funktioniert die Berechnung der Fenstergröße auf Basis der Suchfiltertabs nicht mehr.
+			Muss angepasst werden, damit das wieder geht :-)
