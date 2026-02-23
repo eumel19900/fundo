@@ -5,7 +5,7 @@ using System.Text;
 
 namespace fundo.core.Search.Native
 {
-    internal class FileNameFilter : SearchFilter
+    public class FileNameFilter : SearchFilter
     {
         private string searchPattern;
 
