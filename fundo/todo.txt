@@ -1,9 +1,10 @@
 - Suchkriterien:
+	- Profile speichern Suchparameter
 	- Dateinamen - ok
 		- Regex
 	- Datum von bis
 		- letzter Zugriff
-		- erstellt am
+		- erstellt am - ok
 		- geändert am
 	- Dateinamen mit Regex
 	- Dateigröße von bis
@@ -18,6 +19,9 @@
  - Popupmenu in Ergebnisliste:
 	- Datei öffnen (selbe Aktion wie doppelklick)
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...)
+Settings:
+	- Index erstellen
+	- Daemon Modus per Scheduled Task konfigurierbar
 
 
 Bugs/Sonstiges:
