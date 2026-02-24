@@ -6,7 +6,8 @@
     xmlns:local="using:fundo.gui.page"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    Loaded="SettingsPage_Loaded">
 
     <Grid Padding="20" RowSpacing="15">
         <Border
@@ -16,11 +17,43 @@
         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
         BorderThickness="1">
 
-            <StackPanel Spacing="12">
+            <StackPanel Spacing="16">
                 <TextBlock Text="Fundo - Settings"
                        FontSize="28"
                        FontWeight="SemiBold" />
 
+                <!-- Search index configuration section -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Search index"
+                               FontSize="18"
+                               FontWeight="SemiBold" />
+
+                    <CheckBox x:Name="EnableIndexedSearchCheckBox"
+                              Content="Indexed search enabled" />
+
+                    <TextBlock Text="Drives to include in index:" 
+                               Margin="0,8,0,0"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <!-- List of drives with individual checkboxes; shows drive letter, NT path, and volume GUID -->
+                    <ListView x:Name="IndexedDrivesListView"
+                              BorderThickness="1"
+                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                              Height="200"
+                              IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="local:IndexedDriveEntry">
+                                <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
+                                    <StackPanel>
+                                        <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{x:Bind NtPath}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{x:Bind VolumeGuid}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </CheckBox>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
             </StackPanel>
         </Border>
     </Grid>

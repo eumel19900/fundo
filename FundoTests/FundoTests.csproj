@@ -3,6 +3,8 @@
   <PropertyGroup>
     <!-- Match the app project's TFM so we can reference it -->
     <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+    <!-- Build tests as x64 so architecture matches the fundo app (which outputs to bin/x64/...) -->
+    <PlatformTarget>x64</PlatformTarget>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
