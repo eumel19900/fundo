@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using fundo.core.Search.Index.Entity;
+using Windows.Storage;
 
 namespace fundo.core.Search.Index
 {
@@ -16,10 +17,11 @@ namespace fundo.core.Search.Index
     {
         private static string GetDatabasePath()
         {
-            var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var folder = Path.Combine(localAppData, "Fundo");
-            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-            var dbPath = Path.Combine(folder, "fundo.db");
+            string baseFolder = ApplicationData.Current.LocalFolder.Path;
+            string folder = Path.Combine(baseFolder, "Fundo");
+            Directory.CreateDirectory(folder);
+
+            string dbPath = Path.Combine(folder, "fundo.db");
             return dbPath;
         }
 

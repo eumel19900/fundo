@@ -40,6 +40,8 @@ namespace fundo.core
             if (_current == null)
             {
                 _current = new Session();
+                SearchIndexContext context = SearchIndexStore.CreateContext();
+                context.Dispose();
             }
         }
 
