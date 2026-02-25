@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -103,6 +104,11 @@ namespace fundo.gui.page
             var raw = sb.ToString();
             var firstTerminator = raw.IndexOf('\0');
             return firstTerminator >= 0 ? raw.Substring(0, firstTerminator) : raw;
+        }
+
+        private async void StartIndexingButton_Click(object sender, RoutedEventArgs e)
+        {
+           
         }
     }
 

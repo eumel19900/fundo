@@ -9,8 +9,11 @@ namespace fundo.core.Search.Index.Entity
         // Primary key - EF Core will treat this as the identity/auto-increment column
         public long Id { get; set; }
 
-        // drive/location where the file was found (e.g. "C:\")
-        public string DriveLocation { get; set; } = string.Empty;
+        // Foreign key to the storage device where the file resides
+        public long StorageDeviceId { get; set; }
+
+        // Navigation to the owning storage device
+        public StorageDevice StorageDevice { get; set; } = null!;
 
         public string FileName { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
@@ -21,14 +24,13 @@ namespace fundo.core.Search.Index.Entity
         public FileEntity() { }
 
         public FileEntity(string fileName, string path, long fileSize, DateTime fileDate,
-            string fileType, string driveLocation)
+            string fileType)
         {
             FileName = fileName;
             Path = path;
             FileSize = fileSize;
             FileDate = fileDate;
             FileType = fileType;
-            DriveLocation = driveLocation;
         }
     }
 }

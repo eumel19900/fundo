@@ -53,6 +53,12 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+
+                    <!-- Button to manually start drive indexing -->
+                    <Button x:Name="StartIndexingButton"
+                            Click="StartIndexingButton_Click"
+                            Content="Rebuild Index..."
+                            Margin="0,12,0,0" />
                 </StackPanel>
             </StackPanel>
         </Border>
