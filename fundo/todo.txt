@@ -22,7 +22,9 @@
 Settings:
 	- Index erstellen
 	- Daemon Modus per Scheduled Task konfigurierbar
-- Volltextsuche in der Ergebnisliste
+- Volltextsuche (oder filterung?) in der Ergebnisliste
+- Sortierung in der Ergebnisliste
+
 
 
 Bugs/Sonstiges:

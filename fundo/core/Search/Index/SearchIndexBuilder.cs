@@ -1,4 +1,5 @@
-﻿using System;
+﻿using fundo.core.Search.Native;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,10 +9,10 @@ namespace fundo.core.Search.Index
     {
         public SearchIndexBuilder()
         {
-            SearchIndexContext context = SearchIndexStore.CreateContext();
-
-
-
+            using (SearchIndexContext context = SearchIndexStore.CreateContext())
+            {
+                
+            }
         }
     }
 }

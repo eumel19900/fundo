@@ -1,3 +1,4 @@
+using fundo.core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -70,6 +71,9 @@ namespace fundo.gui.page
             }
 
             IndexedDrivesListView.ItemsSource = drives;
+
+            EnableIndexedSearchCheckBox.IsChecked = Settings.UseIndex;
+            EnableIndexedSearchCheckBox.Checked += (s, args) => Settings.UseIndex = (bool)EnableIndexedSearchCheckBox.IsChecked;
         }
 
         private static string GetNtDevicePath(string dosDeviceName)
