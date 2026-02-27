@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:fundo.gui.page"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local1="using:fundo.tool"
     mc:Ignorable="d"
     Loaded="SettingsPage_Loaded">
 
@@ -42,7 +42,7 @@
                               Height="200"
                               IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="local:IndexedDriveEntry">
+                            <DataTemplate x:DataType="local1:IndexedDriveEntry">
                                 <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
                                     <StackPanel>
                                         <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" />
