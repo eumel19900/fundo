@@ -22,7 +22,7 @@ namespace fundo.gui
         {
             this.xamlRoot = xamlRoot ?? throw new ArgumentNullException(nameof(xamlRoot));
             this.dispatcherQueue = xamlRoot.Content.DispatcherQueue;
-            this.drivesToIndex = drivesToIndex ?? throw new ArgumentNullException(nameof(drivesToIndex));
+            this.drivesToIndex = drivesToIndex.Where(d => d.IsSelected).ToList();
         }
 
         public async Task StartIndexingAsync()
@@ -126,9 +126,7 @@ namespace fundo.gui
             Action<string> updateStatus,
             Action<int> updateProgress)
         {
-            var selectedDrives = drivesToIndex.Where(d => d.IsSelected).ToList();
-
-            if (selectedDrives.Count == 0)
+            if (drivesToIndex.Count == 0)
             {
                 updateStatus("No drives selected for indexing.");
                 await Task.Delay(2000, cancellationToken);
@@ -136,7 +134,7 @@ namespace fundo.gui
             }
 
             int n = 0;
-            foreach (var drive in selectedDrives)
+            foreach (var drive in drivesToIndex)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
