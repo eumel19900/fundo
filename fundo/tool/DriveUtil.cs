@@ -1,8 +1,10 @@
-﻿using System;
+﻿using fundo.core.Search.Index;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using fundo.core.Search.Index.Entity;
 
 namespace fundo.tool
 {
@@ -38,12 +40,18 @@ namespace fundo.tool
 
                     var volumeGuid = GetVolumeGuid(drive.Name);
 
-                    drives.Add(new Drive(driveLetter, ntPath, volumeGuid));
+                    Drive myDrive = new(driveLetter, ntPath, volumeGuid);
+                    StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(ntPath);
+                    if (storageDevice != null)
+                    {
+                        myDrive.IsSelected = true;
+                    }
+                    drives.Add(myDrive);
                 }
             }
             catch
             {
-                // If anything goes wrong, do not crash settings page; list may stay empty.
+                // If anything goes wrong, do not crash
             }
 
             return drives;

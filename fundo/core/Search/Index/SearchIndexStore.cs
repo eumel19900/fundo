@@ -114,6 +114,31 @@ namespace fundo.core.Search.Index
                 .FirstOrDefault(d => d.Id == id);
         }
 
+        public static StorageDevice? GetStorageDeviceByStorageName(string storageName)
+        {
+            if (string.IsNullOrWhiteSpace(storageName)) return null;
+
+            using var ctx = CreateContext();
+            return ctx.StorageDevices
+                .Include(d => d.Files)
+                .FirstOrDefault(d => d.StorageName == storageName);
+        }
+
+        public static void DeleteStorageDevice(long id)
+        {
+            DeleteAllFilesInStorageDevice(id);
+
+            using var ctx = CreateContext();
+            var device = ctx.StorageDevices.FirstOrDefault(d => d.Id == id);
+            if (device == null)
+            {
+                return;
+            }
+
+            ctx.StorageDevices.Remove(device);
+            ctx.SaveChanges();
+        }
+
         // --- FileEntity helpers ---
 
         public static FileEntity AddFile(FileEntity file)
@@ -137,6 +162,20 @@ namespace fundo.core.Search.Index
 
             ctx.FileEntities.Remove(entity);
             ctx.SaveChanges();
+        }
+
+        public static void DeleteAllFilesInStorageDevice(long storageDeviceId)
+        {
+            using var ctx = CreateContext();
+            var filesToDelete = ctx.FileEntities
+                .Where(f => f.StorageDeviceId == storageDeviceId)
+                .ToList();
+
+            if (filesToDelete.Count > 0)
+            {
+                ctx.FileEntities.RemoveRange(filesToDelete);
+                ctx.SaveChanges();
+            }
         }
     }
 }

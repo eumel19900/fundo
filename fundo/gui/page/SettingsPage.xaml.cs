@@ -1,4 +1,5 @@
 using fundo.core;
+using fundo.core.Search.Index;
 using fundo.tool;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -27,19 +28,52 @@ namespace fundo.gui.page
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private List<Drive> drives;
+        private bool settingsSaved = false;
+
         public SettingsPage()
         {
             InitializeComponent();
+
+            drives = DriveUtil.GetDrives();
+            this.Unloaded += SettingsPage_Unloaded;
+        }
+
+        private void SettingsPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            SaveSettings();
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            SaveSettings();
+        }
+
+        private void SaveSettings()
+        {
+            if (settingsSaved)
+            {
+                return;
+            }
+            settingsSaved = true;
+
+            new SearchIndexService().updateDriveList(drives);
         }
        
 
         private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            IndexedDrivesListView.ItemsSource = DriveUtil.GetDrives();
+            IndexedDrivesListView.ItemsSource = drives;
 
             EnableIndexedSearchCheckBox.IsChecked = Settings.UseIndex;
-            EnableIndexedSearchCheckBox.Checked += (s, args)
-                => Settings.UseIndex = (bool)EnableIndexedSearchCheckBox.IsChecked;
+            EnableIndexedSearchCheckBox.Checked += EnableIndexedSearchCheckBox_CheckedChanged;
+            EnableIndexedSearchCheckBox.Unchecked += EnableIndexedSearchCheckBox_CheckedChanged;
+        }
+
+        private void EnableIndexedSearchCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            Settings.UseIndex = EnableIndexedSearchCheckBox.IsChecked ?? false;
         }
 
 

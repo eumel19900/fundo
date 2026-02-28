@@ -42,7 +42,7 @@
                               Height="200"
                               IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="local1:IndexedDriveEntry">
+                            <DataTemplate x:DataType="local1:Drive">
                                 <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
                                     <StackPanel>
                                         <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" />
