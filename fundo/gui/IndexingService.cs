@@ -45,9 +45,11 @@ namespace fundo.gui
             ProgressRing progressRing = new ProgressRing
             {
                 IsActive = true,
-                IsIndeterminate = true,
+                IsIndeterminate = false,
                 Width = 50,
-                Height = 50
+                Height = 50,
+                Maximum = drivesToIndex.Count,
+                Value = 0
             };
 
             StackPanel content = new StackPanel
@@ -73,13 +75,21 @@ namespace fundo.gui
             {
                 try
                 {
-                    await PerformIndexingAsync(cancellationToken, (status) =>
-                    {
-                        dispatcherQueue.TryEnqueue(() =>
+                    await PerformIndexingAsync(cancellationToken, 
+                        (status) =>
                         {
-                            statusText.Text = status;
+                            dispatcherQueue.TryEnqueue(() =>
+                            {
+                                statusText.Text = status;
+                            });
+                        },
+                        (progress) =>
+                        {
+                            dispatcherQueue.TryEnqueue(() =>
+                            {
+                                progressRing.Value = progress;
+                            });
                         });
-                    });
 
                     dispatcherQueue.TryEnqueue(() =>
                     {
@@ -112,7 +122,9 @@ namespace fundo.gui
             cancellationTokenSource = null;
         }
 
-        private async Task PerformIndexingAsync(CancellationToken cancellationToken, Action<string> updateStatus)
+        private async Task PerformIndexingAsync(CancellationToken cancellationToken,
+            Action<string> updateStatus,
+            Action<int> updateProgress)
         {
             var selectedDrives = drivesToIndex.Where(d => d.IsSelected).ToList();
 
@@ -123,13 +135,17 @@ namespace fundo.gui
                 return;
             }
 
+            int n = 0;
             foreach (var drive in selectedDrives)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                updateStatus($"Indexing {drive.NtPath}...");
+                updateStatus($"Indexing drive {drive.DriveLetter}");
 
                 await Task.Delay(1000, cancellationToken);
+
+                n++;
+                updateProgress(n);
             }
 
             updateStatus("Indexing completed!");
