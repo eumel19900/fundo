@@ -102,6 +102,7 @@ namespace fundo.gui.page
         {
             SearchInfoTextBlock.Text = "Searching...";
             SearchButton.IsEnabled = false;
+            currentSearchEngine.reset();
             List<SearchFilter> searchFilters = new();
 
             if (SearchPatternTextBox.Text != "")
