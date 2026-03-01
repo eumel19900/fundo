@@ -39,7 +39,7 @@ namespace fundo.core.Search
         }
 
 
-        public SearchResultItem(FileInfo fileInfo)
+        public SearchResultItem(FileInfo fileInfo, Boolean loadImage = true)
         {
             this.fileName = fileInfo.Name;
             this.path = fileInfo.FullName;
@@ -47,7 +47,10 @@ namespace fundo.core.Search
             this.fileDate = fileInfo.CreationTime;
             this.fileInfo = fileInfo;
             // do not eagerly load icons here to avoid blocking. Start lazy async load of image bytes instead.
-            _ = LoadImageAsync(fileInfo.FullName);
+            if (loadImage)
+            {
+                _ = LoadImageAsync(fileInfo.FullName);
+            }
         }
 
         private async Task LoadImageAsync(string filePath)

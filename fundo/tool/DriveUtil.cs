@@ -24,23 +24,25 @@ namespace fundo.tool
             {
                 foreach (var drive in DriveInfo.GetDrives())
                 {
-                    // Use drive letter (e.g. "C:") to query NT device path.
-                    var driveLetter = drive.Name.TrimEnd('\\'); // "C:\" -> "C:"
-                    if (string.IsNullOrEmpty(driveLetter))
+                    // Für Dateisystem: "C:\" beibehalten
+                    var driveLetterForFs = drive.Name;          // "C:\"
+
+                    // Für QueryDosDevice: "C:"
+                    var driveLetterForNt = drive.Name.TrimEnd('\\'); // "C:\" -> "C:"
+                    if (string.IsNullOrEmpty(driveLetterForNt))
                     {
                         continue;
                     }
 
-                    var ntPath = GetNtDevicePath(driveLetter);
+                    var ntPath = GetNtDevicePath(driveLetterForNt);
                     if (string.IsNullOrEmpty(ntPath))
                     {
-                        // Fallback to the drive letter if NT path lookup fails.
-                        ntPath = driveLetter;
+                        ntPath = driveLetterForNt;
                     }
 
                     var volumeGuid = GetVolumeGuid(drive.Name);
 
-                    Drive myDrive = new(driveLetter, ntPath, volumeGuid);
+                    Drive myDrive = new(driveLetterForFs, ntPath, volumeGuid);
                     StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(ntPath);
                     if (storageDevice != null)
                     {

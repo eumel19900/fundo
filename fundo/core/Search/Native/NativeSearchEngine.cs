@@ -16,6 +16,8 @@ namespace fundo.core.Search.Native
 
         public int DirectoriesSearched { get => directoriesSearched; }
 
+        public Boolean LoadFileIcons { get; set; } = true;
+
         public void reset()
         {
             directoriesSearched = 0;
@@ -97,7 +99,7 @@ namespace fundo.core.Search.Native
 
                             try
                             {
-                                var item = new SearchResultItem(file);
+                                var item = new SearchResultItem(file,LoadFileIcons);
                                 await writer.WriteAsync(item, cancellationToken).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException) { break; }

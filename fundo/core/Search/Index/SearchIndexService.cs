@@ -67,7 +67,8 @@ namespace fundo.core.Search.Index
 
             NativeSearchEngine searchEngine = new NativeSearchEngine();
             searchEngine.reset();
-            
+            searchEngine.LoadFileIcons = false;
+
             await foreach (SearchResultItem result in searchEngine.SearchAsync(
                 new DirectoryInfo(drive.DriveLetter),
                 cancellationToken, 
