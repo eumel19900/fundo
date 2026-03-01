@@ -57,7 +57,6 @@ namespace fundo.core.Search.Native
                         var dir = directoriesStack.Pop();
                         directoriesSearched++;
 
-                        // Enumerate files lazily
                         IEnumerable<FileInfo> files = null;
                         try
                         {
@@ -72,21 +71,26 @@ namespace fundo.core.Search.Native
                             if (cancellationToken.IsCancellationRequested) break;
 
                             bool allowed = true;
-                            try
+
+                            // Nur filtern wenn searchFilters vorhanden sind
+                            if (searchFilters != null && searchFilters.Count > 0)
                             {
-                                foreach (var filter in searchFilters)
+                                try
                                 {
-                                    if (!filter.isAllowed(file))
+                                    foreach (var filter in searchFilters)
                                     {
-                                        allowed = false;
-                                        break;
+                                        if (!filter.isAllowed(file))
+                                        {
+                                            allowed = false;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            catch
-                            {
-                                // if a filter throws, treat as not allowed
-                                allowed = false;
+                                catch
+                                {
+                                    // if a filter throws, treat as not allowed
+                                    allowed = false;
+                                }
                             }
 
                             if (!allowed) continue;

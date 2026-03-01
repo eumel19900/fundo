@@ -79,7 +79,7 @@ namespace fundo.gui.page
 
         private async void StartIndexingButton_Click(object sender, RoutedEventArgs e)
         {
-            var progressDialog = new IndexingService(this.XamlRoot, drives);
+            var progressDialog = new IndexingGuiService(this.XamlRoot, drives);
             await progressDialog.StartIndexingAsync();
         }
     }

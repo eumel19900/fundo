@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using fundo.core.Search.Index.Entity;
 using Windows.Storage;
+using System.Collections.Generic;
 
 namespace fundo.core.Search.Index
 {
@@ -120,7 +121,7 @@ namespace fundo.core.Search.Index
 
             using var ctx = CreateContext();
             return ctx.StorageDevices
-                .Include(d => d.Files)
+                //.Include(d => d.Files)    //dont load all file objects into mem
                 .FirstOrDefault(d => d.StorageName == storageName);
         }
 
@@ -167,15 +168,33 @@ namespace fundo.core.Search.Index
         public static void DeleteAllFilesInStorageDevice(long storageDeviceId)
         {
             using var ctx = CreateContext();
-            var filesToDelete = ctx.FileEntities
+            ctx.FileEntities
                 .Where(f => f.StorageDeviceId == storageDeviceId)
-                .ToList();
+                .ExecuteDelete();
+        }
 
-            if (filesToDelete.Count > 0)
-            {
-                ctx.FileEntities.RemoveRange(filesToDelete);
-                ctx.SaveChanges();
-            }
+        public static void DeleteAllFiles()
+        {
+            using var ctx = CreateContext();
+            ctx.FileEntities.ExecuteDelete();
+        }
+
+        public static void AddFilesBulk(IEnumerable<FileEntity> files)
+        {
+            if (files == null) throw new ArgumentNullException(nameof(files));
+
+            var fileList = files.ToList();
+            if (fileList.Count == 0) return;
+
+            using var ctx = CreateContext();
+            
+            // Performance-Optimierungen für Bulk-Insert
+            ctx.ChangeTracker.AutoDetectChangesEnabled = false;
+            
+            ctx.FileEntities.AddRange(fileList);
+            ctx.SaveChanges();
+            
+            ctx.ChangeTracker.AutoDetectChangesEnabled = true;
         }
     }
 }

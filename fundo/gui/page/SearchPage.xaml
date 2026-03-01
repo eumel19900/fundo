@@ -34,7 +34,6 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <src:LocationControl Grid.Column="0" x:Name="LocationControl" SelectedDirectoryChanged="LocationControl_SelectedDirectoryChanged"/>
-                <Button x:Name="OpenConfigureSearchIndexButton"  Grid.Column="1" Content="Index..." Click="OpenConfigureSearchIndexButton_Click"/>
             </Grid>
         </StackPanel>
 

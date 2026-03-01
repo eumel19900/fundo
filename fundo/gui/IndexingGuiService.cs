@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace fundo.gui
 {
-    internal class IndexingService
+    internal class IndexingGuiService
     {
         private CancellationTokenSource? cancellationTokenSource;
         private readonly XamlRoot xamlRoot;
         private readonly DispatcherQueue dispatcherQueue;
         private readonly List<Drive> drivesToIndex;
 
-        public IndexingService(XamlRoot xamlRoot, List<Drive> drivesToIndex)
+        public IndexingGuiService(XamlRoot xamlRoot, List<Drive> drivesToIndex)
         {
             this.xamlRoot = xamlRoot ?? throw new ArgumentNullException(nameof(xamlRoot));
             this.dispatcherQueue = xamlRoot.Content.DispatcherQueue;
@@ -133,6 +133,10 @@ namespace fundo.gui
                 return;
             }
 
+            updateStatus("Deleting index");
+            SearchIndexService searchIndexService = new SearchIndexService();
+            searchIndexService.clearIndex();
+
             int n = 0;
             foreach (var drive in drivesToIndex)
             {
@@ -140,7 +144,8 @@ namespace fundo.gui
 
                 updateStatus($"Indexing drive {drive.DriveLetter}");
 
-                await Task.Delay(1000, cancellationToken);
+               
+                await searchIndexService.UpdateDriveIndexAsync(drive, cancellationToken);
 
                 n++;
                 updateProgress(n);

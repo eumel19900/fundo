@@ -174,10 +174,5 @@ namespace fundo.gui.page
                 }
             }
         }
-
-        private void OpenConfigureSearchIndexButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
