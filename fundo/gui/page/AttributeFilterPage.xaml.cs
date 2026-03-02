@@ -13,9 +13,6 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace fundo.gui;
 
 /// <summary>
@@ -23,9 +20,36 @@ namespace fundo.gui;
 /// </summary>
 public sealed partial class AttributeFilterPage : Page
 {
+  
+
+    // Nur lesender Zugriff auf die Checkbox-Zustände
+
+    public bool FilterByFileAttributesEnabled =>
+        FilterByFileAttributesCheckbox.IsChecked == true;
+
+    public bool IsReadonlyChecked =>
+        ReadonlyCheckbox.IsChecked == true;
+
+    public bool IsHiddenChecked =>
+        HiddenCheckbox.IsChecked == true;
+
+    public bool IsSystemChecked =>
+        SystemCheckbox.IsChecked == true;
+
+    public bool IsArchiveChecked =>
+        ArchiveCheckbox.IsChecked == true;
+
+    public bool IsTempChecked =>
+        TempCheckbox.IsChecked == true;
+
+    public bool IsCompressedChecked =>
+        CompressedCheckbox.IsChecked == true;
+
+    public bool IsEncryptedChecked =>
+        EncryptedCheckbox.IsChecked == true;
+
     public AttributeFilterPage()
     {
         InitializeComponent();
-
     }
 }

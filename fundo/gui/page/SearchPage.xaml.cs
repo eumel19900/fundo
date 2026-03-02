@@ -1,4 +1,6 @@
+using fundo.core;
 using fundo.core.Search;
+using fundo.core.Search.Index;
 using fundo.core.Search.Native;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -12,27 +14,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace fundo.gui.page
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class SearchPage : Page
     {
-        private SearchEngine currentSearchEngine = new NativeSearchEngine();
+        private SearchEngine currentSearchEngine = null;
         private CancellationTokenSource _cts = new();
         private DirectoryInfo rootSearchDirectoryInfo = null;
 
-        //Filter pages
+        // Filter pages
         private DateFilterPage dateFilterPage;
         private AttributeFilterPage attributeFilterPage;
         private FileContentFilterPage fileContentFilterPage;
@@ -44,6 +37,42 @@ namespace fundo.gui.page
 
             LocationControl_SelectedDirectoryChanged(null, null);
             ContentFrame.Navigated += ContentFrame_Navigated;
+            chooseSearchEngine();
+        }
+
+        public void chooseSearchEngine()
+        {
+            if (Settings.UseIndex)
+            {
+                currentSearchEngine = new IndexBasedSearchEngine();
+                SearchEngineInfoBar.Message =
+                    "Fundo is using the index-based searching backend. You may get outdated results. This can be changed in the settings.";
+            }
+            else
+            {
+                currentSearchEngine = new NativeSearchEngine();
+                SearchEngineInfoBar.Message =
+                    "Fundo will search directly in your filesystem. This can be slow. You can change to index based file search in the settings.";
+            }
+
+            SearchEngineInfoBar.Title = "Search engine";
+            SearchEngineInfoBar.IsOpen = true;
+
+            // nach 10 Sekunden automatisch schließen (nicht blocking)
+            _ = AutoCloseSearchEngineInfoBarAsync(TimeSpan.FromSeconds(10));
+        }
+
+        private async Task AutoCloseSearchEngineInfoBarAsync(TimeSpan delay)
+        {
+            try
+            {
+                await Task.Delay(delay);
+                SearchEngineInfoBar.IsOpen = false;
+            }
+            catch
+            {
+                // ignorieren (Seite evtl. schon zerstört)
+            }
         }
 
         private void FilterNavigationView_SelectionChanged(

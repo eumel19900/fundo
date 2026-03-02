@@ -1,4 +1,5 @@
-﻿using System;
+﻿using fundo.core.Search;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;

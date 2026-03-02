@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Channels;
+using fundo.core.Search;
 
 namespace fundo.core.Search.Native
 {

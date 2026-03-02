@@ -90,6 +90,10 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="core\Search\Index\Filter\" />
+  </ItemGroup>
+
     <!-- Publish Properties -->
   <PropertyGroup>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>

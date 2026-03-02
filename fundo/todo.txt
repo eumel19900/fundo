@@ -33,3 +33,4 @@ Bugs/Sonstiges:
 			Muss angepasst werden, damit das wieder geht :-)
 	- SearchPage: Inhalt wird verworfen, wenn der Anwender zurück auf die Seite navigiert
 			(warum wird hier eine neue Instanz der Seite erstellt?)
+	- Die SearchFilter dürfen nicht mit FileInfo-Objekten arbeiten, weil diese bereits auf die Datei zugreifen

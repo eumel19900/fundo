@@ -16,12 +16,18 @@
 
         <CheckBox x:Name="FilterBySizeCheckbox" Content="Filter by filesize" Grid.Row="0"/>
 
-        <StackPanel Spacing="5" Grid.Row="1" Orientation="Horizontal" x:Name="FileSizeTypeCombobox">
-            <ComboBox PlaceholderText="" Header="How to compare" Width="200" SelectedIndex="2">
+        <StackPanel Spacing="5" Grid.Row="1" Orientation="Horizontal">
+            <!-- x:Name hier von StackPanel auf ComboBox verschoben -->
+            <ComboBox x:Name="FileSizeTypeCombobox"
+                      PlaceholderText=""
+                      Header="How to compare"
+                      Width="200"
+                      SelectedIndex="2">
                 <x:String>Equals</x:String>
                 <x:String>Bigger than</x:String>
                 <x:String>Smaller than</x:String>
             </ComboBox>
+
             <NumberBox
                 x:Name="FileSizeValueNumberbox"
                 Header="Filesize in KiB"
