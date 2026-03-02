@@ -85,7 +85,6 @@ namespace fundo.core.Search.Index
 
                 batch.Add(fileEntity);
 
-                // Batch ist voll -> SYNCHRON in DB persistieren
                 if (batch.Count >= batchSize)
                 {
                     SearchIndexStore.AddFilesBulk(batch);
@@ -93,7 +92,6 @@ namespace fundo.core.Search.Index
                 }
             }
 
-            // Restliche Objekte persistieren (falls < 10000)
             if (batch.Count > 0)
             {
                 SearchIndexStore.AddFilesBulk(batch);
