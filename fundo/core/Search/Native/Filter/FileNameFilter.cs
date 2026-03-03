@@ -1,17 +1,19 @@
-﻿using fundo.core.Search.Filter;
+﻿using fundo.core.Search;
 using System;
 using System.IO;
 
-namespace fundo.core.Search.Native
+namespace fundo.core.Search.Native.Filter
 {
-    internal class FileNameFilter : BaseFileNameFilter
+	public class FileNameFilter : SearchFilter
     {
+        private readonly string searchPattern;
+
         public FileNameFilter(string searchPattern)
-            : base(searchPattern)
         {
+            this.searchPattern = searchPattern ?? string.Empty;
         }
 
-        public override bool isAllowed(FileInfo fileInfo)
+		public bool isAllowed(FileInfo fileInfo)
         {
             if (fileInfo == null) return false;
 

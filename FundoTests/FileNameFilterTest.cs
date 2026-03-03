@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using fundo.core.Search.Native;
+using fundo.core.Search.Native.Filter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace fundo.tests.Search.Native
