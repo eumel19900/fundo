@@ -1,4 +1,5 @@
 ﻿using fundo.core.Search;
+using fundo.core.Search.Index.Entity;
 using fundo.core.Search.Native;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,7 +14,6 @@ namespace fundo.core.Search.Index
     {
         public void reset()
         {
-            // Aktuell kein interner Zustand zu resetten.
         }
 
         public async IAsyncEnumerable<SearchResultItem> SearchAsync(
@@ -30,16 +30,14 @@ namespace fundo.core.Search.Index
 
             string rootPath = startDirectory.FullName;
 
-            using var ctx = SearchIndexStore.CreateContext();
+            SearchIndexContext ctx = SearchIndexStore.CreateContext();
 
-            // Alle indexierten Dateien unterhalb des Startpfads holen
-            var query = ctx.FileEntities
+            IQueryable<FileEntity> query = ctx.FileEntities
                 .AsNoTracking()
                 .Where(f => f.Path.StartsWith(rootPath));
 
-            // TODO: SearchFilter (FileNameFilter, DateFilter, ...) index-basiert auswerten.
 
-            await foreach (var entity in query.AsAsyncEnumerable())
+            await foreach (FileEntity entity in query.AsAsyncEnumerable())
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -54,9 +52,11 @@ namespace fundo.core.Search.Index
                     continue;
                 }
 
-                var result = new SearchResultItem(fileInfo);
+                SearchResultItem result = new SearchResultItem(fileInfo);
                 yield return result;
             }
+
+            ctx.Dispose();
         }
     }
 }
