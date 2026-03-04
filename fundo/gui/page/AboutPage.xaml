@@ -36,7 +36,8 @@
                                FontWeight="SemiBold" />
                     <TextBlock Text="Robert Wermuth" />
                     <TextBlock Text="robert.wermuth@gmail.com"
-                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                               Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                               IsTextSelectionEnabled="True" />
                 </StackPanel>
             </StackPanel>
         </Border>
