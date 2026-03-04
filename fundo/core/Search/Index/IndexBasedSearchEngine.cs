@@ -1,4 +1,5 @@
 ﻿using fundo.core.Search;
+using fundo.core.Search.Index.Filter;
 using fundo.core.Search.Index.Entity;
 using fundo.core.Search.Native;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,18 @@ namespace fundo.core.Search.Index
                 .AsNoTracking()
                 .Where(f => f.Path.StartsWith(rootPath));
 
+            
+            if(searchFilters != null && searchFilters.Count > 0)
+            {
+                foreach (var filter in searchFilters)
+                {
+                    if (filter is IndexBasedFilter indexBasedFilter)
+                    {
+                        query = indexBasedFilter.addQuery(query);
+                    }
+                }
+            }
+            
 
             await foreach (FileEntity entity in query.AsAsyncEnumerable())
             {

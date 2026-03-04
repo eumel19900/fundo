@@ -2,6 +2,7 @@ using fundo.core;
 using fundo.core.Search;
 using fundo.core.Search.Index;
 using fundo.core.Search.Native;
+using fundo.core.Search.Native.Filter;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;

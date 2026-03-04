@@ -34,3 +34,5 @@ Bugs/Sonstiges:
 	- SearchPage: Inhalt wird verworfen, wenn der Anwender zurück auf die Seite navigiert
 			(warum wird hier eine neue Instanz der Seite erstellt?)
 	- Die SearchFilter dürfen nicht mit FileInfo-Objekten arbeiten, weil diese bereits auf die Datei zugreifen
+	- FileIconLoader: Refactoring, performance optimierungen. Lazy Loading. Warum werden bilder als png gecacht?
+	- Infomeldung über index darf nur beim Programmstart einmal angezeigt werden, nicht immer wieder

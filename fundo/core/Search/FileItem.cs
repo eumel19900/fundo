@@ -14,6 +14,9 @@ namespace fundo.core.Search
         private DateTime dateModified;
         private DateTime dateLastAccess;
 
+        // List of selected file attributes (e.g. ReadOnly, Hidden, System, ...)
+        public List<FileAttributes> Attributes { get; } = new List<FileAttributes>();
+
         public string FileName
         {
             get => fileName;
@@ -68,6 +71,38 @@ namespace fundo.core.Search
             dateCreated = fileInfo.CreationTime;
             dateModified = fileInfo.LastWriteTime;
             dateLastAccess = fileInfo.LastAccessTime;
+
+            // Map FileInfo.Attributes flags to the attribute list used in the UI.
+            var attrs = fileInfo.Attributes;
+
+            if ((attrs & FileAttributes.ReadOnly) != 0)
+            {
+                Attributes.Add(FileAttributes.ReadOnly);
+            }
+            if ((attrs & FileAttributes.Hidden) != 0)
+            {
+                Attributes.Add(FileAttributes.Hidden);
+            }
+            if ((attrs & FileAttributes.System) != 0)
+            {
+                Attributes.Add(FileAttributes.System);
+            }
+            if ((attrs & FileAttributes.Archive) != 0)
+            {
+                Attributes.Add(FileAttributes.Archive);
+            }
+            if ((attrs & FileAttributes.Temporary) != 0)
+            {
+                Attributes.Add(FileAttributes.Temporary);
+            }
+            if ((attrs & FileAttributes.Compressed) != 0)
+            {
+                Attributes.Add(FileAttributes.Compressed);
+            }
+            if ((attrs & FileAttributes.Encrypted) != 0)
+            {
+                Attributes.Add(FileAttributes.Encrypted);
+            }
         }
     }
 }

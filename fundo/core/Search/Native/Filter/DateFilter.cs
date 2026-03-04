@@ -1,17 +1,22 @@
-﻿using fundo.core.Search.Filter;
+﻿using fundo.core.Search;
 using System;
 using System.IO;
 
-namespace fundo.core.Search.Native
+
+namespace fundo.core.Search.Native.Filter
 {
-    internal class DateFilter : BaseDateFilter
+	internal class DateFilter : SearchFilter
     {
+        private readonly DateTime startTime;
+        private readonly DateTime endTime;
+
         public DateFilter(DateTime startTime, DateTime endTime)
-            : base(startTime, endTime)
         {
+            this.startTime = startTime;
+            this.endTime = endTime;
         }
 
-        public override bool isAllowed(FileInfo fileInfo)
+        public bool isAllowed(FileInfo fileInfo)
         {
             if (fileInfo == null)
             {
