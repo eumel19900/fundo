@@ -26,6 +26,7 @@ namespace fundo.gui.page
         public AboutPage()
         {
             InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
     }
 }

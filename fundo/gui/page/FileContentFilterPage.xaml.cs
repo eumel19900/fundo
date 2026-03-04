@@ -29,5 +29,6 @@ public sealed partial class FileContentFilterPage : Page
     public FileContentFilterPage()
     {
         InitializeComponent();
+        NavigationCacheMode = NavigationCacheMode.Required;
     }
 }

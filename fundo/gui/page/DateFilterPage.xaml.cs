@@ -43,6 +43,7 @@ public sealed partial class DateFilterPage : Page
     public DateFilterPage()
     {
         InitializeComponent();
+        NavigationCacheMode = NavigationCacheMode.Required;
 
         FromDatePicker.Date = new DateTimeOffset(new DateTime(1970, 1, 1));
         ToDatePicker.Date = new DateTimeOffset(new DateTime(2026, 12, 31));

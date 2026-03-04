@@ -1,6 +1,7 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 namespace fundo.gui;
 
@@ -19,6 +20,7 @@ public sealed partial class SizeFilterPage : Page
     public SizeFilterPage()
     {
         InitializeComponent();
+        NavigationCacheMode = NavigationCacheMode.Required;
     }
 
     // Nur lesender Zugriff auf Checkbox, Combobox und NumberBox

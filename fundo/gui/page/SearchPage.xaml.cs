@@ -35,6 +35,7 @@ namespace fundo.gui.page
         public SearchPage()
         {
             InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
 
             LocationControl_SelectedDirectoryChanged(null, null);
             ContentFrame.Navigated += ContentFrame_Navigated;

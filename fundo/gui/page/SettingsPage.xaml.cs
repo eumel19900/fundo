@@ -34,6 +34,7 @@ namespace fundo.gui.page
         public SettingsPage()
         {
             InitializeComponent();
+            NavigationCacheMode = NavigationCacheMode.Required;
 
             drives = DriveUtil.GetDrives();
             this.Unloaded += SettingsPage_Unloaded;
