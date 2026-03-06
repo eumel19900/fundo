@@ -56,40 +56,7 @@ namespace fundo.core.Search.Index
             SearchIndexStore.DeleteAllFiles();
         }
 
-        /// <summary>
-        /// Synchronous version of drive indexing.
-        /// </summary>
-       /* public void UpdateDriveIndex(Drive drive, CancellationToken cancellationToken = default)
-        {
-            StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(drive.NtPath);
-            if (storageDevice == null)
-            {
-                return;
-            }
-            long storageDeviceId = storageDevice.Id;
-            storageDevice = null;
-
-            const int batchSize = 10000;
-            List<FileEntity> batch = new List<FileEntity>(batchSize);
-            long totalFiles = 0;
-
-            // Use synchronous file enumeration
-            DirectoryInfo rootDir = new DirectoryInfo(drive.DriveLetter);
-            if (!rootDir.Exists)
-            {
-                return;
-            }
-
-            EnumerateFilesRecursive(rootDir, batch, ref totalFiles, storageDeviceId, batchSize, cancellationToken);
-
-            // Persist remaining batch
-            if (batch.Count > 0)
-            {
-                SearchIndexStore.AddFilesBulk(batch);
-                batch.Clear();
-            }
-        }*/
-
+       
         private void EnumerateFilesRecursive(
             DirectoryInfo directory,
             List<FileEntity> batch,
@@ -159,10 +126,8 @@ namespace fundo.core.Search.Index
             }
         }
 
-        /// <summary>
-        /// Async version of drive indexing (kept for compatibility).
-        /// </summary>
-        public async Task UpdateDriveIndexAsync(Drive drive, CancellationToken cancellationToken = default)
+
+        public void UpdateDriveIndex(Drive drive, CancellationToken cancellationToken = default)
         {
             StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(drive.NtPath);
             if (storageDevice == null)
@@ -181,9 +146,8 @@ namespace fundo.core.Search.Index
             searchEngine.reset();
             searchEngine.LoadFileIcons = false;
 
-            await foreach (SearchResultItem result in searchEngine.SearchAsync(
+            foreach (SearchResultItem result in searchEngine.Search(
                 new DirectoryInfo(drive.DriveLetter),
-                cancellationToken, 
                 null))
             {
                 FileEntity fileEntity = new FileEntity
@@ -211,17 +175,18 @@ namespace fundo.core.Search.Index
             }
         }
 
-        public void UpdateDriveIndex(Drive drive, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Async version of drive indexing (kept for compatibility with IndexingGuiService).
+        /// </summary>
+        public async Task UpdateDriveIndexAsync(Drive drive, CancellationToken cancellationToken = default)
         {
             StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(drive.NtPath);
             if (storageDevice == null)
             {
-                //drive not found in Database?!
                 return;
             }
             long storageDeviceId = storageDevice.Id;
             storageDevice = null;
-
 
             const int batchSize = 10000;
             List<FileEntity> batch = new List<FileEntity>(batchSize);
@@ -230,8 +195,9 @@ namespace fundo.core.Search.Index
             searchEngine.reset();
             searchEngine.LoadFileIcons = false;
 
-            foreach (SearchResultItem result in searchEngine.Search(
+            await foreach (SearchResultItem result in searchEngine.SearchAsync(
                 new DirectoryInfo(drive.DriveLetter),
+                cancellationToken,
                 null))
             {
                 FileEntity fileEntity = new FileEntity

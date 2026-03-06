@@ -171,7 +171,7 @@ namespace fundo.gui.Job
         /// Updates the progress value. Call from within Execute().
         /// Thread-safe: dispatches to UI thread.
         /// </summary>
-        protected void ReportProgress(double progress)
+        protected void ReportProgress(int progress)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
@@ -184,7 +184,7 @@ namespace fundo.gui.Job
         /// Updates the progress with max value. Call from within Execute().
         /// Thread-safe: dispatches to UI thread.
         /// </summary>
-        protected void ReportProgress(double progress, double maxProgress)
+        protected void ReportProgress(int progress, int maxProgress)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {
@@ -238,7 +238,7 @@ namespace fundo.gui.Job
         /// Updates progress, title and description at once. Call from within Execute().
         /// Thread-safe: dispatches to UI thread.
         /// </summary>
-        protected void ReportStatus(double progress, string title, string description)
+        protected void ReportStatus(int progress, string title, string description)
         {
             _dispatcherQueue.TryEnqueue(() =>
             {

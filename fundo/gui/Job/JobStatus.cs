@@ -9,8 +9,8 @@ namespace fundo.gui.Job
     /// </summary>
     public class JobStatus : INotifyPropertyChanged
     {
-        private double _progress;
-        private double _maxProgress;
+        private int _progress;
+        private int _maxProgress;
         private bool _isIndeterminate;
         private string _title;
         private string _description;
@@ -21,7 +21,7 @@ namespace fundo.gui.Job
         /// <summary>
         /// Current progress value (0 to MaxProgress).
         /// </summary>
-        public double Progress
+        public int Progress
         {
             get => _progress;
             set
@@ -38,7 +38,7 @@ namespace fundo.gui.Job
         /// <summary>
         /// Maximum progress value. Default is 100.
         /// </summary>
-        public double MaxProgress
+        public int MaxProgress
         {
             get => _maxProgress;
             set
@@ -56,7 +56,7 @@ namespace fundo.gui.Job
         /// Progress as percentage (0-100).
         /// </summary>
         public double ProgressPercentage =>
-            _maxProgress > 0 ? (_progress / _maxProgress) * 100.0 : 0.0;
+            _maxProgress > 0 ? ((double)_progress / _maxProgress) * 100.0 : 0.0;
 
         /// <summary>
         /// If true, progress is indeterminate (unknown duration).

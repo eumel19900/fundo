@@ -26,51 +26,7 @@ namespace fundo.gui.Job
 
         protected override void Execute()
         {
-            //if (_drivesToIndex.Count == 0)
-            //{
-            //    ReportStatus("No drives selected", "Please select at least one drive to index.");
-            //    Sleep(2000);
-            //    return;
-            //}
-
-            //SearchIndexService indexService = new();
-
-            //// Wire up progress callback
-            //indexService.OnProgress = (fileCount, description) =>
-            //{
-            //    ReportDescription(description);
-            //};
-
-            //// Clear existing index first
-            //ReportStatus("Preparing", "Clearing existing index...");
-            //indexService.clearIndex();
-
-            ////int driveCount = _drivesToIndex.Count;
-            ////int currentDrive = 0;
-
-            //foreach (Drive drive in _drivesToIndex)
-            //{
-            //    ThrowIfCancellationRequested();
-
-            //    currentDrive++;
-            //    double baseProgress = ((currentDrive - 1) / (double)driveCount) * 100;
-
-            //    ReportProgress(baseProgress, 100);
-            //    ReportStatus($"Indexing drive {drive.DriveLetter}",
-            //        $"Processing drive {currentDrive} of {driveCount}...");
-
-            //    // Index this drive (synchronous)
-            //    indexService.UpdateDriveIndex(drive, CancellationToken);
-
-            //    double endProgress = (currentDrive / (double)driveCount) * 100;
-            //    ReportProgress(endProgress, 100);
-            //}
-
-            //ReportProgress(100, 100);
-            //ReportStatus("Indexing completed", $"Successfully indexed {driveCount} drive(s).");
-
-
-            if (_drivesToIndex.Count == 0)
+           if (_drivesToIndex.Count == 0)
             {
                 ReportStatus("No drives selected", "Please select at least one drive to index.");
                 return;
