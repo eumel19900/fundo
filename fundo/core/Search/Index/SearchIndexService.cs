@@ -56,77 +56,6 @@ namespace fundo.core.Search.Index
             SearchIndexStore.DeleteAllFiles();
         }
 
-       
-        private void EnumerateFilesRecursive(
-            DirectoryInfo directory,
-            List<FileEntity> batch,
-            ref long totalFiles,
-            long storageDeviceId,
-            int batchSize,
-            CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            // Enumerate files in current directory
-            IEnumerable<FileInfo> files;
-            try
-            {
-                files = directory.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
-            }
-            catch (UnauthorizedAccessException) { return; }
-            catch (DirectoryNotFoundException) { return; }
-            catch (IOException) { return; }
-
-            foreach (FileInfo file in files)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                try
-                {
-                    FileEntity fileEntity = new FileEntity
-                    {
-                        FileName = file.Name,
-                        Path = file.FullName,
-                        FileSize = file.Length,
-                        FileDate = file.CreationTime,
-                        StorageDeviceId = storageDeviceId,
-                    };
-
-                    batch.Add(fileEntity);
-                    totalFiles++;
-
-                    if (batch.Count >= batchSize)
-                    {
-                        SearchIndexStore.AddFilesBulk(batch);
-                        batch.Clear();
-                        OnProgress?.Invoke(totalFiles, $"Indexed {totalFiles:N0} files...");
-                    }
-                }
-                catch
-                {
-                    // Skip files that cannot be accessed
-                    continue;
-                }
-            }
-
-            // Recurse into subdirectories
-            IEnumerable<DirectoryInfo> subdirs;
-            try
-            {
-                subdirs = directory.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
-            }
-            catch (UnauthorizedAccessException) { return; }
-            catch (DirectoryNotFoundException) { return; }
-            catch (IOException) { return; }
-
-            foreach (DirectoryInfo subdir in subdirs)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                EnumerateFilesRecursive(subdir, batch, ref totalFiles, storageDeviceId, batchSize, cancellationToken);
-            }
-        }
-
-
         public void UpdateDriveIndex(Drive drive, CancellationToken cancellationToken = default)
         {
             StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(drive.NtPath);
@@ -148,56 +77,6 @@ namespace fundo.core.Search.Index
 
             foreach (SearchResultItem result in searchEngine.Search(
                 new DirectoryInfo(drive.DriveLetter),
-                null))
-            {
-                FileEntity fileEntity = new FileEntity
-                {
-                    FileName = result.FileName,
-                    Path = result.Path,
-                    FileSize = result.FileSize,
-                    FileDate = result.FileDate,
-                    StorageDeviceId = storageDeviceId,
-                };
-
-                batch.Add(fileEntity);
-
-                if (batch.Count >= batchSize)
-                {
-                    SearchIndexStore.AddFilesBulk(batch);
-                    batch.Clear();
-                }
-            }
-
-            if (batch.Count > 0)
-            {
-                SearchIndexStore.AddFilesBulk(batch);
-                batch.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Async version of drive indexing (kept for compatibility with IndexingGuiService).
-        /// </summary>
-        public async Task UpdateDriveIndexAsync(Drive drive, CancellationToken cancellationToken = default)
-        {
-            StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(drive.NtPath);
-            if (storageDevice == null)
-            {
-                return;
-            }
-            long storageDeviceId = storageDevice.Id;
-            storageDevice = null;
-
-            const int batchSize = 10000;
-            List<FileEntity> batch = new List<FileEntity>(batchSize);
-
-            NativeSearchEngine searchEngine = new NativeSearchEngine();
-            searchEngine.reset();
-            searchEngine.LoadFileIcons = false;
-
-            await foreach (SearchResultItem result in searchEngine.SearchAsync(
-                new DirectoryInfo(drive.DriveLetter),
-                cancellationToken,
                 null))
             {
                 FileEntity fileEntity = new FileEntity
