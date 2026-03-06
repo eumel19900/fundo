@@ -4,7 +4,7 @@ using System.IO;
 
 namespace fundo.core.Search.Native.Filter
 {
-	public class FileNameFilter : SearchFilter
+	public class FileNameFilter : NativeSearchFilter
     {
         private readonly string searchPattern;
 

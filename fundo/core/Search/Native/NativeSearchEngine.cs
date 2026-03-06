@@ -17,6 +17,8 @@ namespace fundo.core.Search.Native
 
         public int DirectoriesSearched { get => directoriesSearched; }
 
+        public SearchEngine.EngineType Kind => SearchEngine.EngineType.Native;
+
         public Boolean LoadFileIcons { get; set; } = true;
 
         public void reset()
@@ -82,7 +84,7 @@ namespace fundo.core.Search.Native
                                 {
                                     foreach (var filter in searchFilters)
                                     {
-                                        if (!filter.isAllowed(file))
+                                        if (filter is NativeSearchFilter nativeFilter && !nativeFilter.isAllowed(file))
                                         {
                                             allowed = false;
                                             break;
@@ -159,7 +161,7 @@ namespace fundo.core.Search.Native
         }
 
         public List<SearchResultItem> Search(DirectoryInfo startDirectory,
-            List<SearchFilter> searchFilters)
+            List<NativeSearchFilter> searchFilters)
         {
             List<SearchResultItem> resultList = new List<SearchResultItem>();
             if (startDirectory == null || !startDirectory.Exists)

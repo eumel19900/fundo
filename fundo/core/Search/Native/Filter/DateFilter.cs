@@ -5,7 +5,7 @@ using System.IO;
 
 namespace fundo.core.Search.Native.Filter
 {
-	internal class DateFilter : SearchFilter
+	internal class DateFilter : NativeSearchFilter
     {
         private readonly DateTime startTime;
         private readonly DateTime endTime;

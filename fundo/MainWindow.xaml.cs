@@ -72,9 +72,9 @@ namespace fundo
             }
             finally
             {
-                if (Content is FrameworkElement root2)
+                if (Content is FrameworkElement root)
                 {
-                    root2.Loaded -= MainWindow_Loaded;
+                    root.Loaded -= MainWindow_Loaded;
                 }
             }
         }

@@ -13,6 +13,8 @@ namespace fundo.core.Search.Index
 {
     internal class IndexBasedSearchEngine : SearchEngine
     {
+        public SearchEngine.EngineType Kind => SearchEngine.EngineType.IndexBased;
+
         public void reset()
         {
         }

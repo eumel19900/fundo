@@ -1,6 +1,7 @@
 using fundo.core;
 using fundo.core.Search;
 using fundo.core.Search.Index;
+using fundo.core.Search.Index.Filter;
 using fundo.core.Search.Native;
 using fundo.core.Search.Native.Filter;
 using Microsoft.UI.Xaml;
@@ -25,6 +26,7 @@ namespace fundo.gui.page
         private SearchEngine currentSearchEngine = null;
         private CancellationTokenSource _cts = new();
         private DirectoryInfo rootSearchDirectoryInfo = null;
+        private List<SearchFilter> filters = new List<SearchFilter>();
 
         // Filter pages
         private DateFilterPage dateFilterPage;
@@ -124,8 +126,38 @@ namespace fundo.gui.page
             }
         }
 
+
         private async void SeachButton_Clicked(object sender, RoutedEventArgs e)
         {
+            if(currentSearchEngine == null)
+            {
+                return;
+            }
+
+
+            //Setup filters
+            filters.Clear();
+            switch (currentSearchEngine.Kind)
+            {
+                case SearchEngine.EngineType.Native:
+                    if (SearchPatternTextBox.Text != "")
+                    {
+                        filters.Add(new FileNameFilter(SearchPatternTextBox.Text));
+                    }
+                    if (dateFilterPage.DateFilterEnabled)
+                    {
+                        filters.Add(new DateFilter(dateFilterPage.startTime, dateFilterPage.endTime));
+                    }
+                    break;
+
+                case SearchEngine.EngineType.IndexBased:
+                    if (SearchPatternTextBox.Text != "")
+                    {
+                        filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text));
+                    }
+                    break;
+            }
+
             await StartSearchAsync();
         }
 
@@ -134,21 +166,10 @@ namespace fundo.gui.page
             SearchInfoTextBlock.Text = "Searching...";
             SearchButton.IsEnabled = false;
             currentSearchEngine.reset();
-            List<SearchFilter> searchFilters = new();
-
-            if (SearchPatternTextBox.Text != "")
-            {
-                searchFilters.Add(new FileNameFilter(SearchPatternTextBox.Text));
-            }
-
-            if (dateFilterPage.DateFilterEnabled)
-            {
-                searchFilters.Add(new DateFilter(dateFilterPage.startTime, dateFilterPage.endTime));
-            }
 
             ObservableCollection<SearchResultItem> searchResults = new ObservableCollection<SearchResultItem>();
             SearchResultListView.ItemsSource = searchResults;
-            await foreach (SearchResultItem result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token, searchFilters))
+            await foreach (SearchResultItem result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token, filters))
             {
                 searchResults.Add(result);
                 if (currentSearchEngine is NativeSearchEngine)

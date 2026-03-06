@@ -92,10 +92,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="core\Search\Filter\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Update="gui\Job\JobStatusBar.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
