@@ -7,6 +7,7 @@ using fundo.tool;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Windows.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -45,13 +46,16 @@ namespace fundo
         public MainWindow()
         {
             InitializeComponent();
+            AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
+
+
             // Defer sizing until the window content is loaded so UI elements (like NavigationView) are available
             if (Content is FrameworkElement root)
             {
                 root.Loaded += MainWindow_Loaded;
             }
         }
-        
+
 
         private void MainWindow_Loaded(object? sender, RoutedEventArgs e)
         {
