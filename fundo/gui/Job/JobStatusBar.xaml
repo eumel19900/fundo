@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="fundo.gui.Job.JobStatusBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:fundo.gui.Job"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="RootGrid"
+          Background="{ThemeResource LayerFillColorDefaultBrush}"
+          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+          BorderThickness="0,1,0,0"
+          Padding="12,8"
+          Visibility="Collapsed">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Progress indicator -->
+        <ProgressRing x:Name="StatusProgressRing"
+                      Grid.Column="0"
+                      Width="20"
+                      Height="20"
+                      IsActive="False"
+                      Margin="0,0,12,0"/>
+
+        <!-- Status text -->
+        <StackPanel Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Spacing="2">
+            <TextBlock x:Name="TitleTextBlock"
+                       Text="Working..."
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       TextTrimming="CharacterEllipsis"/>
+            <TextBlock x:Name="DescriptionTextBlock"
+                       Text=""
+                       FontSize="11"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       TextTrimming="CharacterEllipsis"/>
+        </StackPanel>
+
+        <!-- Progress bar -->
+        <ProgressBar x:Name="StatusProgressBar"
+                     Grid.Column="2"
+                     Width="150"
+                     Minimum="0"
+                     Maximum="100"
+                     Value="0"
+                     IsIndeterminate="False"
+                     VerticalAlignment="Center"
+                     Margin="12,0"/>
+
+        <!-- Cancel button -->
+        <Button x:Name="CancelButton"
+                Grid.Column="3"
+                Click="CancelButton_Click"
+                ToolTipService.ToolTip="Cancel operation"
+                Padding="8,4">
+            <SymbolIcon Symbol="Cancel" />
+        </Button>
+    </Grid>
+</UserControl>

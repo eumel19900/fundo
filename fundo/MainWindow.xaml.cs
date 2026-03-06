@@ -1,6 +1,7 @@
 using fundo.core.Search;
 using fundo.core.Search.Native;
 using fundo.gui;
+using fundo.gui.Job;
 using fundo.gui.page;
 using fundo.tool;
 using Microsoft.UI;
@@ -56,8 +57,11 @@ namespace fundo
         {
             try
             {
-                if (Content is FrameworkElement)
+                if (Content is FrameworkElement root)
                 {
+                    // Initialize JobScheduler with XamlRoot for dialogs
+                    JobScheduler.Instance.Initialize(root.XamlRoot);
+
                     // Use the helper to place and size the window in a DPI-aware way
                     WindowPlacementHelper.PlacePortraitWindowEnsureNavTabsVisible(this, AppWindow, FilterNavigationView, 0.8);
                 }

@@ -21,6 +21,7 @@
     <None Remove="gui\page\SearchPage.xaml" />
     <None Remove="gui\page\SettingsPage.xaml" />
     <None Remove="gui\SizeFilterPage.xaml" />
+    <None Remove="gui\Job\JobStatusBar.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fundo.ico" />
@@ -92,6 +93,12 @@
 
   <ItemGroup>
     <Folder Include="core\Search\Filter\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="gui\Job\JobStatusBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
     <!-- Publish Properties -->

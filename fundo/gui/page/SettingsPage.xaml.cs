@@ -1,5 +1,6 @@
 using fundo.core;
 using fundo.core.Search.Index;
+using fundo.gui.Job;
 using fundo.tool;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -80,9 +81,16 @@ namespace fundo.gui.page
 
         private async void StartIndexingButton_Click(object sender, RoutedEventArgs e)
         {
-            var progressDialog = new IndexingGuiService(this.XamlRoot, drives);
+            /*var progressDialog = new IndexingGuiService(this.XamlRoot, drives);
             new SearchIndexService().updateDriveList(drives);
-            await progressDialog.StartIndexingAsync();
+            await progressDialog.StartIndexingAsync();*/
+
+            DriveIndexingJob job = new DriveIndexingJob(drives)
+            {
+                Priority = JobPriority.Normal,
+                BlocksUI = true
+            };
+            await JobScheduler.Instance.ScheduleAndWaitAsync(job);
         }
     }
 }

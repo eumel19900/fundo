@@ -1,0 +1,15 @@
+﻿Über Claude-Opus 4.5:
+Ich benötige eine Abstraktionsschicht bzw ein Framework für langlaufende Fordergrundprozesse/Vorgänge. Im Kontext von diesem Projekt geht es um langlaufende rekursive Dateisuchen bzw. um Laufwerksindizierungen. 
+Die Abstraktionsschicht soll als bessere Alternative zu dem C#-eigenem Async/Await-Mechanismus fungieren.
+
+An die Abstraktionsschicht habe ich folgende Anforderungen:
+ - Ich möchte langlaufende Vorgänge schedulen können (mit Priorität, und mit einem Flag zum optionalem Blocken der UI)
+ - Der langlaufende Vorgang soll den UI-Thread nicht blockieren
+ - Der langlaufende Vorgang setzt über die Abstraktionsschicht folgende Statusinformationen: 1. Fortschritt, 2. Aufgabenbezeichnung, 3. Detailierte Aufgabenbezeichnung
+ - Der Anwender kann den Vorgang abbrechen. Langlaufende vorgänge müssen auf den Wunsch des Anwenders abzubrechen reagieren können.
+ - In der Oberfläche soll wahlweise ein blockierender Dialog (im Fordergrund von MainWindow) den Fortschritt und die Statusmeldungen anzeigen
+ - Oder der langlaufende Vorgang läuft im Hintergrund und der Fortschritt und die Statusmeldungen werden dezent im MainWindow der Anwendung angzeigt (z.b. in als Statuszeile). Es handelt sich um eine WinUI3-basierte Anwendung. Das Konzept zur Fortschrittsanzeige im Hintergrund soll als Stil zu einer modernen WinUI3-basierten Anwendung passen
+
+Programmiere alles in Englisch
+Erstelle diese Abstraktionsschicht für mich.
+Lege die erforderlichen Klassen unter gui/Job/ an.

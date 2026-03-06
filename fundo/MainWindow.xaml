@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:src="using:fundo.gui.control" xmlns:model="using:fundo.core.Search"
+    xmlns:job="using:fundo.gui.Job"
     mc:Ignorable="d"
     Title="Fundo">
 
@@ -15,7 +16,12 @@
     </Window.SystemBackdrop>
 
 
-    <Grid >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
         <NavigationView Grid.Row="0"
              x:Name="FilterNavigationView"
              PaneDisplayMode="LeftMinimal"
@@ -39,6 +45,9 @@
 
             <Frame x:Name="MainWindowContentFrame" Margin="32,0,0,0"/>
         </NavigationView>
+
+        <!-- Job status bar for background operations -->
+        <job:JobStatusBar Grid.Row="1" x:Name="MainJobStatusBar"/>
     </Grid>
 
 </Window>

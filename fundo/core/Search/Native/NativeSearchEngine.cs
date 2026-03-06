@@ -157,5 +157,89 @@ namespace fundo.core.Search.Native
                 try { await produceTask.ConfigureAwait(false); } catch { }
             }
         }
+
+        public List<SearchResultItem> Search(DirectoryInfo startDirectory,
+            List<SearchFilter> searchFilters)
+        {
+            List<SearchResultItem> resultList = new List<SearchResultItem>();
+            if (startDirectory == null || !startDirectory.Exists)
+            {
+                return null;
+            }
+
+
+            var directoriesStack = new Stack<DirectoryInfo>();
+            directoriesStack.Push(startDirectory);
+
+            while (directoriesStack.Count > 0)
+            {
+
+                var dir = directoriesStack.Pop();
+                directoriesSearched++;
+
+                IEnumerable<FileInfo> files = null;
+                try
+                {
+                    files = dir.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
+                }
+                catch (UnauthorizedAccessException) { continue; }
+                catch (DirectoryNotFoundException) { continue; }
+                catch (IOException) { continue; }
+
+                foreach (var file in files)
+                {
+                    bool allowed = true;
+
+                    // Nur filtern wenn searchFilters vorhanden sind
+                    if (searchFilters != null && searchFilters.Count > 0)
+                    {
+                        try
+                        {
+                            foreach (var filter in searchFilters)
+                            {
+                                if (!filter.isAllowed(file))
+                                {
+                                    allowed = false;
+                                    break;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // if a filter throws, treat as not allowed
+                            allowed = false;
+                        }
+                    }
+
+                    if (!allowed) continue;
+
+                    try
+                    {
+                        resultList.Add(new SearchResultItem(file, LoadFileIcons));
+                    }
+                    catch
+                    {
+                        // ignore file-specific failures
+                        continue;
+                    }
+                }
+
+                // push subdirectories
+                IEnumerable<DirectoryInfo> subdirs = null;
+                try
+                {
+                    subdirs = dir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
+                }
+                catch (UnauthorizedAccessException) { continue; }
+                catch (DirectoryNotFoundException) { continue; }
+                catch (IOException) { continue; }
+
+                foreach (var sd in subdirs)
+                {
+                    directoriesStack.Push(sd);
+                }
+            }
+            return resultList;
+        }
     }
 }
