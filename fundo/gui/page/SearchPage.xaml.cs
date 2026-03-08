@@ -159,6 +159,15 @@ namespace fundo.gui.page
                     {
                         filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text));
                     }
+                    if (dateFilterPage.DateFilterEnabled)
+                    {
+                        filters.Add(new IndexBasedDateFilter(
+                            dateFilterPage.startTime,
+                            dateFilterPage.endTime,
+                            dateFilterPage.CreationTimeEnabled,
+                            dateFilterPage.ModifiedTimeEnabled,
+                            dateFilterPage.LastAccessTimeEnabled));
+                    }
                     break;
             }
 
