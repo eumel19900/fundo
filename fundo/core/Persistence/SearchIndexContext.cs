@@ -1,14 +1,13 @@
 using Microsoft.EntityFrameworkCore;
-using System;
-using fundo.core.Search.Index.Entity;
+using fundo.core.Persistence.Entity;
 
-namespace fundo.core.Search.Index
+namespace fundo.core.Persistence
 {
     internal class SearchIndexContext : DbContext
     {
         public DbSet<FileEntity> FileEntities { get; set; } = null!;
         public DbSet<StorageDevice> StorageDevices { get; set; } = null!;
-        public DbSet<ConfigEntry> ConfigEntries { get; set; } = null!;
+        public DbSet<PropertyEntry> PropertyEntries { get; set; } = null!;
 
         public SearchIndexContext(DbContextOptions<SearchIndexContext> options) : base(options)
         {
@@ -31,8 +30,12 @@ namespace fundo.core.Search.Index
                 .HasForeignKey(f => f.StorageDeviceId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            file.HasIndex(f => new { f.FileName, f.FileType, f.FileDate })
-                .HasDatabaseName("IX_FileEntity_SearchFields");
+            file.HasIndex(f => f.FileName)
+                .HasDatabaseName("IX_FileEntity_FileName");
+            file.HasIndex(f => f.FileType)
+                .HasDatabaseName("IX_FileEntity_FileType");
+            file.HasIndex(f => f.FileDate)
+                .HasDatabaseName("IX_FileEntity_FileDate");
 
 
             // StorageDevice
@@ -45,14 +48,14 @@ namespace fundo.core.Search.Index
             storage.HasIndex(d => d.Id).HasDatabaseName("IX_StorageDevice_Id");
             storage.HasIndex(d => d.StorageName).HasDatabaseName("IX_StorageDevice_StorageName");
 
-            
-            // Config
-            var config = modelBuilder.Entity<ConfigEntry>();
-            config.HasKey(c => c.Id);
-            config.Property(c => c.Id).ValueGeneratedOnAdd();
-            config.Property(c => c.Key).IsRequired();
-            config.Property(c => c.Value).HasMaxLength(260).IsRequired();
-            config.HasIndex(c => c.Key).HasDatabaseName("IX_ConfigEntry_Key");
+
+            // PropertyEntry
+            var property = modelBuilder.Entity<PropertyEntry>();
+            property.HasKey(c => c.Id);
+            property.Property(c => c.Id).ValueGeneratedOnAdd();
+            property.Property(c => c.Key).IsRequired();
+            property.Property(c => c.Value).HasMaxLength(260).IsRequired();
+            property.HasIndex(c => c.Key).HasDatabaseName("IX_PropertyEntry_Key");
         }
     }
 }

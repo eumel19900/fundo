@@ -1,8 +1,4 @@
-﻿using fundo.core.Search.Index;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Windows.Media.AppBroadcasting;
+﻿using fundo.core.Persistence;
 
 namespace fundo.core
 {

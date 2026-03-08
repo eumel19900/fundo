@@ -1,5 +1,4 @@
 using fundo.core.Search;
-using fundo.core.Search.Native;
 using fundo.gui;
 using fundo.gui.Job;
 using fundo.gui.page;

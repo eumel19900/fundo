@@ -1,10 +1,10 @@
-﻿using fundo.core.Search.Index;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using fundo.core.Search.Index.Entity;
+using fundo.core.Persistence;
+using fundo.core.Persistence.Entity;
 
 namespace fundo.tool
 {

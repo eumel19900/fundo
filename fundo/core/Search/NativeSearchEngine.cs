@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Threading.Channels;
 using fundo.core.Search;
 
-namespace fundo.core.Search.Native
+namespace fundo.core.Search
 {
     internal class NativeSearchEngine : SearchEngine
     {

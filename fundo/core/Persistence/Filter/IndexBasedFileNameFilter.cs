@@ -1,10 +1,8 @@
-﻿using fundo.core.Search;
-using fundo.core.Search.Index.Entity;
+﻿using fundo.core.Persistence.Entity;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 
-namespace fundo.core.Search.Index.Filter
+namespace fundo.core.Persistence.Filter
 {
     internal class IndexBasedFileNameFilter : IndexBasedFilter
     {

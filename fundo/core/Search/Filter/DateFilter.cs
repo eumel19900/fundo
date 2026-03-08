@@ -1,9 +1,9 @@
-﻿using fundo.core.Search;
+﻿using fundo.core.Search.Filter;
 using System;
 using System.IO;
 
 
-namespace fundo.core.Search.Native.Filter
+namespace fundo.core.Search.Filter
 {
 	internal class DateFilter : NativeSearchFilter
     {

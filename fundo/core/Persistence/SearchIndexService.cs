@@ -1,14 +1,16 @@
-﻿using fundo.core.Search.Index.Entity;
-using fundo.core.Search.Native;
+﻿using fundo;
+using fundo.core;
+using fundo.core.Persistence;
+using fundo.core.Persistence.Entity;
+using fundo.core.Search;
 using fundo.tool;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-namespace fundo.core.Search.Index
+namespace fundo.core.Persistence
 {
     internal class SearchIndexService
     {

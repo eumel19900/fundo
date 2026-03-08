@@ -1,11 +1,10 @@
-using System;
 
-namespace fundo.core.Search.Index.Entity
+namespace fundo.core.Persistence.Entity
 {
     /// <summary>
     /// Simple key/value pair used to persist configuration values for the search index.
     /// </summary>
-    internal class ConfigEntry
+    internal class PropertyEntry
     {
         // Primary key - identity/auto-increment column
         public long Id { get; set; }
@@ -16,11 +15,11 @@ namespace fundo.core.Search.Index.Entity
         // Stored configuration value, limited to 260 characters in the database.
         public string Value { get; set; } = string.Empty;
 
-        public ConfigEntry()
+        public PropertyEntry()
         {
         }
 
-        public ConfigEntry(string key, string value)
+        public PropertyEntry(string key, string value)
         {
             Key = key;
             Value = value;

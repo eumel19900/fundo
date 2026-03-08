@@ -1,5 +1,5 @@
 using fundo.core;
-using fundo.core.Search.Index;
+using fundo.core.Persistence;
 using fundo.gui.Job;
 using fundo.tool;
 using Microsoft.UI.Xaml;

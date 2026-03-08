@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using System.Linq;
-using fundo.core.Search.Index.Entity;
 using Windows.Storage;
 using System.Collections.Generic;
+using fundo.core.Persistence.Entity;
 
-namespace fundo.core.Search.Index
+namespace fundo.core.Persistence
 {
     /// <summary>
     /// Manages the SQLite-backed search index using Entity Framework Core.
@@ -50,7 +50,7 @@ namespace fundo.core.Search.Index
             if (string.IsNullOrWhiteSpace(key)) return null;
 
             using var ctx = CreateContext();
-            var entry = ctx.ConfigEntries
+            var entry = ctx.PropertyEntries
                 .AsNoTracking()
                 .FirstOrDefault(c => c.Key == key);
 
@@ -63,11 +63,11 @@ namespace fundo.core.Search.Index
 
             using var ctx = CreateContext();
 
-            var entry = ctx.ConfigEntries.FirstOrDefault(c => c.Key == key);
+            var entry = ctx.PropertyEntries.FirstOrDefault(c => c.Key == key);
             if (entry == null)
             {
-                entry = new ConfigEntry(key, value);
-                ctx.ConfigEntries.Add(entry);
+                entry = new PropertyEntry(key, value);
+                ctx.PropertyEntries.Add(entry);
             }
             else
             {

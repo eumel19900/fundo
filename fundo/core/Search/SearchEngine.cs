@@ -1,12 +1,9 @@
-﻿using fundo.core.Search;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 
-namespace fundo.core.Search.Native
+namespace fundo.core.Search
 {
     internal interface SearchEngine
     {

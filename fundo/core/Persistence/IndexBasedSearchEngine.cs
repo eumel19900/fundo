@@ -1,15 +1,12 @@
 ﻿using fundo.core.Search;
-using fundo.core.Search.Index.Filter;
-using fundo.core.Search.Index.Entity;
-using fundo.core.Search.Native;
+using fundo.core.Persistence.Filter;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
+using fundo.core.Persistence.Entity;
 
-namespace fundo.core.Search.Index
+namespace fundo.core.Persistence
 {
     internal class IndexBasedSearchEngine : SearchEngine
     {

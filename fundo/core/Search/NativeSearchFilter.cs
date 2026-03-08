@@ -1,12 +1,4 @@
-﻿using fundo;
-using fundo.core;
-using fundo.core.Search;
-using fundo.core.Search;
-using fundo.core.Search.Native;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
 namespace fundo.core.Search
 {

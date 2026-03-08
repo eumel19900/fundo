@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace fundo.core.Search.Index.Entity
+namespace fundo.core.Persistence.Entity
 {
     internal class FileEntity
     {

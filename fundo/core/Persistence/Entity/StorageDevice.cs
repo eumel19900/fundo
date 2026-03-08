@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace fundo.core.Search.Index.Entity
+namespace fundo.core.Persistence.Entity
 {
     /// <summary>
     /// Represents a physical or logical storage device (e.g. NT device name or network drive).

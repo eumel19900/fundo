@@ -1,9 +1,8 @@
 using fundo.core;
+using fundo.core.Persistence;
+using fundo.core.Persistence.Filter;
 using fundo.core.Search;
-using fundo.core.Search.Index;
-using fundo.core.Search.Index.Filter;
-using fundo.core.Search.Native;
-using fundo.core.Search.Native.Filter;
+using fundo.core.Search.Filter;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -127,7 +126,7 @@ namespace fundo.gui.page
         }
 
 
-        private async void SeachButton_Clicked(object sender, RoutedEventArgs e)
+        private async void SearchButton_Clicked(object sender, RoutedEventArgs e)
         {
             if(currentSearchEngine == null)
             {
@@ -157,6 +156,7 @@ namespace fundo.gui.page
                     }
                     break;
             }
+
 
             await StartSearchAsync();
         }

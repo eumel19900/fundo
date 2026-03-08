@@ -67,7 +67,7 @@
                 <TextBlock x:Name="SearchInfoTextBlock"
                            VerticalAlignment="Center"/>
                 <Button x:Name="SearchButton"
-                        Click="SeachButton_Clicked"
+                        Click="SearchButton_Clicked"
                         Content="Start search"
                         HorizontalAlignment="Right"
                         Padding="20,8"/>

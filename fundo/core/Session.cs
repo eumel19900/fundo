@@ -1,7 +1,5 @@
 using System;
-using fundo;
-using fundo.core;
-using fundo.core.Search.Index;
+using fundo.core.Persistence;
 
 namespace fundo.core
 {
