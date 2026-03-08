@@ -14,6 +14,10 @@
                         DateChanged="InnerDatePicker_DateChanged" />
             <TimePicker x:Name="InnerTimePicker"
                         TimeChanged="InnerTimePicker_TimeChanged" />
+            <Button Click="SetCurrentDateTimeButton_Click"
+                    ToolTipService.ToolTip="Set current date and time">
+                <SymbolIcon Symbol="Clock" />
+            </Button>
         </StackPanel>
     </Grid>
 </UserControl>

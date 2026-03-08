@@ -102,6 +102,13 @@ namespace fundo.gui.control
             UpdateTimeFromControls();
         }
 
+        private void SetCurrentDateTimeButton_Click(object sender, RoutedEventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            ApplyDateTimeToControls(now);
+            Time = now;
+        }
+
         private void UpdateTimeFromControls()
         {
             if (isUpdatingControls)
