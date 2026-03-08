@@ -145,7 +145,12 @@ namespace fundo.gui.page
                     }
                     if (dateFilterPage.DateFilterEnabled)
                     {
-                        filters.Add(new DateFilter(dateFilterPage.startTime, dateFilterPage.endTime));
+                        filters.Add(new DateFilter(
+                            dateFilterPage.startTime,
+                            dateFilterPage.endTime,
+                            dateFilterPage.CreationTimeEnabled,
+                            dateFilterPage.ModifiedTimeEnabled,
+                            dateFilterPage.LastAccessTimeEnabled));
                     }
                     break;
 

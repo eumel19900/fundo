@@ -15,6 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="gui\AttributeFilterPage.xaml" />
+    <None Remove="gui\control\DateTimePicker.xaml" />
     <None Remove="gui\control\LocationControl.xaml" />
     <None Remove="gui\DateFilterPage.xaml" />
     <None Remove="gui\page\AboutPage.xaml" />
@@ -81,6 +82,12 @@
 
   <ItemGroup>
     <Page Update="gui\page\SearchPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="gui\control\DateTimePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

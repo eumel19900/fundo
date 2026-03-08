@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:fundo.gui"
+    xmlns:src="using:fundo.gui.control"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -13,18 +14,26 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
          </Grid.RowDefinitions>
        
-        <CheckBox x:Name="FilterByDateCheckbox" Content="Filter by date" Grid.Row="0"/>
+        <StackPanel Spacing="8" Grid.Row="0" Orientation="Horizontal">
+            <CheckBox x:Name="FilterByDateCheckbox" Content="Filter by time" />
+            <ComboBox x:Name="DateTypeComboBox" SelectedIndex="0" Width="180">
+                <x:String>CreationTime</x:String>
+                <x:String>ModifiedTime</x:String>
+                <x:String>LastAccessTime</x:String>
+            </ComboBox>
+        </StackPanel>
 
-        <StackPanel Spacing="5" Grid.Row="1" Orientation="Horizontal">
-            <DatePicker x:Name="FromDatePicker" Header="From date" />
-            <TimePicker x:Name="FromTimePicker" Header="From time" Time="0:00:00"/>
+        <StackPanel Spacing="5" Grid.Row="1">
+            <TextBlock Text="From" />
+            <src:DateTimePicker x:Name="FromDateTimePicker" />
         </StackPanel>
         
-        <StackPanel Spacing="5" Grid.Row="2" Orientation="Horizontal">
-            <DatePicker x:Name="ToDatePicker" Header="To date" />
-            <TimePicker x:Name="ToTimePicker" Header="To time" Time="23:59:59" />
+        <StackPanel Spacing="5" Grid.Row="2">
+            <TextBlock Text="To" />
+            <src:DateTimePicker x:Name="ToDateTimePicker" />
         </StackPanel>
     </Grid>
 </Page>

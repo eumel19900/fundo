@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using fundo.gui.control;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -24,11 +25,15 @@ namespace fundo.gui;
 public sealed partial class DateFilterPage : Page
 {
     public bool DateFilterEnabled => FilterByDateCheckbox.IsChecked == true;
+    public bool CreationTimeEnabled => DateTypeComboBox.SelectedIndex == 0;
+    public bool ModifiedTimeEnabled => DateTypeComboBox.SelectedIndex == 1;
+    public bool LastAccessTimeEnabled => DateTypeComboBox.SelectedIndex == 2;
+
     public DateTime startTime
     {
         get
         {
-            return new DateTime(DateOnly.FromDateTime(FromDatePicker.Date.LocalDateTime), TimeOnly.FromTimeSpan(FromTimePicker.Time));
+            return FromDateTimePicker.Time;
         }
     }
 
@@ -36,7 +41,7 @@ public sealed partial class DateFilterPage : Page
     {
         get
         {
-            return new DateTime(DateOnly.FromDateTime(ToDatePicker.Date.LocalDateTime), TimeOnly.FromTimeSpan(ToTimePicker.Time));
+            return ToDateTimePicker.Time;
         }
     }
 
@@ -45,7 +50,8 @@ public sealed partial class DateFilterPage : Page
         InitializeComponent();
         NavigationCacheMode = NavigationCacheMode.Required;
 
-        FromDatePicker.Date = new DateTimeOffset(new DateTime(1970, 1, 1));
-        ToDatePicker.Date = new DateTimeOffset(new DateTime(2026, 12, 31));
+        FromDateTimePicker.DefaultTime = new DateTime(1970, 1, 1, 0, 0, 0);
+        ToDateTimePicker.DefaultTime = new DateTime(2026, 12, 31, 23, 59, 59);
+        DateTypeComboBox.SelectedIndex = 0;
     }
 }
