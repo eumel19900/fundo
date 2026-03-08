@@ -19,7 +19,10 @@
        
         <StackPanel Spacing="8" Grid.Row="0" Orientation="Horizontal">
             <CheckBox x:Name="FilterByDateCheckbox" Content="Filter by time" />
-            <ComboBox x:Name="DateTypeComboBox" SelectedIndex="0" Width="180">
+            <ComboBox x:Name="DateTypeComboBox"
+                      SelectedIndex="0"
+                      Width="180"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByDateCheckbox}">
                 <x:String>CreationTime</x:String>
                 <x:String>ModifiedTime</x:String>
                 <x:String>LastAccessTime</x:String>
@@ -28,12 +31,14 @@
 
         <StackPanel Spacing="5" Grid.Row="1">
             <TextBlock Text="From" />
-            <src:DateTimePicker x:Name="FromDateTimePicker" />
+            <src:DateTimePicker x:Name="FromDateTimePicker"
+                                IsEnabled="{Binding IsChecked, ElementName=FilterByDateCheckbox}" />
         </StackPanel>
         
         <StackPanel Spacing="5" Grid.Row="2">
             <TextBlock Text="To" />
-            <src:DateTimePicker x:Name="ToDateTimePicker" />
+            <src:DateTimePicker x:Name="ToDateTimePicker"
+                                IsEnabled="{Binding IsChecked, ElementName=FilterByDateCheckbox}" />
         </StackPanel>
     </Grid>
 </Page>

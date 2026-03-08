@@ -18,16 +18,30 @@
         <CheckBox x:Name="FilterByFileAttributesCheckbox" Content="Filter by file attributes" Grid.Row="0"/>
 
         <StackPanel Spacing="5" Grid.Row="1" Orientation="Horizontal">
-            <CheckBox x:Name="ReadonlyCheckbox" Content="Readonly" />
-            <CheckBox x:Name="HiddenCheckbox" Content="Hidden" />
-            <CheckBox x:Name="SystemCheckbox" Content="System" />
-            <CheckBox x:Name="ArchiveCheckbox" Content="Archive" />
+            <CheckBox x:Name="ReadonlyCheckbox"
+                      Content="Readonly"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByFileAttributesCheckbox}" />
+            <CheckBox x:Name="HiddenCheckbox"
+                      Content="Hidden"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByFileAttributesCheckbox}" />
+            <CheckBox x:Name="SystemCheckbox"
+                      Content="System"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByFileAttributesCheckbox}" />
+            <CheckBox x:Name="ArchiveCheckbox"
+                      Content="Archive"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByFileAttributesCheckbox}" />
         </StackPanel>
 
         <StackPanel Spacing="5" Grid.Row="2" Orientation="Horizontal">
-            <CheckBox x:Name="TempCheckbox" Content="Temporary" />
-            <CheckBox x:Name="CompressedCheckbox" Content="Compressed" />
-            <CheckBox x:Name="EncryptedCheckbox" Content="Encrypted" />
+            <CheckBox x:Name="TempCheckbox"
+                      Content="Temporary"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByFileAttributesCheckbox}" />
+            <CheckBox x:Name="CompressedCheckbox"
+                      Content="Compressed"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByFileAttributesCheckbox}" />
+            <CheckBox x:Name="EncryptedCheckbox"
+                      Content="Encrypted"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByFileAttributesCheckbox}" />
         </StackPanel>
     </Grid>
 </Page>

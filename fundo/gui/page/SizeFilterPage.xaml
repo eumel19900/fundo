@@ -22,7 +22,8 @@
                       PlaceholderText=""
                       Header="How to compare"
                       Width="200"
-                      SelectedIndex="2">
+                      SelectedIndex="2"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterBySizeCheckbox}">
                 <x:String>Equals</x:String>
                 <x:String>Bigger than</x:String>
                 <x:String>Smaller than</x:String>
@@ -35,7 +36,8 @@
                 SpinButtonPlacementMode="Inline"
                 SmallChange="10"
                 LargeChange="100"
-                Width="200"/>
+                Width="200"
+                IsEnabled="{Binding IsChecked, ElementName=FilterBySizeCheckbox}"/>
         </StackPanel>
     </Grid>
 </Page>
