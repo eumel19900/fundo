@@ -16,18 +16,22 @@ namespace fundo.core.Persistence.Entity
         public string FileName { get; set; } = string.Empty;
         public string Path { get; set; } = string.Empty;
         public long FileSize { get; set; }
-        public DateTime FileDate { get; set; }
+        public DateTime CreationTime { get; set; }
+        public DateTime ModifiedTime { get; set; }
+        public DateTime LastAccessTime { get; set; }
         public string FileType { get; set; } = string.Empty;
 
         public FileEntity() { }
 
-        public FileEntity(string fileName, string path, long fileSize, DateTime fileDate,
-            string fileType)
+        public FileEntity(string fileName, string path, long fileSize, DateTime creationTime,
+            DateTime modifiedTime, DateTime lastAccessTime, string fileType)
         {
             FileName = fileName;
             Path = path;
             FileSize = fileSize;
-            FileDate = fileDate;
+            CreationTime = creationTime;
+            ModifiedTime = modifiedTime;
+            LastAccessTime = lastAccessTime;
             FileType = fileType;
         }
     }

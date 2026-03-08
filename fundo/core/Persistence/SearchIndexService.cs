@@ -86,7 +86,9 @@ namespace fundo.core.Persistence
                     FileName = result.FileName,
                     Path = result.Path,
                     FileSize = result.FileSize,
-                    FileDate = result.FileDate,
+                    CreationTime = result.FileInfo.CreationTime,
+                    ModifiedTime = result.FileInfo.LastWriteTime,
+                    LastAccessTime = result.FileInfo.LastAccessTime,
                     StorageDeviceId = storageDeviceId,
                 };
 

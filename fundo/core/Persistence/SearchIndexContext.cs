@@ -34,8 +34,12 @@ namespace fundo.core.Persistence
                 .HasDatabaseName("IX_FileEntity_FileName");
             file.HasIndex(f => f.FileType)
                 .HasDatabaseName("IX_FileEntity_FileType");
-            file.HasIndex(f => f.FileDate)
-                .HasDatabaseName("IX_FileEntity_FileDate");
+            file.HasIndex(f => f.CreationTime)
+                .HasDatabaseName("IX_FileEntity_CreationTime");
+            file.HasIndex(f => f.ModifiedTime)
+                .HasDatabaseName("IX_FileEntity_ModifiedTime");
+            file.HasIndex(f => f.LastAccessTime)
+                .HasDatabaseName("IX_FileEntity_LastAccessTime");
 
 
             // StorageDevice
