@@ -12,7 +12,7 @@ namespace fundo.core
         {
             get
             {
-                string? value = SearchIndexStore.GetConfigValue(UseIndexKey);
+                string? value = SearchIndexStore.GetPropertyValue(UseIndexKey);
                 if (value == TrueValue)
                 {
                     return true;
@@ -21,7 +21,7 @@ namespace fundo.core
             }
             set
             {
-                SearchIndexStore.SetConfigValue(UseIndexKey, value ? TrueValue : FalseValue);
+                SearchIndexStore.SetPropertyValue(UseIndexKey, value ? TrueValue : FalseValue);
             }
         }
     }

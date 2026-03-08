@@ -43,9 +43,9 @@ namespace fundo.core.Persistence
             return ctx;
         }
 
-        // --- ConfigEntry helpers ---
+        // --- PropertyEntry helpers ---
 
-        public static string? GetConfigValue(string key)
+        public static string? GetPropertyValue(string key)
         {
             if (string.IsNullOrWhiteSpace(key)) return null;
 
@@ -57,7 +57,7 @@ namespace fundo.core.Persistence
             return entry?.Value;
         }
 
-        public static void SetConfigValue(string key, string value)
+        public static void SetPropertyValue(string key, string value)
         {
             if (string.IsNullOrWhiteSpace(key)) return;
 
