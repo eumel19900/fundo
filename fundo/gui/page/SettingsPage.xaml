@@ -17,95 +17,104 @@
         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
         BorderThickness="1">
 
-            <StackPanel Spacing="16">
+            <StackPanel Spacing="16"
+                        HorizontalAlignment="Stretch">
                 <TextBlock Text="Fundo - Settings"
                        FontSize="28"
                        FontWeight="SemiBold" />
 
                 <!-- Search index configuration section -->
-                <StackPanel Spacing="8">
-                    <TextBlock Text="Search index"
-                               FontSize="18"
-                               FontWeight="SemiBold" />
-
-                    <CheckBox x:Name="EnableIndexedSearchCheckBox"
-                              Content="Indexed search enabled" />
-
-                    <TextBlock Text="Drives to include in index:" 
-                               Margin="0,8,0,0"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-
-                    <!-- List of drives with individual checkboxes; shows drive letter, NT path, and volume GUID -->
-                    <ListView x:Name="IndexedDrivesListView"
-                              BorderThickness="1"
-                              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                              Height="200"
-                              IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="local1:Drive">
-                                <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
-                                    <StackPanel>
-                                        <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" />
-                                        <TextBlock Text="{x:Bind NtPath}" FontSize="12" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="{x:Bind VolumeGuid}" FontSize="12" TextTrimming="CharacterEllipsis" />
-                                    </StackPanel>
-                                </CheckBox>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-
-                    <!-- Button to manually start drive indexing -->
-                    <Button x:Name="StartIndexingButton"
-                            Click="StartIndexingButton_Click"
-                            Content="Rebuild Index..."
-                            Margin="0,12,0,0" />
-                </StackPanel>
-
-                <!-- Scheduled index update configuration section -->
-                <StackPanel Spacing="8">
-                    <TextBlock Text="Automatic index update"
-                               FontSize="18"
-                               FontWeight="SemiBold" />
-
-                    <TextBlock Text="Configure a scheduled task to refresh the search index automatically. This helps keep indexed search results up to date without starting a manual rebuild."
-                               TextWrapping="Wrap"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-
-                    <CheckBox x:Name="EnableScheduledIndexUpdateCheckBox"
-                              IsChecked="{x:Bind IsScheduledIndexUpdateEnabled, Mode=TwoWay}"
-                              Content="Enable automatic index update" />
-
-                    <StackPanel Spacing="12"
-                                Margin="24,0,0,0">
-                        <TextBlock Text="Choose how often the search index should be refreshed and optionally limit execution to times when the computer is idle."
+                <Expander Header="Search index"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          IsExpanded="True">
+                    <StackPanel Spacing="8"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock Text="Configure indexed search and choose which drives should be included in the search index."
                                    TextWrapping="Wrap"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="Update interval" />
-                            <ComboBox x:Name="ScheduledIndexUpdateIntervalComboBox"
-                                      ItemsSource="{x:Bind ScheduledIndexUpdateIntervals}"
-                                      IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
-                                      SelectedItem="{x:Bind SelectedScheduledIndexUpdateInterval, Mode=TwoWay}"
-                                      PlaceholderText="Select an interval">
-                            </ComboBox>
-                        </StackPanel>
+                        <CheckBox x:Name="EnableIndexedSearchCheckBox"
+                                  Content="Indexed search enabled" />
 
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="Preferred execution time" />
-                            <TimePicker x:Name="ScheduledIndexUpdateTimePicker"
-                                        IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
-                                        SelectedTime="{x:Bind ScheduledIndexUpdatePreferredTime, Mode=TwoWay}"
-                                        ClockIdentifier="24HourClock"
-                                        MinuteIncrement="15" />
-                        </StackPanel>
+                        <TextBlock Text="Drives to include in index:"
+                                   Margin="0,8,0,0"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-                        <CheckBox x:Name="RunScheduledIndexUpdateOnlyWhenIdleCheckBox"
-                                  IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
-                                  IsChecked="{x:Bind RunScheduledIndexUpdateOnlyWhenIdle, Mode=TwoWay}"
-                                  Content="Only run automatic updates when the computer is idle" />
+                        <!-- List of drives with individual checkboxes; shows drive letter, NT path, and volume GUID -->
+                        <ListView x:Name="IndexedDrivesListView"
+                                  BorderThickness="1"
+                                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                  Height="200"
+                                  IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="local1:Drive">
+                                    <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
+                                        <StackPanel>
+                                            <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" />
+                                            <TextBlock Text="{x:Bind NtPath}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Text="{x:Bind VolumeGuid}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                    </CheckBox>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <!-- Button to manually start drive indexing -->
+                        <Button x:Name="StartIndexingButton"
+                                Click="StartIndexingButton_Click"
+                                Content="Rebuild Index..."
+                                Margin="0,12,0,0" />
                     </StackPanel>
-                </StackPanel>
+                </Expander>
+
+                <!-- Scheduled index update configuration section -->
+                <Expander Header="Automatic index update"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          IsExpanded="True">
+                    <StackPanel Spacing="8"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock Text="Configure a scheduled task to refresh the search index automatically. This helps keep indexed search results up to date without starting a manual rebuild."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <CheckBox x:Name="EnableScheduledIndexUpdateCheckBox"
+                                  IsChecked="{x:Bind IsScheduledIndexUpdateEnabled, Mode=TwoWay}"
+                                  Content="Enable automatic index update" />
+
+                        <StackPanel Spacing="12"
+                                    Margin="24,0,0,0"
+                                    HorizontalAlignment="Stretch">
+                            <TextBlock Text="Choose how often the search index should be refreshed and optionally limit execution to times when the computer is idle."
+                                       TextWrapping="Wrap"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Update interval" />
+                                <ComboBox x:Name="ScheduledIndexUpdateIntervalComboBox"
+                                          ItemsSource="{x:Bind ScheduledIndexUpdateIntervals}"
+                                          IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
+                                          SelectedItem="{x:Bind SelectedScheduledIndexUpdateInterval, Mode=TwoWay}"
+                                          PlaceholderText="Select an interval" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Preferred execution time" />
+                                <TimePicker x:Name="ScheduledIndexUpdateTimePicker"
+                                            IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
+                                            SelectedTime="{x:Bind ScheduledIndexUpdatePreferredTime, Mode=TwoWay}"
+                                            ClockIdentifier="24HourClock"
+                                            MinuteIncrement="15" />
+                            </StackPanel>
+
+                            <CheckBox x:Name="RunScheduledIndexUpdateOnlyWhenIdleCheckBox"
+                                      IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
+                                      IsChecked="{x:Bind RunScheduledIndexUpdateOnlyWhenIdle, Mode=TwoWay}"
+                                      Content="Only run automatic updates when the computer is idle" />
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
             </StackPanel>
         </Border>
     </Grid>
