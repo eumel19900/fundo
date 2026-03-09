@@ -143,6 +143,10 @@ namespace fundo.gui.page
                     {
                         filters.Add(new FileNameFilter(SearchPatternTextBox.Text));
                     }
+                    if (sizeFilterPage.SizeFilterEnabled)
+                    {
+                        filters.Add(new FileSizeFilter(sizeFilterPage.FileSizeKib, sizeFilterPage.CompareMode));
+                    }
                     if (dateFilterPage.DateFilterEnabled)
                     {
                         filters.Add(new DateFilter(
@@ -158,6 +162,10 @@ namespace fundo.gui.page
                     if (SearchPatternTextBox.Text != "")
                     {
                         filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text));
+                    }
+                    if (sizeFilterPage.SizeFilterEnabled)
+                    {
+                        filters.Add(new IndexBasedFileSizeFilter(sizeFilterPage.FileSizeKib, sizeFilterPage.CompareMode));
                     }
                     if (dateFilterPage.DateFilterEnabled)
                     {
