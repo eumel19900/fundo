@@ -3,9 +3,9 @@
 	- Dateinamen - ok
 		- Regex
 	- Datum von bis
-		- letzter Zugriff
+		- letzter Zugriff - ok
 		- erstellt am - ok
-		- geändert am
+		- geändert am - ok
 	- Dateinamen mit Regex
 	- Dateigröße von bis
 	- Liste an Dateitypen

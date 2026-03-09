@@ -1,4 +1,5 @@
-﻿Über Claude-Opus 4.5:
+﻿Job-Framework
+Über Claude-Opus 4.5:
 Ich benötige eine Abstraktionsschicht bzw ein Framework für langlaufende Fordergrundprozesse/Vorgänge. Im Kontext von diesem Projekt geht es um langlaufende rekursive Dateisuchen bzw. um Laufwerksindizierungen. 
 Die Abstraktionsschicht soll als bessere Alternative zu dem C#-eigenem Async/Await-Mechanismus fungieren.
 
@@ -13,3 +14,27 @@ An die Abstraktionsschicht habe ich folgende Anforderungen:
 Programmiere alles in Englisch
 Erstelle diese Abstraktionsschicht für mich.
 Lege die erforderlichen Klassen unter gui/Job/ an.
+
+
+
+Neues LocationControl
+Über Claude-Opus 4.5:
+Schau Dir das LocationControl an. Hier ist derzeit vom Anwender lediglich ein Verzeichnis auswählbar.
+Das soll nun grundlegend anders.
+Ab jetzt soll im LocationControl eine Liste von Verzeichnissen (auch reduziert nur auf den Laufwerksbuchstaben) auswählbar sein.
+Stand jetzt besteht LocationControl aus einem Textfeld (in dem das verzeichnis angegeben wird) und einen button mit der Beschriftung "..." der bislang den nativen Dialog zur Auswahl des Verzeichnis öffnet.
+
+Zukünftig soll es so sein:
+ - LocationControl wird mit einem Verzeichnis initialisert als Startparameter ("C:\")
+ - Ist in der Verzeichnisliste von LocationControl nur ein einzelnes Verzeichnis so zeigt das textfeld den Verzeichnispfad an. Das textfeld ist auch editierbar und bearbeitet das einzige Verzeichnis aus der Liste
+ - Es ist niemals weniger als ein Verzeichnis in der Verzeichnisliste.
+ - Klickt der Anwender auf den Button soll sich ein nun neu zu entwickelnder Dialog zur Verzeichnisauswahl öffnen.
+ - In diesem neuen Dialog soll die Liste an Verzeichnissen bearbeitet werden.
+ - In dem Dialog kann der Anwender neue Verzeichnisse hinzufügen: Plus+Button öffnet den nativen Verzeichnisauswahldialog. Hier wählt der Anwender ein Verzeichnis aus, um es der Liste hinzuzufügen.
+ - Einen Delete-Button: hiermit entfernt der Anwender das selektierte Verzeichnis aus der Verzeichnisliste
+ - Es soll in dem Dialog einen Button geben um alle Laufwerke des Computer als Verzeichnis in die Liste aufzunehmen (diese Operation entfernt alle Verzeichnisse aus der Liste, die nicht nur aus einem Laufwerksbuchstaben bestehen)
+ - Der Dialog kann mit ok und abbrechen buttons geschlossen werden, wobei in klick auf den OK-Button die Verzeichnisliste aus dem Dialog in das LocationControl übernimmt.
+ - Befinden sich mehrere Verzeichnisse in der Verzeichnisliste, wird das Textfeld in den Readonly-Modus geschaltet und stellt die Liste an Verzeichnissen textuell dar.
+ - Der Dialog soll gestalterisch modern, passend zu winui3 (und den design richtlinien von Microsoft) entwickelt werden
+
+Das LocationControl wird in der Anwendung bereits verwendet. Nehme die erforderlichen änderungen vor sodass mindestens die Auswahl eines einzelnden Verzeichnisses von den aufrufenden Codestellen weiterhin funktioniert

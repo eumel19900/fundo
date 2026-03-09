@@ -1,33 +1,86 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Windows.Storage.Pickers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using WinRT.Interop;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace fundo.gui.control
 {
     public sealed partial class LocationControl : UserControl
     {
+        private List<string> directories = new() { @"C:\" };
+        private bool isUpdatingText;
+
         public event TextChangedEventHandler SelectedDirectoryChanged;
 
+        /// <summary>
+        /// Gets or sets the first (or only) directory. For backwards compatibility.
+        /// </summary>
         public string SelectedDirectory
         {
-            get => LocationTextBox.Text;
-            set => LocationTextBox.Text = value;
+            get => directories.FirstOrDefault() ?? string.Empty;
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    directories = new List<string> { value };
+                    UpdateTextBoxDisplay();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the list of directories.
+        /// </summary>
+        public List<string> Directories
+        {
+            get => new List<string>(directories);
+            set
+            {
+                if (value != null && value.Count > 0)
+                {
+                    directories = new List<string>(value);
+                }
+                else
+                {
+                    directories = new List<string> { @"C:\" };
+                }
+                UpdateTextBoxDisplay();
+            }
+        }
+
+        /// <summary>
+        /// Initial directory to use (can be set in XAML).
+        /// </summary>
+        public string InitialDirectory { get; set; } = @"C:\";
+
+        /// <summary>
+        /// Returns true if multiple directories are selected.
+        /// </summary>
+        public bool HasMultipleDirectories => directories.Count > 1;
+
+        /// <summary>
+        /// Returns all selected directories as DirectoryInfo objects.
+        /// </summary>
+        public IEnumerable<DirectoryInfo> GetDirectoryInfos()
+        {
+            foreach (string dir in directories)
+            {
+                DirectoryInfo? info = null;
+                try
+                {
+                    info = new DirectoryInfo(dir);
+                }
+                catch
+                {
+                    // Skip invalid paths
+                }
+                if (info != null)
+                {
+                    yield return info;
+                }
+            }
         }
 
         public LocationControl()
@@ -35,35 +88,77 @@ namespace fundo.gui.control
             InitializeComponent();
         }
 
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(InitialDirectory) && directories.Count == 1 && directories[0] == @"C:\")
+            {
+                directories[0] = InitialDirectory;
+            }
+            UpdateTextBoxDisplay();
+        }
+
+        private void UpdateTextBoxDisplay()
+        {
+            isUpdatingText = true;
+            try
+            {
+                if (directories.Count == 1)
+                {
+                    LocationTextBox.Text = directories[0];
+                    LocationTextBox.IsReadOnly = false;
+                    LocationTextBox.PlaceholderText = @"C:\";
+                }
+                else
+                {
+                    LocationTextBox.Text = string.Join("; ", directories);
+                    LocationTextBox.IsReadOnly = true;
+                    LocationTextBox.PlaceholderText = "Multiple directories selected";
+                }
+            }
+            finally
+            {
+                isUpdatingText = false;
+            }
+        }
+
         private async void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
-            var window = App.MainWindowInstance;
-            FolderPicker folderPicker = new FolderPicker(window.AppWindow.Id)
+            try
             {
-                // (Optional) Specify the initial location for the picker. 
-                //     If the specified location doesn't exist on the user's machine, it falls back to the DocumentsLibrary.
-                //     If not set, it defaults to PickerLocationId.Unspecified, and the system will use its default location.
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                LocationPickerDialog dialog = new LocationPickerDialog
+                {
+                    XamlRoot = this.XamlRoot
+                };
+                dialog.SetDirectories(directories);
 
-                // (Optional) specify the text displayed on the commit button. 
-                //     If not specified, the system uses a default label of "Open" (suitably translated).
-                CommitButtonText = "Select Folder",
+                await dialog.ShowAsync();
 
-                // (Optional) specify the view mode of the picker dialog. If not specified, default to List.
-                ViewMode = PickerViewMode.List,
-            };
-
-            var result = await folderPicker.PickSingleFolderAsync();
-
-            if (result is not null)
+                if (dialog.Confirmed && dialog.SelectedDirectories.Count > 0)
+                {
+                    directories = dialog.SelectedDirectories;
+                    UpdateTextBoxDisplay();
+                    SelectedDirectoryChanged?.Invoke(this, null);
+                }
+            }
+            catch
             {
-                var path = result.Path;
-                LocationTextBox.Text = path;
+                // Ignore dialog errors
             }
         }
 
         private void LocationTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (isUpdatingText)
+            {
+                return;
+            }
+
+            // Only update the single directory if we have exactly one
+            if (directories.Count == 1 && !LocationTextBox.IsReadOnly)
+            {
+                directories[0] = LocationTextBox.Text;
+            }
+
             SelectedDirectoryChanged?.Invoke(this, e);
         }
     }

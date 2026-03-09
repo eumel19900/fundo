@@ -24,7 +24,7 @@ namespace fundo.gui.page
     {
         private SearchEngine currentSearchEngine = null;
         private CancellationTokenSource _cts = new();
-        private DirectoryInfo rootSearchDirectoryInfo = null;
+        private List<DirectoryInfo> rootSearchDirectories = new();
         private List<SearchFilter> filters = new List<SearchFilter>();
 
         // Filter pages
@@ -183,14 +183,19 @@ namespace fundo.gui.page
 
             ObservableCollection<SearchResultItem> searchResults = new ObservableCollection<SearchResultItem>();
             SearchResultListView.ItemsSource = searchResults;
-            await foreach (SearchResultItem result in currentSearchEngine.SearchAsync(rootSearchDirectoryInfo, _cts.Token, filters))
+
+            foreach (DirectoryInfo rootDir in rootSearchDirectories)
             {
-                searchResults.Add(result);
-                if (currentSearchEngine is NativeSearchEngine)
+                await foreach (SearchResultItem result in currentSearchEngine.SearchAsync(rootDir, _cts.Token, filters))
                 {
-                    SearchInfoTextBlock.Text = "Searching... (looked already in " + (currentSearchEngine as NativeSearchEngine).DirectoriesSearched + " directories)";
+                    searchResults.Add(result);
+                    if (currentSearchEngine is NativeSearchEngine)
+                    {
+                        SearchInfoTextBlock.Text = "Searching... (looked already in " + (currentSearchEngine as NativeSearchEngine).DirectoriesSearched + " directories)";
+                    }
                 }
             }
+
             SearchButton.IsEnabled = true;
             SearchInfoTextBlock.Text = "Finished search. Found " + searchResults.Count + " items";
         }
@@ -198,21 +203,26 @@ namespace fundo.gui.page
 
         private void LocationControl_SelectedDirectoryChanged(object sender, TextChangedEventArgs e)
         {
-            rootSearchDirectoryInfo = null;
-            try
+            rootSearchDirectories.Clear();
+
+            foreach (DirectoryInfo dirInfo in LocationControl.GetDirectoryInfos())
             {
-                rootSearchDirectoryInfo = new DirectoryInfo(LocationControl.SelectedDirectory);
+                if (dirInfo.Exists)
+                {
+                    rootSearchDirectories.Add(dirInfo);
+                }
             }
-            catch { }
-            bool searchButtonEnabled = rootSearchDirectoryInfo != null && rootSearchDirectoryInfo.Exists;
+
+            bool searchButtonEnabled = rootSearchDirectories.Count > 0;
             ToolTip toolTip = new ToolTip();
             if (searchButtonEnabled)
             {
-                toolTip.Content = "Click here to start search";
+                toolTip.Content = rootSearchDirectories.Count == 1
+                    ? "Click here to start search"
+                    : $"Click here to search in {rootSearchDirectories.Count} directories";
             }
             else
             {
-                //this does not work because the SearchButton is disabled, but it shows the idea of providing user feedback on why the button is disabled (comment by copilot :-))
                 toolTip.Content = "Please enter a valid directory path";
             }
             ToolTipService.SetToolTip(SearchButton, toolTip);

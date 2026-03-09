@@ -54,7 +54,7 @@ namespace fundo.gui.Job
 
                 searchIndexService.UpdateDriveIndex(drive);
 
-                ReportProgress(currentDrive, driveCount);
+                ReportProgress(++currentDrive, driveCount);
             }
             ReportProgress(driveCount, driveCount);
 
