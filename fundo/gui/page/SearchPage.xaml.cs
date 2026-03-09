@@ -28,10 +28,10 @@ namespace fundo.gui.page
         private List<SearchFilter> filters = new List<SearchFilter>();
 
         // Filter pages
-        private DateFilterPage dateFilterPage;
-        private AttributeFilterPage attributeFilterPage;
-        private FileContentFilterPage fileContentFilterPage;
-        private SizeFilterPage sizeFilterPage;
+        private DateFilterPage? dateFilterPage;
+        private AttributeFilterPage? attributeFilterPage;
+        private FileContentFilterPage? fileContentFilterPage;
+        private SizeFilterPage? sizeFilterPage;
 
         public SearchPage()
         {
@@ -128,7 +128,7 @@ namespace fundo.gui.page
 
         private async void SearchButton_Clicked(object sender, RoutedEventArgs e)
         {
-            if(currentSearchEngine == null)
+            if (currentSearchEngine == null)
             {
                 return;
             }
@@ -143,11 +143,11 @@ namespace fundo.gui.page
                     {
                         filters.Add(new FileNameFilter(SearchPatternTextBox.Text));
                     }
-                    if (sizeFilterPage.SizeFilterEnabled)
+                    if (sizeFilterPage?.SizeFilterEnabled == true)
                     {
                         filters.Add(new FileSizeFilter(sizeFilterPage.FileSizeKib, sizeFilterPage.CompareMode));
                     }
-                    if (dateFilterPage.DateFilterEnabled)
+                    if (dateFilterPage?.DateFilterEnabled == true)
                     {
                         filters.Add(new DateFilter(
                             dateFilterPage.startTime,
@@ -163,11 +163,11 @@ namespace fundo.gui.page
                     {
                         filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text));
                     }
-                    if (sizeFilterPage.SizeFilterEnabled)
+                    if (sizeFilterPage?.SizeFilterEnabled == true)
                     {
                         filters.Add(new IndexBasedFileSizeFilter(sizeFilterPage.FileSizeKib, sizeFilterPage.CompareMode));
                     }
-                    if (dateFilterPage.DateFilterEnabled)
+                    if (dateFilterPage?.DateFilterEnabled == true)
                     {
                         filters.Add(new IndexBasedDateFilter(
                             dateFilterPage.startTime,
