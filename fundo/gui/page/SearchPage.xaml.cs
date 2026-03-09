@@ -202,6 +202,10 @@ namespace fundo.gui.page
                     {
                         filters.Add(new AttributeFilter(GetSelectedFileAttributes(attributeFilterPage)));
                     }
+                    if (fileContentFilterPage?.ContentFilterEnabled == true)
+                    {
+                        filters.Add(new FileContentFilter(fileContentFilterPage.ContentSearchText));
+                    }
                     break;
 
                 case SearchEngine.EngineType.IndexBased:
