@@ -60,6 +60,52 @@
                             Content="Rebuild Index..."
                             Margin="0,12,0,0" />
                 </StackPanel>
+
+                <!-- Scheduled index update configuration section -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Automatic index update"
+                               FontSize="18"
+                               FontWeight="SemiBold" />
+
+                    <TextBlock Text="Configure a scheduled task to refresh the search index automatically. This helps keep indexed search results up to date without starting a manual rebuild."
+                               TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <CheckBox x:Name="EnableScheduledIndexUpdateCheckBox"
+                              IsChecked="{x:Bind IsScheduledIndexUpdateEnabled, Mode=TwoWay}"
+                              Content="Enable automatic index update" />
+
+                    <StackPanel Spacing="12"
+                                Margin="24,0,0,0">
+                        <TextBlock Text="Choose how often the search index should be refreshed and optionally limit execution to times when the computer is idle."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Update interval" />
+                            <ComboBox x:Name="ScheduledIndexUpdateIntervalComboBox"
+                                      ItemsSource="{x:Bind ScheduledIndexUpdateIntervals}"
+                                      IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
+                                      SelectedItem="{x:Bind SelectedScheduledIndexUpdateInterval, Mode=TwoWay}"
+                                      PlaceholderText="Select an interval">
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Preferred execution time" />
+                            <TimePicker x:Name="ScheduledIndexUpdateTimePicker"
+                                        IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
+                                        SelectedTime="{x:Bind ScheduledIndexUpdatePreferredTime, Mode=TwoWay}"
+                                        ClockIdentifier="24HourClock"
+                                        MinuteIncrement="15" />
+                        </StackPanel>
+
+                        <CheckBox x:Name="RunScheduledIndexUpdateOnlyWhenIdleCheckBox"
+                                  IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
+                                  IsChecked="{x:Bind RunScheduledIndexUpdateOnlyWhenIdle, Mode=TwoWay}"
+                                  Content="Only run automatic updates when the computer is idle" />
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
         </Border>
     </Grid>

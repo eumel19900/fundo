@@ -32,6 +32,16 @@ namespace fundo.gui.page
         private List<Drive> drives;
         private bool settingsSaved = false;
 
+        public ScheduledIndexUpdateInterval[] ScheduledIndexUpdateIntervals { get; } = Enum.GetValues<ScheduledIndexUpdateInterval>();
+
+        public bool IsScheduledIndexUpdateEnabled { get; set; } = Settings.AutomaticIndexUpdateEnabled;
+
+        public ScheduledIndexUpdateInterval SelectedScheduledIndexUpdateInterval { get; set; } = Settings.AutomaticIndexUpdateInterval;
+
+        public TimeSpan ScheduledIndexUpdatePreferredTime { get; set; } = Settings.AutomaticIndexUpdatePreferredTime;
+
+        public bool RunScheduledIndexUpdateOnlyWhenIdle { get; set; } = Settings.AutomaticIndexUpdateOnlyWhenIdle;
+
         public SettingsPage()
         {
             InitializeComponent();
@@ -59,6 +69,11 @@ namespace fundo.gui.page
                 return;
             }
             settingsSaved = true;
+
+            Settings.AutomaticIndexUpdateEnabled = IsScheduledIndexUpdateEnabled;
+            Settings.AutomaticIndexUpdateInterval = SelectedScheduledIndexUpdateInterval;
+            Settings.AutomaticIndexUpdatePreferredTime = ScheduledIndexUpdatePreferredTime;
+            Settings.AutomaticIndexUpdateOnlyWhenIdle = RunScheduledIndexUpdateOnlyWhenIdle;
 
             new SearchIndexService().updateDriveList(drives);
         }
