@@ -125,6 +125,48 @@ namespace fundo.gui.page
             }
         }
 
+        private static FileAttribute GetSelectedFileAttributes(AttributeFilterPage attributeFilterPage)
+        {
+            FileAttribute selectedAttributes = FileAttribute.None;
+
+            if (attributeFilterPage.IsReadonlyChecked)
+            {
+                selectedAttributes |= FileAttribute.Readonly;
+            }
+
+            if (attributeFilterPage.IsHiddenChecked)
+            {
+                selectedAttributes |= FileAttribute.Hidden;
+            }
+
+            if (attributeFilterPage.IsSystemChecked)
+            {
+                selectedAttributes |= FileAttribute.System;
+            }
+
+            if (attributeFilterPage.IsArchiveChecked)
+            {
+                selectedAttributes |= FileAttribute.Archive;
+            }
+
+            if (attributeFilterPage.IsTempChecked)
+            {
+                selectedAttributes |= FileAttribute.Temporary;
+            }
+
+            if (attributeFilterPage.IsCompressedChecked)
+            {
+                selectedAttributes |= FileAttribute.Compress;
+            }
+
+            if (attributeFilterPage.IsEncryptedChecked)
+            {
+                selectedAttributes |= FileAttribute.Encrypted;
+            }
+
+            return selectedAttributes;
+        }
+
 
         private async void SearchButton_Clicked(object sender, RoutedEventArgs e)
         {
@@ -156,6 +198,10 @@ namespace fundo.gui.page
                             dateFilterPage.ModifiedTimeEnabled,
                             dateFilterPage.LastAccessTimeEnabled));
                     }
+                    if (attributeFilterPage?.FilterByFileAttributesEnabled == true)
+                    {
+                        filters.Add(new AttributeFilter(GetSelectedFileAttributes(attributeFilterPage)));
+                    }
                     break;
 
                 case SearchEngine.EngineType.IndexBased:
@@ -175,6 +221,10 @@ namespace fundo.gui.page
                             dateFilterPage.CreationTimeEnabled,
                             dateFilterPage.ModifiedTimeEnabled,
                             dateFilterPage.LastAccessTimeEnabled));
+                    }
+                    if (attributeFilterPage?.FilterByFileAttributesEnabled == true)
+                    {
+                        filters.Add(new IndexBasedAttributeFilter(GetSelectedFileAttributes(attributeFilterPage)));
                     }
                     break;
             }

@@ -89,6 +89,7 @@ namespace fundo.core.Persistence
                     CreationTime = result.FileInfo.CreationTime,
                     ModifiedTime = result.FileInfo.LastWriteTime,
                     LastAccessTime = result.FileInfo.LastAccessTime,
+                    FileAttributes = FileAttributeHelper.FromSystemFileAttributes(result.FileInfo.Attributes),
                     StorageDeviceId = storageDeviceId,
                 };
 

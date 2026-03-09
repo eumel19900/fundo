@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using fundo.core;
 
 namespace fundo.core.Persistence.Entity
 {
@@ -20,11 +22,19 @@ namespace fundo.core.Persistence.Entity
         public DateTime ModifiedTime { get; set; }
         public DateTime LastAccessTime { get; set; }
         public string FileType { get; set; } = string.Empty;
+        public byte FileAttributesValue { get; set; }
+
+        [NotMapped]
+        public FileAttribute FileAttributes
+        {
+            get => FileAttributeHelper.FromByte(FileAttributesValue);
+            set => FileAttributesValue = FileAttributeHelper.ToByte(value);
+        }
 
         public FileEntity() { }
 
         public FileEntity(string fileName, string path, long fileSize, DateTime creationTime,
-            DateTime modifiedTime, DateTime lastAccessTime, string fileType)
+            DateTime modifiedTime, DateTime lastAccessTime, string fileType, FileAttribute fileAttributes = FileAttribute.None)
         {
             FileName = fileName;
             Path = path;
@@ -33,6 +43,7 @@ namespace fundo.core.Persistence.Entity
             ModifiedTime = modifiedTime;
             LastAccessTime = lastAccessTime;
             FileType = fileType;
+            FileAttributes = fileAttributes;
         }
     }
 }

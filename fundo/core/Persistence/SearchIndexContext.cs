@@ -24,6 +24,7 @@ namespace fundo.core.Persistence
             file.Property(f => f.FileName).HasMaxLength(260).IsRequired();
             file.Property(f => f.Path).HasMaxLength(260).IsRequired();
             file.Property(f => f.FileType).HasMaxLength(50).IsRequired();
+            file.Property(f => f.FileAttributesValue).IsRequired();
 
             file.HasOne(f => f.StorageDevice)
                 .WithMany(d => d.Files)
