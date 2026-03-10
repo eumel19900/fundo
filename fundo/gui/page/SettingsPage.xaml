@@ -49,7 +49,7 @@
                         <ListView x:Name="IndexedDrivesListView"
                                   BorderThickness="1"
                                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                  Height="200"
+                                  Height="200"  
                                   IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:Drive">

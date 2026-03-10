@@ -40,6 +40,8 @@ namespace fundo.core
                 _current = new Session();
                 SearchIndexContext context = SearchIndexStore.CreateContext();
                 context.Dispose();
+
+                ScheduledTaskService.EnsureScheduledTaskIsSetup();
             }
         }
 
