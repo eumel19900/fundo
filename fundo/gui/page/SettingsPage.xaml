@@ -9,13 +9,17 @@
     mc:Ignorable="d"
     Loaded="SettingsPage_Loaded">
 
-    <Grid Padding="20" RowSpacing="15">
-        <Border
-        Padding="24"
-        CornerRadius="8"
-        Background="{ThemeResource LayerFillColorDefaultBrush}"
-        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-        BorderThickness="1">
+    <ScrollViewer VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid Padding="20" RowSpacing="15">
+            <Border
+            Padding="24"
+            CornerRadius="8"
+            Background="{ThemeResource LayerFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1">
 
             <StackPanel Spacing="16"
                         HorizontalAlignment="Stretch">
@@ -116,6 +120,7 @@
                     </StackPanel>
                 </Expander>
             </StackPanel>
-        </Border>
-    </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
 </Page>
