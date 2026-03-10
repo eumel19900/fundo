@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using fundo.core.Persistence.Entity;
+using System;
 
 namespace fundo.core.Persistence
 {
@@ -61,6 +62,26 @@ namespace fundo.core.Persistence
                 catch
                 {
                     // Pfad ungültig oder Datei existiert nicht mehr -> Eintrag überspringen
+                    continue;
+                }
+
+                Boolean allowed = true;
+                if (searchFilters != null && searchFilters.Count > 0)
+                {
+                    foreach (var filter in searchFilters)
+                    {
+                        if (filter is NativeSearchFilter nativeSearchFilter)
+                        {
+                            allowed = nativeSearchFilter.isAllowed(fileInfo);
+                            if(!allowed)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!allowed)
+                {
                     continue;
                 }
 

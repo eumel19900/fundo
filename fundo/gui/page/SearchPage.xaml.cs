@@ -202,10 +202,6 @@ namespace fundo.gui.page
                     {
                         filters.Add(new AttributeFilter(GetSelectedFileAttributes(attributeFilterPage)));
                     }
-                    if (fileContentFilterPage?.ContentFilterEnabled == true)
-                    {
-                        filters.Add(new FileContentFilter(fileContentFilterPage.ContentSearchText));
-                    }
                     break;
 
                 case SearchEngine.EngineType.IndexBased:
@@ -231,6 +227,10 @@ namespace fundo.gui.page
                         filters.Add(new IndexBasedAttributeFilter(GetSelectedFileAttributes(attributeFilterPage)));
                     }
                     break;
+            }
+            if (fileContentFilterPage?.ContentFilterEnabled == true)
+            {
+                filters.Add(new FileContentFilter(fileContentFilterPage.ContentSearchText));
             }
 
 
