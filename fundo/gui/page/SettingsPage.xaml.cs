@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -47,7 +48,6 @@ namespace fundo.gui.page
             InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Required;
 
-            drives = DriveUtil.GetDrives();
             this.Unloaded += SettingsPage_Unloaded;
         }
 
@@ -79,13 +79,41 @@ namespace fundo.gui.page
         }
        
 
-        private void SettingsPage_Loaded(object sender, RoutedEventArgs e)
+        private async void SettingsPage_Loaded(object sender, RoutedEventArgs e)
         {
-            IndexedDrivesListView.ItemsSource = drives;
-
             EnableIndexedSearchCheckBox.IsChecked = Settings.UseIndex;
             EnableIndexedSearchCheckBox.Checked += EnableIndexedSearchCheckBox_CheckedChanged;
             EnableIndexedSearchCheckBox.Unchecked += EnableIndexedSearchCheckBox_CheckedChanged;
+
+            await LoadDrivesAsync();
+        }
+
+        private async Task LoadDrivesAsync()
+        {
+            DriveLoadingProgressRing.IsActive = true;
+            DriveLoadingProgressRing.Visibility = Visibility.Visible;
+            DriveLoadingText.Visibility = Visibility.Visible;
+            IndexedDrivesListView.Visibility = Visibility.Collapsed;
+            StartIndexingButton.IsEnabled = false;
+
+            try
+            {
+                drives = await Task.Run(() => DriveUtil.GetDrives());
+                IndexedDrivesListView.ItemsSource = drives;
+            }
+            catch
+            {
+                drives = [];
+                IndexedDrivesListView.ItemsSource = drives;
+            }
+            finally
+            {
+                DriveLoadingProgressRing.IsActive = false;
+                DriveLoadingProgressRing.Visibility = Visibility.Collapsed;
+                DriveLoadingText.Visibility = Visibility.Collapsed;
+                IndexedDrivesListView.Visibility = Visibility.Visible;
+                StartIndexingButton.IsEnabled = true;
+            }
         }
 
         private void EnableIndexedSearchCheckBox_CheckedChanged(object sender, RoutedEventArgs e)

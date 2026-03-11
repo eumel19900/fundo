@@ -45,6 +45,21 @@
                                    Margin="0,8,0,0"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
+                        <!-- Loading indicator shown while drives are being enumerated -->
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8"
+                                    Margin="0,4,0,4">
+                            <ProgressRing x:Name="DriveLoadingProgressRing"
+                                          IsActive="False"
+                                          Visibility="Collapsed"
+                                          Width="20" Height="20" />
+                            <TextBlock x:Name="DriveLoadingText"
+                                       Text="Loading drives..."
+                                       Visibility="Collapsed"
+                                       VerticalAlignment="Center"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+
                         <!-- List of drives with individual checkboxes; shows drive letter, NT path, and volume GUID -->
                         <ListView x:Name="IndexedDrivesListView"
                                   BorderThickness="1"
