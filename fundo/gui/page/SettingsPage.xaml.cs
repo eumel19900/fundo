@@ -62,6 +62,13 @@ namespace fundo.gui.page
             SaveSettings();
         }
 
+        protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            settingsSaved = false;
+        }
+
+
         private void SaveSettings()
         {
             if (settingsSaved)
@@ -86,6 +93,11 @@ namespace fundo.gui.page
             EnableIndexedSearchCheckBox.Unchecked += EnableIndexedSearchCheckBox_CheckedChanged;
 
             await LoadDrivesAsync();
+        }
+
+        private void EnableIndexedSearchCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
+        {
+            Settings.UseIndex = EnableIndexedSearchCheckBox.IsChecked ?? false;
         }
 
         private async Task LoadDrivesAsync()
@@ -114,11 +126,6 @@ namespace fundo.gui.page
                 IndexedDrivesListView.Visibility = Visibility.Visible;
                 StartIndexingButton.IsEnabled = true;
             }
-        }
-
-        private void EnableIndexedSearchCheckBox_CheckedChanged(object sender, RoutedEventArgs e)
-        {
-            Settings.UseIndex = EnableIndexedSearchCheckBox.IsChecked ?? false;
         }
 
 
