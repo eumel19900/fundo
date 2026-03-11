@@ -65,28 +65,13 @@ namespace fundo
             // Initialize application-wide session and shared services
             Session.Initialize();
 
-            if (HasCommandLineArgument(args.Arguments, "--UpdateIndexOnly"))
+            if (CommandLineService.IsUpdateIndexOnlyLaunch(args.Arguments))
             {
                 return;
             }
 
             EnsureMainWindowIsOpen();
             InitializeNotifyIcon();
-        }
-
-        private static bool HasCommandLineArgument(string launchArguments, string argument)
-        {
-            if (!string.IsNullOrWhiteSpace(launchArguments))
-            {
-                string[] arguments = launchArguments.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                if (arguments.Contains(argument, StringComparer.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return Environment.GetCommandLineArgs()
-                .Contains(argument, StringComparer.OrdinalIgnoreCase);
         }
 
         private void InitializeNotifyIcon()
