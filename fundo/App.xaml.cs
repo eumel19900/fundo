@@ -36,6 +36,7 @@ namespace fundo
         private WndProcDelegate? _windowProcDelegate;
         private NOTIFYICONDATA _notifyIconData;
         private bool _isNotifyIconCreated;
+        private bool _hasShownMinimizeToTrayHint;
 
         // Static accessor to the application's main window instance
         public static MainWindow? MainWindowInstance { get; private set; }
@@ -53,11 +54,15 @@ namespace fundo
         private const int SizeMinimized = 1;
         private const int TrayIconId = 1;
         private const int OpenFundoMenuCommandId = 1001;
+        private const int CloseFundoMenuCommandId = 1002;
         private const uint NifMessage = 0x00000001;
         private const uint NifIcon = 0x00000002;
         private const uint NifTip = 0x00000004;
+        private const uint NifInfo = 0x00000010;
         private const uint NimAdd = 0x00000000;
+        private const uint NimModify = 0x00000001;
         private const uint NimDelete = 0x00000002;
+        private const uint NiifInfo = 0x00000001;
         private const uint ImageIcon = 1;
         private const uint LrLoadFromFile = 0x00000010;
         private const uint LrDefaultSize = 0x00000040;
@@ -201,6 +206,26 @@ namespace fundo
             ShowWindow(windowHandle, SwHide);
         }
 
+        private void ShowMinimizeToTrayHint()
+        {
+            if (!_isNotifyIconCreated || _hasShownMinimizeToTrayHint)
+            {
+                return;
+            }
+
+            NOTIFYICONDATA notifyIconData = _notifyIconData;
+            notifyIconData.uFlags = NifInfo;
+            notifyIconData.dwInfoFlags = NiifInfo;
+            notifyIconData.uTimeoutOrVersion = 10000;
+            notifyIconData.szInfoTitle = "Fundo is still running";
+            notifyIconData.szInfo = "The app was minimized to the notification area and continues running there.";
+
+            if (Shell_NotifyIcon(NimModify, ref notifyIconData))
+            {
+                _hasShownMinimizeToTrayHint = true;
+            }
+        }
+
         private static void OpenMainWindowFromNotifyIcon()
         {
             if (Application.Current is not App app)
@@ -210,6 +235,18 @@ namespace fundo
 
             app.EnsureMainWindowIsOpen();
             BringMainWindowToFront();
+        }
+
+        private static void CloseApplicationFromNotifyIcon()
+        {
+            if (Application.Current is not App app)
+            {
+                return;
+            }
+
+            app.RemoveNotifyIcon();
+            MainWindowInstance?.Close();
+            app.Exit();
         }
 
         private void ShowNotifyIconContextMenu()
@@ -223,6 +260,7 @@ namespace fundo
             try
             {
                 AppendMenu(menu, MfString, OpenFundoMenuCommandId, "Open Fundo...");
+                AppendMenu(menu, MfString, CloseFundoMenuCommandId, "Terminate Fundo");
 
                 if (GetCursorPos(out POINT point))
                 {
@@ -257,6 +295,7 @@ namespace fundo
             if (msg == WmSize && wParam.ToInt32() == SizeMinimized)
             {
                 HideMainWindowToTray(hWnd);
+                ShowMinimizeToTrayHint();
                 return IntPtr.Zero;
             }
 
@@ -279,6 +318,12 @@ namespace fundo
             if (msg == WmCommand && GetLowWord(wParam) == OpenFundoMenuCommandId)
             {
                 OpenMainWindowFromNotifyIcon();
+                return IntPtr.Zero;
+            }
+
+            if (msg == WmCommand && GetLowWord(wParam) == CloseFundoMenuCommandId)
+            {
+                CloseApplicationFromNotifyIcon();
                 return IntPtr.Zero;
             }
 
