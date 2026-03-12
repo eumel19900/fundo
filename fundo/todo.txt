@@ -6,12 +6,11 @@
 		- letzter Zugriff - ok
 		- erstellt am - ok
 		- geändert am - ok
-	- Dateinamen mit Regex
-	- Dateigröße von bis
+	- Dateigröße von bis - ok
 	- Liste an Dateitypen
-	- Dateiflags/attribute: versteckt, system, archiv, ...
+	- Dateiflags/attribute: versteckt, system, archiv, - ok
 	- Dateibesitzer
-	- Volltextsuche
+	- Volltextsuche - ok
 		- case sensitive
 		- regex
 		- ganzes wort
@@ -20,14 +19,19 @@
 	- Datei öffnen (selbe Aktion wie doppelklick)
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...)
 Settings:
-	- Index erstellen
+	- Index erstellen - ok
 	- Daemon Modus per Scheduled Task konfigurierbar
 - Volltextsuche (oder filterung?) in der Ergebnisliste
 - Sortierung in der Ergebnisliste
 - Ergebnisliste mit lazy loading
-- Immer nur eine Instanz von Fundo erlauben
+- Immer nur eine Instanz von Fundo erlauben - ok
 	- Kommunikation an erste Instanz z.b. bei Kommandozeilenparametern
 - Manual-Seite
+- Global-Hotkeys zum Öffnen das MainWindows
+- Dateisuche auch in Archiv-Dateien
+- Datei Kopieren als Copy-Source über Shell32
+- Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
+	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
 
 
 

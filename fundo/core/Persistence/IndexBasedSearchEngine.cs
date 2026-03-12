@@ -51,6 +51,7 @@ namespace fundo.core.Persistence
             }
             
 
+
             await foreach (FileEntity entity in query.AsAsyncEnumerable())
             {
                 cancellationToken.ThrowIfCancellationRequested();
