@@ -1,11 +1,12 @@
-﻿using fundo.core.Search;
+﻿using fundo.core.Persistence.Entity;
 using fundo.core.Persistence.Filter;
+using fundo.core.Search;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using fundo.core.Persistence.Entity;
-using System;
 
 namespace fundo.core.Persistence
 {
@@ -64,6 +65,7 @@ namespace fundo.core.Persistence
                     // Pfad ungültig oder Datei existiert nicht mehr -> Eintrag überspringen
                     continue;
                 }
+                Debug.WriteLine($"Found file {fileInfo.FullName}");
 
                 Boolean allowed = true;
                 if (searchFilters != null && searchFilters.Count > 0)

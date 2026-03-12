@@ -39,9 +39,23 @@ namespace fundo.gui.control
             bool hasSelection = DirectoryListView.SelectedItem != null;
             bool canRemove = hasSelection && directories.Count > 1;
             RemoveButton.IsEnabled = canRemove;
+            EditButton.IsEnabled = hasSelection;
         }
 
         private async void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            string? path = await PickFolderAsync();
+            if (path != null)
+            {
+                AddOrReplaceDirectoryWithHierarchyCheck(path);
+            }
+        }
+
+        /// <summary>
+        /// Opens a folder picker dialog and returns the selected path, or <c>null</c> if
+        /// the user cancelled or an error occurred.
+        /// </summary>
+        private static async System.Threading.Tasks.Task<string?> PickFolderAsync()
         {
             try
             {
@@ -54,34 +68,36 @@ namespace fundo.gui.control
                 };
 
                 var result = await folderPicker.PickSingleFolderAsync();
-
                 if (result != null && !string.IsNullOrWhiteSpace(result.Path))
                 {
-                    AddDirectoryWithHierarchyCheck(result.Path);
+                    return result.Path;
                 }
             }
             catch
             {
                 // Ignore picker errors
             }
+
+            return null;
         }
 
         /// <summary>
-        /// Adds a directory to the list with hierarchy checks:
+        /// Adds or replaces a directory in the list with hierarchy checks:
         /// - If the new directory is already covered by an existing parent directory, it is not added.
         /// - If the new directory is a parent of existing directories, those child directories are removed.
+        /// When <paramref name="entryToReplace"/> is provided the existing entry is replaced in-place
+        /// instead of appending to the end.
         /// </summary>
-        private void AddDirectoryWithHierarchyCheck(string newPath)
+        private void AddOrReplaceDirectoryWithHierarchyCheck(string newPath, string? entryToReplace = null)
         {
             string normalizedNewPath = NormalizePath(newPath);
 
             // Check if an existing directory already contains the new path (new path is a child)
             foreach (string existing in directories)
             {
-                string normalizedExisting = NormalizePath(existing);
-                if (IsSubdirectoryOf(normalizedNewPath, normalizedExisting))
+                if (existing == entryToReplace) continue;
+                if (IsSubdirectoryOf(normalizedNewPath, NormalizePath(existing)))
                 {
-                    // New path is already covered by an existing parent directory - don't add
                     return;
                 }
             }
@@ -90,8 +106,8 @@ namespace fundo.gui.control
             List<string> toRemove = new();
             foreach (string existing in directories)
             {
-                string normalizedExisting = NormalizePath(existing);
-                if (IsSubdirectoryOf(normalizedExisting, normalizedNewPath))
+                if (existing == entryToReplace) continue;
+                if (IsSubdirectoryOf(NormalizePath(existing), normalizedNewPath))
                 {
                     toRemove.Add(existing);
                 }
@@ -104,9 +120,22 @@ namespace fundo.gui.control
 
             // Check for exact duplicate (case-insensitive)
             bool alreadyExists = directories.Any(d =>
+                d != entryToReplace &&
                 string.Equals(NormalizePath(d), normalizedNewPath, StringComparison.OrdinalIgnoreCase));
 
-            if (!alreadyExists)
+            if (entryToReplace != null)
+            {
+                int index = directories.IndexOf(entryToReplace);
+                if (!alreadyExists && index >= 0)
+                {
+                    directories[index] = newPath;
+                }
+                else if (index >= 0)
+                {
+                    directories.RemoveAt(index);
+                }
+            }
+            else if (!alreadyExists)
             {
                 directories.Add(newPath);
             }
@@ -140,6 +169,20 @@ namespace fundo.gui.control
             if (DirectoryListView.SelectedItem is string selected && directories.Count > 1)
             {
                 directories.Remove(selected);
+            }
+        }
+
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DirectoryListView.SelectedItem is not string selected)
+            {
+                return;
+            }
+
+            string? path = await PickFolderAsync();
+            if (path != null)
+            {
+                AddOrReplaceDirectoryWithHierarchyCheck(path, selected);
             }
         }
 
