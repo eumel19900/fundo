@@ -65,6 +65,12 @@ namespace fundo
             // Initialize application-wide session and shared services
             Session.Initialize();
 
+            if(!new SingleInstanceService().TryClaimInstance())
+            {
+                Exit();
+                return;
+            }
+
             if (CommandLineService.IsUpdateIndexOnlyLaunch(args.Arguments))
             {
                 return;
