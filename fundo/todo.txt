@@ -1,13 +1,17 @@
+Version 1.0
 - Suchkriterien:
 	- Profile speichern Suchparameter
 	- Dateinamen - ok
 		- Regex
+	- Liste an Dateinamen zur Suche
+	- Dateinamensuche mit dialog
+		- Liste an Suchnamen
+		- Regex (pro Eintrag)
 	- Datum von bis
 		- letzter Zugriff - ok
 		- erstellt am - ok
 		- geändert am - ok
 	- Dateigröße von bis - ok
-	- Liste an Dateitypen
 	- Dateiflags/attribute: versteckt, system, archiv, - ok
 	- Dateibesitzer
 	- Volltextsuche - ok
@@ -32,6 +36,9 @@ Settings:
 - Datei Kopieren als Copy-Source über Shell32
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
+- MetaInformationen zum Index in den Settings anzeigen
+- Suche Abbrechbar
+- Suche nach * heißt kein Dateinamenfilter
 
 
 
@@ -40,8 +47,22 @@ Bugs/Sonstiges:
 			funktioniert die Berechnung der Fenstergröße auf Basis der Suchfiltertabs nicht mehr.
 			Muss angepasst werden, damit das wieder geht :-)
 	- SearchPage: Inhalt wird verworfen, wenn der Anwender zurück auf die Seite navigiert
-			(warum wird hier eine neue Instanz der Seite erstellt?)
+			(warum wird hier eine neue Instanz der Seite erstellt?) - ok
 	- Die SearchFilter dürfen nicht mit FileInfo-Objekten arbeiten, weil diese bereits auf die Datei zugreifen
 	- FileIconLoader: Refactoring, performance optimierungen. Lazy Loading. Warum werden bilder als png gecacht?
-	- Infomeldung über index darf nur beim Programmstart einmal angezeigt werden, nicht immer wieder
-	- Settingspage lässt sich manchmal nicht öffnen, vermutlich wegen IO-Hängern
+	- Infomeldung über index darf nur beim Programmstart einmal angezeigt werden, nicht immer wieder - ok
+	- Settingspage lässt sich manchmal nicht öffnen, vermutlich wegen IO-Hängern - ok
+	- Wechseln der SearchEngine in der SettingsPage muss sich sofort in der Anwendung auswirken
+
+Version 1.1
+ - Bilder:
+	 - Ergebnisliste umschaltbar in Thumbnail-Ansicht
+		- Thumbnails lokal im Arbeitsspeicher cachen
+		- Thumbnails optional in Datenbank cachen?
+		- Thumbnails mit Indizierung erstellen?
+		- Thumbnails in mehreren Threads erstellen
+		- Thumbnails zweistufig erstellen: Nativen thumbnail aus Jpeg-laden, dann in passender Auflösung nachladen
+	- Suche in Metadaten von Bildern mittels Filter
+		- EXIF
+		- IPTC
+		- XMP

@@ -31,7 +31,7 @@
                 <Expander Header="Search index"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Stretch"
-                          IsExpanded="True">
+                          IsExpanded="False">
                     <StackPanel Spacing="8"
                                 HorizontalAlignment="Stretch">
                         <TextBlock Text="Configure indexed search and choose which drives should be included in the search index."
@@ -91,7 +91,7 @@
                 <Expander Header="Automatic index update"
                           HorizontalAlignment="Stretch"
                           HorizontalContentAlignment="Stretch"
-                          IsExpanded="True">
+                          IsExpanded="False">
                     <StackPanel Spacing="8"
                                 HorizontalAlignment="Stretch">
                         <TextBlock Text="Configure a scheduled task to refresh the search index automatically. This helps keep indexed search results up to date without starting a manual rebuild."
