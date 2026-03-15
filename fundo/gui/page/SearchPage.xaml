@@ -80,7 +80,20 @@
                     BorderThickness="1">
                 <ListView x:Name="SearchResultListView"
                           SelectionMode="Single"
+                          RightTapped="SearchResultListView_RightTapped"
                           DoubleTapped="SearchResultListView_DoubleTapped">
+                    <ListView.ContextFlyout>
+                        <MenuFlyout Opening="SearchResultMenuFlyout_Opening">
+                            <MenuFlyoutItem x:Name="OpenFileMenuFlyoutItem"
+                                            Text="Open File..."
+                                            IsEnabled="False"
+                                            Click="OpenFileMenuFlyoutItem_Click" />
+                            <MenuFlyoutItem x:Name="LocateFileMenuFlyoutItem"
+                                            Text="Locate File..."
+                                            IsEnabled="False"
+                                            Click="LocateFileMenuFlyoutItem_Click" />
+                        </MenuFlyout>
+                    </ListView.ContextFlyout>
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="model:SearchResultItem">
                             <StackPanel Orientation="Horizontal" Margin="4" VerticalAlignment="Center">

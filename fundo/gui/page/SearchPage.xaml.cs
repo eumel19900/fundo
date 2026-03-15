@@ -291,26 +291,128 @@ namespace fundo.gui.page
             SearchButton.IsEnabled = searchButtonEnabled;
         }
 
-        private void SearchResultListView_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        private async void SearchResultListView_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            if (SearchResultListView.SelectedItem is SearchResultItem)
+            await OpenSelectedFile();
+        }
+
+        private SearchResultItem? GetSelectedSearchResultItem()
+        {
+            return SearchResultListView.SelectedItem as SearchResultItem;
+        }
+
+        private void SearchResultMenuFlyout_Opening(object sender, object e)
+        {
+            UpdateSearchResultMenuItems();
+        }
+
+        private void SearchResultListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            if (e.OriginalSource is not DependencyObject originalSource)
             {
-                SearchResultItem selectedItem = (SearchResultItem)SearchResultListView.SelectedItem;
-                try
+                return;
+            }
+
+            DependencyObject? current = originalSource;
+            while (current != null)
+            {
+                if (current is FrameworkElement element && element.DataContext is SearchResultItem searchResultItem)
                 {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-                    {
-                        FileName = selectedItem.FileInfo.FullName,
-                        UseShellExecute = true
-                    });
+                    SearchResultListView.SelectedItem = searchResultItem;
+                    UpdateSearchResultMenuItems();
+                    return;
                 }
-                catch (Exception ex)
+
+                current = VisualTreeHelper.GetParent(current);
+            }
+
+            SearchResultListView.SelectedItem = null;
+            UpdateSearchResultMenuItems();
+        }
+
+        private void UpdateSearchResultMenuItems()
+        {
+            bool hasSelection = GetSelectedSearchResultItem() != null;
+            if (SearchResultListView.ContextFlyout is MenuFlyout menuFlyout)
+            {
+                if (menuFlyout.Items.Count > 0 && menuFlyout.Items[0] is MenuFlyoutItem openFileItem)
                 {
-                    // Handle exceptions (e.g., file not found, no associated application)
-                    ToolTip toolTip = new ToolTip { Content = $"Unable to open file: {ex.Message}" };
-                    ToolTipService.SetToolTip(SearchResultListView, toolTip);
+                    openFileItem.IsEnabled = hasSelection;
+                }
+
+                if (menuFlyout.Items.Count > 1 && menuFlyout.Items[1] is MenuFlyoutItem locateFileItem)
+                {
+                    locateFileItem.IsEnabled = hasSelection;
                 }
             }
+        }
+
+        private async void OpenFileMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            await OpenSelectedFile();
+        }
+
+        private async void LocateFileMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            await LocateSelectedFile();
+        }
+
+        private async Task OpenSelectedFile()
+        {
+            SearchResultItem? selectedItem = GetSelectedSearchResultItem();
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                {
+                    FileName = selectedItem.FileInfo.FullName,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                await ShowErrorDialogAsync("Unable to open file", ex.Message);
+            }
+        }
+
+        private async Task LocateSelectedFile()
+        {
+            SearchResultItem? selectedItem = GetSelectedSearchResultItem();
+            if (selectedItem == null || selectedItem.FileInfo.DirectoryName == null)
+            {
+                return;
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                {
+                    FileName = selectedItem.FileInfo.DirectoryName,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                await ShowErrorDialogAsync("Unable to locate file", ex.Message);
+            }
+        }
+
+        private async Task ShowErrorDialogAsync(string title, string message)
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = title,
+                Content = message,
+                CloseButtonText = "OK",
+                DefaultButton = ContentDialogButton.Close
+            };
+
+            await dialog.ShowAsync();
         }
     }
 }

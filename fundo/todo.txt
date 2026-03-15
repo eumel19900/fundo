@@ -19,9 +19,9 @@ Version 1.0
 		- regex
 		- ganzes wort
 		- enthält nicht?
- - Popupmenu in Ergebnisliste:
-	- Datei öffnen (selbe Aktion wie doppelklick)
-	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...)
+ - Popupmenu in Ergebnisliste: - ok
+	- Datei öffnen (selbe Aktion wie doppelklick) - ok
+	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...) - ok
 Settings:
 	- Index erstellen - ok
 	- Daemon Modus per Scheduled Task konfigurierbar
@@ -32,6 +32,9 @@ Settings:
 	- Kommunikation an erste Instanz z.b. bei Kommandozeilenparametern
 - Manual-Seite
 - Global-Hotkeys zum Öffnen das MainWindows
+	- Konfiguration in Settingspage
+- Autostart von Fundo
+	- Konfiguration in Settingspage
 - Dateisuche auch in Archiv-Dateien
 - Datei Kopieren als Copy-Source über Shell32
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
@@ -39,6 +42,9 @@ Settings:
 - MetaInformationen zum Index in den Settings anzeigen
 - Suche Abbrechbar
 - Suche nach * heißt kein Dateinamenfilter
+- Automatisches Software-update
+	- Nachfragen im Windows-Store ob Update verfügbar ist
+	- Konfiguration in Settingspage
 
 
 
@@ -53,8 +59,9 @@ Bugs/Sonstiges:
 	- Infomeldung über index darf nur beim Programmstart einmal angezeigt werden, nicht immer wieder - ok
 	- Settingspage lässt sich manchmal nicht öffnen, vermutlich wegen IO-Hängern - ok
 	- Wechseln der SearchEngine in der SettingsPage muss sich sofort in der Anwendung auswirken
+	- Performance in index basierter suche viel zu langsam
 
-Version 1.1
+Version 1.1 - Für Fotografen
  - Bilder:
 	 - Ergebnisliste umschaltbar in Thumbnail-Ansicht
 		- Thumbnails lokal im Arbeitsspeicher cachen

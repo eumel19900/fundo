@@ -38,3 +38,10 @@ Zukünftig soll es so sein:
  - Der Dialog soll gestalterisch modern, passend zu winui3 (und den design richtlinien von Microsoft) entwickelt werden
 
 Das LocationControl wird in der Anwendung bereits verwendet. Nehme die erforderlichen änderungen vor sodass mindestens die Auswahl eines einzelnden Verzeichnisses von den aufrufenden Codestellen weiterhin funktioniert
+
+
+GPT-5.4:
+Lege in SearchPage für die SearchResultListView ein Popup menu an.
+Hier sollen zunächst zwei Einträge hinein:
+ - "Open File...": Öffnen die selektierte Datei mit derselben Logik wie in "SearchResultListView_DoubleTapped()". Darf nur enabled sein, wenn eine Datei selektiert ist.
+ - "Locate File...": Öffnet den Windows Explorer in dem Verzeichnis in dem sich die selektierte Datei befindet. Darf nur enabled sein, wenn eine Datei selektiert ist.
