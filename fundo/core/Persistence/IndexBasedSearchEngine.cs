@@ -4,9 +4,10 @@ using fundo.core.Search;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace fundo.core.Persistence
 {
@@ -20,7 +21,7 @@ namespace fundo.core.Persistence
 
         public async IAsyncEnumerable<SearchResultItem> SearchAsync(
             DirectoryInfo startDirectory,
-            System.Threading.CancellationToken cancellationToken,
+            [EnumeratorCancellation] CancellationToken cancellationToken,
             List<SearchFilter> searchFilters)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -32,27 +33,28 @@ namespace fundo.core.Persistence
 
             string rootPath = startDirectory.FullName;
 
-            SearchIndexContext ctx = SearchIndexStore.CreateContext();
-
-            IQueryable<FileEntity> query = ctx.FileEntities
-                .AsNoTracking()
-                .Where(f => f.Path.StartsWith(rootPath));
-
-            
-            if(searchFilters != null && searchFilters.Count > 0)
+            List<FileEntity> entities;
+            using (SearchIndexContext ctx = SearchIndexStore.CreateContext())
             {
-                foreach (var filter in searchFilters)
+                IQueryable<FileEntity> query = ctx.FileEntities
+                    .AsNoTracking()
+                    .Where(f => f.Path.StartsWith(rootPath));
+
+                if (searchFilters != null && searchFilters.Count > 0)
                 {
-                    if (filter is IndexBasedFilter indexBasedFilter)
+                    foreach (var filter in searchFilters)
                     {
-                        query = indexBasedFilter.addQuery(query);
+                        if (filter is IndexBasedFilter indexBasedFilter)
+                        {
+                            query = indexBasedFilter.addQuery(query);
+                        }
                     }
                 }
+
+                entities = await query.ToListAsync(cancellationToken);
             }
-            
 
-
-            await foreach (FileEntity entity in query.AsAsyncEnumerable())
+            foreach (FileEntity entity in entities)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
@@ -63,16 +65,15 @@ namespace fundo.core.Persistence
                 }
                 catch
                 {
-                    // Pfad ungültig oder Datei existiert nicht mehr -> Eintrag überspringen
                     continue;
                 }
+
                 if (!fileInfo.Exists)
                 {
                     continue;
                 }
-                Debug.WriteLine($"Found file {fileInfo.FullName}");
 
-                Boolean allowed = true;
+                bool allowed = true;
                 if (searchFilters != null && searchFilters.Count > 0)
                 {
                     foreach (var filter in searchFilters)
@@ -80,13 +81,14 @@ namespace fundo.core.Persistence
                         if (filter is NativeSearchFilter nativeSearchFilter)
                         {
                             allowed = nativeSearchFilter.isAllowed(fileInfo);
-                            if(!allowed)
+                            if (!allowed)
                             {
                                 break;
                             }
                         }
                     }
                 }
+
                 if (!allowed)
                 {
                     continue;
@@ -95,8 +97,6 @@ namespace fundo.core.Persistence
                 SearchResultItem result = new SearchResultItem(fileInfo);
                 yield return result;
             }
-
-            ctx.Dispose();
         }
     }
 }

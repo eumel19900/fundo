@@ -7,7 +7,7 @@ Version 1.0
 	- Dateinamensuche mit dialog
 		- Liste an Suchnamen
 		- Regex (pro Eintrag)
-	- Datum von bis
+	- Datum von bis - ok
 		- letzter Zugriff - ok
 		- erstellt am - ok
 		- geändert am - ok
@@ -40,7 +40,7 @@ Settings:
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
 - MetaInformationen zum Index in den Settings anzeigen
-- Suche Abbrechbar
+- Suche Abbrechbar - ok
 - Suche nach * heißt kein Dateinamenfilter
 - Automatisches Software-update
 	- Nachfragen im Windows-Store ob Update verfügbar ist
@@ -59,7 +59,7 @@ Bugs/Sonstiges:
 	- Infomeldung über index darf nur beim Programmstart einmal angezeigt werden, nicht immer wieder - ok
 	- Settingspage lässt sich manchmal nicht öffnen, vermutlich wegen IO-Hängern - ok
 	- Wechseln der SearchEngine in der SettingsPage muss sich sofort in der Anwendung auswirken
-	- Performance in index basierter suche viel zu langsam
+	- Performance in index basierter suche viel zu langsam - ok
 
 Version 1.1 - Für Fotografen
  - Bilder:
