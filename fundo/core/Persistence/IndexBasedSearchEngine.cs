@@ -66,6 +66,10 @@ namespace fundo.core.Persistence
                     // Pfad ungültig oder Datei existiert nicht mehr -> Eintrag überspringen
                     continue;
                 }
+                if (!fileInfo.Exists)
+                {
+                    continue;
+                }
                 Debug.WriteLine($"Found file {fileInfo.FullName}");
 
                 Boolean allowed = true;

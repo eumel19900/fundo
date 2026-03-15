@@ -3,6 +3,8 @@ using fundo.core.Persistence;
 using fundo.core.Persistence.Filter;
 using fundo.core.Search;
 using fundo.core.Search.Filter;
+using fundo.gui.Job;
+using fundo.gui.Job.Jobs;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -23,7 +25,6 @@ namespace fundo.gui.page
     public sealed partial class SearchPage : Page
     {
         private SearchEngine currentSearchEngine = null;
-        private CancellationTokenSource _cts = new();
         private List<DirectoryInfo> rootSearchDirectories = new();
         private List<SearchFilter> filters = new List<SearchFilter>();
 
@@ -234,32 +235,20 @@ namespace fundo.gui.page
             }
 
 
-            await StartSearchAsync();
-        }
-
-        public async Task StartSearchAsync()
-        {
             SearchInfoTextBlock.Text = "Searching...";
             SearchButton.IsEnabled = false;
-            currentSearchEngine.reset();
 
-            ObservableCollection<SearchResultItem> searchResults = new ObservableCollection<SearchResultItem>();
-            SearchResultListView.ItemsSource = searchResults;
-
-            foreach (DirectoryInfo rootDir in rootSearchDirectories)
+            SearchJob job = new SearchJob(currentSearchEngine, new List<DirectoryInfo>(rootSearchDirectories), new List<SearchFilter>(filters))
             {
-                await foreach (SearchResultItem result in currentSearchEngine.SearchAsync(rootDir, _cts.Token, filters))
-                {
-                    searchResults.Add(result);
-                    if (currentSearchEngine is NativeSearchEngine)
-                    {
-                        SearchInfoTextBlock.Text = "Searching... (looked already in " + (currentSearchEngine as NativeSearchEngine).DirectoriesSearched + " directories)";
-                    }
-                }
-            }
+                Priority = JobPriority.Normal,
+                BlocksUI = true
+            };
 
+            await JobScheduler.Instance.ScheduleAndWaitAsync(job);
+
+            SearchResultListView.ItemsSource = new ObservableCollection<SearchResultItem>(job.Results);
             SearchButton.IsEnabled = true;
-            SearchInfoTextBlock.Text = "Finished search. Found " + searchResults.Count + " items";
+            SearchInfoTextBlock.Text = "Finished search. Found " + job.Results.Count + " items";
         }
 
 

@@ -1,11 +1,15 @@
+using fundo;
 using fundo.core.Persistence;
+using fundo.gui;
+using fundo.gui.Job;
+using fundo.gui.Job.Jobs;
 using fundo.tool;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace fundo.gui.Job
+namespace fundo.gui.Job.Jobs
 {
     /// <summary>
     /// Job that indexes selected drives.

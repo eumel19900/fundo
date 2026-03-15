@@ -1,6 +1,7 @@
 using fundo.core;
 using fundo.core.Persistence;
 using fundo.gui.Job;
+using fundo.gui.Job.Jobs;
 using fundo.tool;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
