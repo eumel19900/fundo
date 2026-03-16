@@ -19,6 +19,7 @@ Version 1.0
 		- regex
 		- ganzes wort
 		- enthält nicht?
+		- Fortschrittsanzeige
  - Popupmenu in Ergebnisliste: - ok
 	- Datei öffnen (selbe Aktion wie doppelklick) - ok
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...) - ok
