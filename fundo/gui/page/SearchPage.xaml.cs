@@ -19,6 +19,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
 
 namespace fundo.gui.page
 {
@@ -333,6 +335,11 @@ namespace fundo.gui.page
                 {
                     locateFileItem.IsEnabled = hasSelection;
                 }
+
+                if (menuFlyout.Items.Count > 2 && menuFlyout.Items[2] is MenuFlyoutItem copyFileItem)
+                {
+                    copyFileItem.IsEnabled = hasSelection;
+                }
             }
         }
 
@@ -344,6 +351,11 @@ namespace fundo.gui.page
         private async void LocateFileMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             await LocateSelectedFile();
+        }
+
+        private async void CopyFileMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            await CopySelectedFileToClipboard();
         }
 
         private async Task OpenSelectedFile()
@@ -387,6 +399,29 @@ namespace fundo.gui.page
             catch (Exception ex)
             {
                 await ShowErrorDialogAsync("Unable to locate file", ex.Message);
+            }
+        }
+
+        private async Task CopySelectedFileToClipboard()
+        {
+            SearchResultItem? selectedItem = GetSelectedSearchResultItem();
+            if (selectedItem == null)
+            {
+                return;
+            }
+
+            try
+            {
+                StorageFile file = await StorageFile.GetFileFromPathAsync(selectedItem.FileInfo.FullName);
+                DataPackage dataPackage = new DataPackage();
+                dataPackage.RequestedOperation = DataPackageOperation.Copy;
+                dataPackage.SetStorageItems(new[] { file });
+                Clipboard.SetContent(dataPackage);
+                Clipboard.Flush();
+            }
+            catch (Exception ex)
+            {
+                await ShowErrorDialogAsync("Unable to copy file", ex.Message);
             }
         }
 

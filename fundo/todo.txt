@@ -23,6 +23,7 @@ Version 1.0
  - Popupmenu in Ergebnisliste: - ok
 	- Datei öffnen (selbe Aktion wie doppelklick) - ok
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...) - ok
+	- Kopieren der Datei in Zwischenablage - ok
 Settings:
 	- Index erstellen - ok
 	- Daemon Modus per Scheduled Task konfigurierbar
@@ -37,7 +38,6 @@ Settings:
 - Autostart von Fundo
 	- Konfiguration in Settingspage
 - Dateisuche auch in Archiv-Dateien
-- Datei Kopieren als Copy-Source über Shell32
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
 - MetaInformationen zum Index in den Settings anzeigen

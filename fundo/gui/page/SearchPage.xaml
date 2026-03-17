@@ -87,11 +87,30 @@
                             <MenuFlyoutItem x:Name="OpenFileMenuFlyoutItem"
                                             Text="Open File..."
                                             IsEnabled="False"
-                                            Click="OpenFileMenuFlyoutItem_Click" />
+                                            Click="OpenFileMenuFlyoutItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="OpenFile" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                             <MenuFlyoutItem x:Name="LocateFileMenuFlyoutItem"
                                             Text="Locate File..."
                                             IsEnabled="False"
-                                            Click="LocateFileMenuFlyoutItem_Click" />
+                                            Click="LocateFileMenuFlyoutItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="OpenLocal" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="CopyFileMenuFlyoutItem"
+                                            Text="Copy"
+                                            IsEnabled="False"
+                                            Click="CopyFileMenuFlyoutItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Copy" />
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="C" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </ListView.ContextFlyout>
                     <ListView.ItemTemplate>
