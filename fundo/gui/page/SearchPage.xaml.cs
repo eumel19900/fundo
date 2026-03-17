@@ -284,12 +284,21 @@ namespace fundo.gui.page
 
         private async void SearchResultListView_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            await OpenSelectedFile();
+            await OpenSelectedFiles();
         }
 
-        private SearchResultItem? GetSelectedSearchResultItem()
+        private List<SearchResultItem> GetSelectedSearchResultItems()
         {
-            return SearchResultListView.SelectedItem as SearchResultItem;
+            if (SearchResultListView.SelectionMode == ListViewSelectionMode.Single)
+            {
+                return SearchResultListView.SelectedItem is SearchResultItem selectedItem
+                    ? new List<SearchResultItem> { selectedItem }
+                    : new List<SearchResultItem>();
+            }
+
+            return SearchResultListView.SelectedItems
+                .OfType<SearchResultItem>()
+                .ToList();
         }
 
         private void SearchResultMenuFlyout_Opening(object sender, object e)
@@ -309,21 +318,28 @@ namespace fundo.gui.page
             {
                 if (current is FrameworkElement element && element.DataContext is SearchResultItem searchResultItem)
                 {
-                    SearchResultListView.SelectedItem = searchResultItem;
+                    if (SearchResultListView.SelectionMode == ListViewSelectionMode.Single)
+                    {
+                        SearchResultListView.SelectedItem = searchResultItem;
+                    }
+                    else if (!SearchResultListView.SelectedItems.Contains(searchResultItem))
+                    {
+                        SearchResultListView.SelectedItems.Clear();
+                        SearchResultListView.SelectedItems.Add(searchResultItem);
+                    }
+
                     UpdateSearchResultMenuItems();
                     return;
                 }
 
                 current = VisualTreeHelper.GetParent(current);
             }
-
-            SearchResultListView.SelectedItem = null;
             UpdateSearchResultMenuItems();
         }
 
         private void UpdateSearchResultMenuItems()
         {
-            bool hasSelection = GetSelectedSearchResultItem() != null;
+            bool hasSelection = GetSelectedSearchResultItems().Count > 0;
             if (SearchResultListView.ContextFlyout is MenuFlyout menuFlyout)
             {
                 if (menuFlyout.Items.Count > 0 && menuFlyout.Items[0] is MenuFlyoutItem openFileItem)
@@ -340,39 +356,63 @@ namespace fundo.gui.page
                 {
                     copyFileItem.IsEnabled = hasSelection;
                 }
+
             }
+
+            ToggleSelectionModeMenuFlyoutItem.Text = SearchResultListView.SelectionMode == ListViewSelectionMode.Multiple
+                ? "Enable single-selection"
+                : "Enable multi-selection";
         }
 
         private async void OpenFileMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            await OpenSelectedFile();
+            await OpenSelectedFiles();
         }
 
         private async void LocateFileMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            await LocateSelectedFile();
+            await LocateSelectedFiles();
         }
 
         private async void CopyFileMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            await CopySelectedFileToClipboard();
+            await CopySelectedFilesToClipboard();
         }
 
-        private async Task OpenSelectedFile()
+        private void EnableMultiSelectionMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            SearchResultItem? selectedItem = GetSelectedSearchResultItem();
-            if (selectedItem == null)
+            SearchResultItem? firstSelectedItem = GetSelectedSearchResultItems().FirstOrDefault();
+
+            SearchResultListView.SelectionMode = SearchResultListView.SelectionMode == ListViewSelectionMode.Multiple
+                ? ListViewSelectionMode.Single
+                : ListViewSelectionMode.Multiple;
+
+            if (SearchResultListView.SelectionMode == ListViewSelectionMode.Single)
+            {
+                SearchResultListView.SelectedItem = firstSelectedItem;
+            }
+
+            UpdateSearchResultMenuItems();
+        }
+
+        private async Task OpenSelectedFiles()
+        {
+            List<SearchResultItem> selectedItems = GetSelectedSearchResultItems();
+            if (selectedItems.Count == 0)
             {
                 return;
             }
 
             try
             {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                foreach (SearchResultItem selectedItem in selectedItems)
                 {
-                    FileName = selectedItem.FileInfo.FullName,
-                    UseShellExecute = true
-                });
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                    {
+                        FileName = selectedItem.FileInfo.FullName,
+                        UseShellExecute = true
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -380,21 +420,30 @@ namespace fundo.gui.page
             }
         }
 
-        private async Task LocateSelectedFile()
+        private async Task LocateSelectedFiles()
         {
-            SearchResultItem? selectedItem = GetSelectedSearchResultItem();
-            if (selectedItem == null || selectedItem.FileInfo.DirectoryName == null)
+            List<string> directories = GetSelectedSearchResultItems()
+                .Select(item => item.FileInfo.DirectoryName)
+                .Where(directory => !string.IsNullOrWhiteSpace(directory))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Cast<string>()
+                .ToList();
+
+            if (directories.Count == 0)
             {
                 return;
             }
 
             try
             {
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                foreach (string directory in directories)
                 {
-                    FileName = selectedItem.FileInfo.DirectoryName,
-                    UseShellExecute = true
-                });
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+                    {
+                        FileName = directory,
+                        UseShellExecute = true
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -402,20 +451,26 @@ namespace fundo.gui.page
             }
         }
 
-        private async Task CopySelectedFileToClipboard()
+        private async Task CopySelectedFilesToClipboard()
         {
-            SearchResultItem? selectedItem = GetSelectedSearchResultItem();
-            if (selectedItem == null)
+            List<SearchResultItem> selectedItems = GetSelectedSearchResultItems();
+            if (selectedItems.Count == 0)
             {
                 return;
             }
 
             try
             {
-                StorageFile file = await StorageFile.GetFileFromPathAsync(selectedItem.FileInfo.FullName);
+                List<IStorageItem> files = new List<IStorageItem>();
+                foreach (SearchResultItem selectedItem in selectedItems)
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync(selectedItem.FileInfo.FullName);
+                    files.Add(file);
+                }
+
                 DataPackage dataPackage = new DataPackage();
                 dataPackage.RequestedOperation = DataPackageOperation.Copy;
-                dataPackage.SetStorageItems(new[] { file });
+                dataPackage.SetStorageItems(files);
                 Clipboard.SetContent(dataPackage);
                 Clipboard.Flush();
             }

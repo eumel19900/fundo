@@ -111,6 +111,14 @@
                                     <KeyboardAccelerator Modifiers="Control" Key="C" />
                                 </MenuFlyoutItem.KeyboardAccelerators>
                             </MenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Name="ToggleSelectionModeMenuFlyoutItem"
+                                            Text="Enable multi-selection"
+                                            Click="EnableMultiSelectionMenuFlyoutItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Bullets" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </ListView.ContextFlyout>
                     <ListView.ItemTemplate>

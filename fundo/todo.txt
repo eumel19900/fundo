@@ -19,6 +19,7 @@ Version 1.0
 		- regex
 		- ganzes wort
 		- enthält nicht?
+		- Fortschrittsanzeige
  - Popupmenu in Ergebnisliste: - ok
 	- Datei öffnen (selbe Aktion wie doppelklick) - ok
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...) - ok
@@ -44,6 +45,7 @@ Settings:
 - Suche nach * heißt kein Dateinamenfilter
 - Mehrfachselektion in Ergebnisliste
 - Automatisches Software-update
+- Automatisches Software-update?
 	- Nachfragen im Windows-Store ob Update verfügbar ist
 	- Konfiguration in Settingspage
 
