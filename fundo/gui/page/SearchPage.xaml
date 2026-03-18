@@ -7,7 +7,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:src="using:fundo.gui.control"
-    xmlns:model="using:fundo.core.Search"
     mc:Ignorable="d">
 
     <Grid>
@@ -73,79 +72,8 @@
                         Padding="20,8"/>
             </Grid>
 
-            <Border Grid.Row="4"
-                    Padding="20,8"
-                    Background="{ThemeResource LayerFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1">
-                <ListView x:Name="SearchResultListView"
-                          SelectionMode="Single"
-                          RightTapped="SearchResultListView_RightTapped"
-                          DoubleTapped="SearchResultListView_DoubleTapped">
-                    <ListView.ContextFlyout>
-                        <MenuFlyout Opening="SearchResultMenuFlyout_Opening">
-                            <MenuFlyoutItem x:Name="OpenFileMenuFlyoutItem"
-                                            Text="Open File..."
-                                            IsEnabled="False"
-                                            Click="OpenFileMenuFlyoutItem_Click">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="OpenFile" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem x:Name="LocateFileMenuFlyoutItem"
-                                            Text="Locate File..."
-                                            IsEnabled="False"
-                                            Click="LocateFileMenuFlyoutItem_Click">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="OpenLocal" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem x:Name="CopyFileMenuFlyoutItem"
-                                            Text="Copy"
-                                            IsEnabled="False"
-                                            Click="CopyFileMenuFlyoutItem_Click">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="Copy" />
-                                </MenuFlyoutItem.Icon>
-                                <MenuFlyoutItem.KeyboardAccelerators>
-                                    <KeyboardAccelerator Modifiers="Control" Key="C" />
-                                </MenuFlyoutItem.KeyboardAccelerators>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutSeparator />
-                            <MenuFlyoutItem x:Name="ToggleSelectionModeMenuFlyoutItem"
-                                            Text="Enable multi-selection"
-                                            Click="EnableMultiSelectionMenuFlyoutItem_Click">
-                                <MenuFlyoutItem.Icon>
-                                    <SymbolIcon Symbol="Bullets" />
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                        </MenuFlyout>
-                    </ListView.ContextFlyout>
-                    <ListView.ItemTemplate>
-                        <DataTemplate x:DataType="model:SearchResultItem">
-                            <StackPanel Orientation="Horizontal" Margin="4" VerticalAlignment="Center">
-                                <Image Source="{x:Bind FileImage, Mode=OneWay}"
-                                       Width="32" Height="32" Margin="0,0,8,0"/>
-
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{x:Bind FileName}"
-                                               FontSize="18"
-                                               Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
-                                    <TextBlock Text="{x:Bind Path}"
-                                               FontSize="10"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock Text="{x:Bind FileDate}"
-                                               FontSize="10"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock Text="{x:Bind FileSizeString}"
-                                               FontSize="10"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Border>
+            <src:SearchResultListControl Grid.Row="4"
+                                          x:Name="SearchResultListControl"/>
         </Grid>
 
         <!-- Überlagernder InfoBar, hoher Z-Index -->
