@@ -51,6 +51,9 @@
     <None Update="gui\control\LocationPickerWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
+    <Page Update="gui\control\SearchResultListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
