@@ -44,7 +44,6 @@ Settings:
 - Suche Abbrechbar - ok
 - Suche nach * heißt kein Dateinamenfilter
 - Mehrfachselektion in Ergebnisliste
-- Automatisches Software-update
 - Automatisches Software-update?
 	- Nachfragen im Windows-Store ob Update verfügbar ist
 	- Konfiguration in Settingspage
