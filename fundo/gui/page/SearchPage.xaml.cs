@@ -56,8 +56,27 @@ namespace fundo.gui.page
             SearchEngineInfoBar.Title = "Search engine";
             SearchEngineInfoBar.IsOpen = true;
 
+            UpdateMainWindowTitle();
+
             // nach 10 Sekunden automatisch schließen (nicht blocking)
             _ = AutoCloseSearchEngineInfoBarAsync(TimeSpan.FromSeconds(10));
+        }
+
+        private void UpdateMainWindowTitle()
+        {
+            if (App.MainWindowInstance == null)
+            {
+                return;
+            }
+
+            string engineName = currentSearchEngine switch
+            {
+                IndexBasedSearchEngine => "Index-based search",
+                NativeSearchEngine => "Native file search",
+                _ => "Unknown"
+            };
+
+            App.MainWindowInstance.Title = $"Fundo – {engineName}";
         }
 
         private async Task AutoCloseSearchEngineInfoBarAsync(TimeSpan delay)
