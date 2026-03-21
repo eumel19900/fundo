@@ -72,8 +72,8 @@
                         Padding="20,8"/>
             </Grid>
 
-            <src:SearchResultListControl Grid.Row="4"
-                                          x:Name="SearchResultListControl"/>
+            <src:SearchResultListItemRepeater Grid.Row="4"
+                                                x:Name="SearchResultList"/>
         </Grid>
 
         <!-- Überlagernder InfoBar, hoher Z-Index -->

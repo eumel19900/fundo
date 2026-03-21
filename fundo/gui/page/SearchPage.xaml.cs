@@ -259,7 +259,7 @@ namespace fundo.gui.page
 
             await JobScheduler.Instance.ScheduleAndWaitAsync(job);
 
-            SearchResultListControl.ItemsSource = new ObservableCollection<SearchResultItem>(job.Results);
+            SearchResultList.SetItems(job.Results);
             SearchButton.IsEnabled = true;
             SearchInfoTextBlock.Text = "Finished search. Found " + job.Results.Count + " items";
         }
