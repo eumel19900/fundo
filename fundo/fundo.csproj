@@ -133,10 +133,6 @@
     </Page>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="gui\control\SearchResultListCtl\" />
-  </ItemGroup>
-
     <!-- Publish Properties -->
   <PropertyGroup>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
