@@ -50,15 +50,10 @@ Hier sollen zunächst zwei Einträge hinein:
 Claude Opus 4.6:
 Ich möchte ein neues UserControl namens SearchResultListItemRepeater haben.
 Lege dieses unter gui/control/ an.
-
 Es soll auf einem ItemsRepeater basieren und es soll SearchResultItem-Objekte darstellen. Die Darstellung dieser Objekte soll identisch sein wie im SearchResultListControl.
 Die Liste aus SearchResultItem-Objekten kann sehr lang sein (mehrere Millionen objekte), wir benötigen also eine Lazy-Loading mechanik (das heißt die Virtualisierungs-mechaniken von Winui3 sollen verwendet werden). Es wird eine Caching-Mechanik benötigt die dafür sorgt, dass immer nur einige Hundert Items in dem Control zur Zeit instanziiert sind.
-
 Schreibe für das Control einen Daten-Provider, der die millionen SearchResultItem-objekte hält. Hier muss zusätzlich Filtern nach Dateinamen (nur Name nicht Pfadanteil) möglich sein. Zusätzlich muss hier eine Sortierung möglich sein: nach Dateiname (nicht Pfadanteil), nach beinhaltenem Ordner, nach Dateigröße, nach Dateidatum. Berücksichtige auch hier, dass die Dateiliste mehrere Millionen Einträge enthalten kann.
-
 Implementiere für das neue Control ein Contextmenu, dass dem Contextmenu aus dem SearchResultListControl entspricht.
 Erweitere dieses Context-Menu zusätzlich um die Sortierfunktionen, die ich oben beschrieben habe. Filterung soll im Context-menu zunächst nicht implementiert werden.
-
 Bedenke dass das SearchResultItem auch ein Icon enthält, dass mit einer Lazy-Loading Mechanik geladen wird.
-
 Abschließend ersetze bitte das SearchResultListControl in der SearchPage durch das neue UserControl.

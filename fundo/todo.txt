@@ -13,7 +13,7 @@ Version 1.0
 		- geändert am - ok
 	- Dateigröße von bis - ok
 	- Dateiflags/attribute: versteckt, system, archiv, - ok
-	- Dateibesitzer
+	- Dateibesitzer?
 	- Volltextsuche - ok
 		- case sensitive
 		- regex

@@ -41,7 +41,7 @@ namespace fundo.tool
                 // avoid overflow when taking abs
                 return $"{(double)bytes:N0} B";
             }
-
+            
             var negative = bytes < 0;
             var value = Math.Abs((double)bytes);
 
