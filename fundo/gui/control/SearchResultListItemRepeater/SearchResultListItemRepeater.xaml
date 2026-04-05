@@ -132,6 +132,13 @@
                                     <SymbolIcon Symbol="Calendar"/>
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="SortByTypeMenuItem"
+                                            Text="Sort by type"
+                                            Click="SortByTypeMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Document"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                                 </MenuFlyout>
                             </ScrollViewer.ContextFlyout>
                         </ScrollViewer>

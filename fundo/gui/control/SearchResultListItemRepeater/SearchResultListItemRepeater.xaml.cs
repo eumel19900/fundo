@@ -224,6 +224,7 @@ namespace fundo.gui.control
             SortByDirectoryMenuItem.Text = "Sort by directory" + (_dataProvider.SortField == SearchResultSortField.Directory ? arrow : "");
             SortBySizeMenuItem.Text = "Sort by size" + (_dataProvider.SortField == SearchResultSortField.FileSize ? arrow : "");
             SortByDateMenuItem.Text = "Sort by date" + (_dataProvider.SortField == SearchResultSortField.FileDate ? arrow : "");
+            SortByTypeMenuItem.Text = "Sort by type" + (_dataProvider.SortField == SearchResultSortField.FileType ? arrow : "");
         }
 
         private async void OpenFileMenuItem_Click(object sender, RoutedEventArgs e) => await OpenSelectedFiles();
@@ -246,6 +247,7 @@ namespace fundo.gui.control
         private void SortByDirectoryMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.Directory);
         private void SortBySizeMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileSize);
         private void SortByDateMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileDate);
+        private void SortByTypeMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileType);
 
         private void FilterByNameMenuItem_Click(object sender, RoutedEventArgs e)
         {

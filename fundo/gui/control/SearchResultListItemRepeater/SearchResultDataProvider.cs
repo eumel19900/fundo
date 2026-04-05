@@ -13,7 +13,8 @@ namespace fundo.gui.control
         FileName,
         Directory,
         FileSize,
-        FileDate
+        FileDate,
+        FileType
     }
 
     /// <summary>
@@ -180,6 +181,10 @@ namespace fundo.gui.control
                     StringComparison.OrdinalIgnoreCase),
                 SearchResultSortField.FileSize => x.Length.CompareTo(y.Length),
                 SearchResultSortField.FileDate => x.CreationTime.CompareTo(y.CreationTime),
+                SearchResultSortField.FileType => string.Compare(
+                    x.Extension ?? string.Empty,
+                    y.Extension ?? string.Empty,
+                    StringComparison.OrdinalIgnoreCase),
                 _ => 0
             };
         }
