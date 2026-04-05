@@ -27,6 +27,7 @@ namespace fundo.gui.page
         private AttributeFilterPage? attributeFilterPage;
         private FileContentFilterPage? fileContentFilterPage;
         private SizeFilterPage? sizeFilterPage;
+        private Boolean needsSearchEngineInfoBarUpdate = true;
 
         public SearchPage()
         {
@@ -54,7 +55,12 @@ namespace fundo.gui.page
             }
 
             SearchEngineInfoBar.Title = "Search engine";
-            SearchEngineInfoBar.IsOpen = true;
+
+            if (needsSearchEngineInfoBarUpdate)
+            {
+                SearchEngineInfoBar.IsOpen = true;
+                needsSearchEngineInfoBarUpdate = false;
+            }
 
             UpdateMainWindowTitle();
 
@@ -184,10 +190,7 @@ namespace fundo.gui.page
 
         private async void SearchButton_Clicked(object sender, RoutedEventArgs e)
         {
-            if (currentSearchEngine == null)
-            {
-                return;
-            }
+            chooseSearchEngine();
 
 
             //Setup filters
