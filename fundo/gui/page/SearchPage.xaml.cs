@@ -200,7 +200,7 @@ namespace fundo.gui.page
                 case SearchEngine.EngineType.Native:
                     if (SearchPatternTextBox.Text != "")
                     {
-                        filters.Add(new FileNameFilter(SearchPatternTextBox.Text));
+                        filters.Add(new FileNameFilter(SearchPatternTextBox.Text, useRegex: RegexCheckBox.IsChecked == true));
                     }
                     if (sizeFilterPage?.SizeFilterEnabled == true)
                     {

@@ -23,8 +23,18 @@
             <!-- filename -->
             <StackPanel Spacing="5">
                 <TextBlock Text="Filename" FontWeight="SemiBold"/>
-                <TextBox x:Name="SearchPatternTextBox"
-                         PlaceholderText="*.jpeg"/>
+                <Grid ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="SearchPatternTextBox"
+                             PlaceholderText="*.jpeg"/>
+                    <CheckBox x:Name="RegexCheckBox"
+                              Grid.Column="1"
+                              Content="Regex"
+                              VerticalAlignment="Center"/>
+                </Grid>
             </StackPanel>
 
             <!-- search location -->
