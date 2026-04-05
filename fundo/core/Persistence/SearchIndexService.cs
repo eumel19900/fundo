@@ -75,30 +75,40 @@ namespace fundo.core.Persistence
 
             NativeSearchEngine searchEngine = new NativeSearchEngine();
             searchEngine.reset();
+            searchEngine.IncludeIoProperties = true;
 
-            foreach (DetachedFileInfo result in searchEngine.Search(
-                new DirectoryInfo(drive.DriveLetter),
-                null))
+            var asyncEnumerable = searchEngine.SearchAsync(
+                new DirectoryInfo(drive.DriveLetter), cancellationToken, null);
+            var enumerator = asyncEnumerable.GetAsyncEnumerator(cancellationToken);
+            try
             {
-                FileEntity fileEntity = new FileEntity
+                while (enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
                 {
-                    FileName = result.Name,
-                    Path = result.FullName,
-                    FileSize = result.Length,
-                    CreationTime = result.CreationTime,
-                    ModifiedTime = result.LastWriteTime,
-                    LastAccessTime = result.LastAccessTime,
-                    FileAttributes = FileAttributeHelper.FromSystemFileAttributes(result.Attributes),
-                    StorageDeviceId = storageDeviceId,
-                };
+                    var result = enumerator.Current;
+                    FileEntity fileEntity = new FileEntity
+                    {
+                        FileName = result.Name,
+                        Path = result.FullName,
+                        FileSize = result.Length,
+                        CreationTime = result.CreationTime,
+                        ModifiedTime = result.LastWriteTime,
+                        LastAccessTime = result.LastAccessTime,
+                        FileAttributes = FileAttributeHelper.FromSystemFileAttributes(result.Attributes),
+                        StorageDeviceId = storageDeviceId,
+                    };
 
-                batch.Add(fileEntity);
+                    batch.Add(fileEntity);
 
-                if (batch.Count >= batchSize)
-                {
-                    SearchIndexStore.AddFilesBulk(batch);
-                    batch.Clear();
+                    if (batch.Count >= batchSize)
+                    {
+                        SearchIndexStore.AddFilesBulk(batch);
+                        batch.Clear();
+                    }
                 }
+            }
+            finally
+            {
+                enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
             }
 
             if (batch.Count > 0)

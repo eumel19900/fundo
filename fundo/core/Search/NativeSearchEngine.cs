@@ -19,6 +19,13 @@ namespace fundo.core.Search
 
         public SearchEngine.EngineType Kind => SearchEngine.EngineType.Native;
 
+        /// <summary>
+        /// Controls whether DetachedFileInfo results include IO properties eagerly.
+        /// When false (default), IO properties are loaded lazily on first access.
+        /// Set to true when all IO properties will be accessed for every result (e.g., indexing).
+        /// </summary>
+        public bool IncludeIoProperties { get; set; }
+
         public void reset()
         {
             directoriesSearched = 0;
@@ -100,7 +107,7 @@ namespace fundo.core.Search
 
                             try
                             {
-                                var item = new DetachedFileInfo(file, includeIoProperties: false);
+                                var item = new DetachedFileInfo(file, includeIoProperties: IncludeIoProperties);
                                 await writer.WriteAsync(item, cancellationToken).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException) { break; }
@@ -158,88 +165,5 @@ namespace fundo.core.Search
             }
         }
 
-        public List<DetachedFileInfo> Search(DirectoryInfo startDirectory,
-            List<NativeSearchFilter> searchFilters)
-        {
-            List<DetachedFileInfo> resultList = new List<DetachedFileInfo>();
-            if (startDirectory == null || !startDirectory.Exists)
-            {
-                return null;
             }
-
-
-            var directoriesStack = new Stack<DirectoryInfo>();
-            directoriesStack.Push(startDirectory);
-
-            while (directoriesStack.Count > 0)
-            {
-
-                var dir = directoriesStack.Pop();
-                directoriesSearched++;
-
-                IEnumerable<FileInfo> files = null;
-                try
-                {
-                    files = dir.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
-                }
-                catch (UnauthorizedAccessException) { continue; }
-                catch (DirectoryNotFoundException) { continue; }
-                catch (IOException) { continue; }
-
-                foreach (var file in files)
-                {
-                    bool allowed = true;
-
-                    // Nur filtern wenn searchFilters vorhanden sind
-                    if (searchFilters != null && searchFilters.Count > 0)
-                    {
-                        try
-                        {
-                            foreach (var filter in searchFilters)
-                            {
-                                if (!filter.isAllowed(file))
-                                {
-                                    allowed = false;
-                                    break;
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            // if a filter throws, treat as not allowed
-                            allowed = false;
-                        }
-                    }
-
-                    if (!allowed) continue;
-
-                    try
-                    {
-                        resultList.Add(new DetachedFileInfo(file));
-                    }
-                    catch
-                    {
-                        // ignore file-specific failures
-                        continue;
-                    }
-                }
-
-                // push subdirectories
-                IEnumerable<DirectoryInfo> subdirs = null;
-                try
-                {
-                    subdirs = dir.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
-                }
-                catch (UnauthorizedAccessException) { continue; }
-                catch (DirectoryNotFoundException) { continue; }
-                catch (IOException) { continue; }
-
-                foreach (var sd in subdirs)
-                {
-                    directoriesStack.Push(sd);
-                }
-            }
-            return resultList;
         }
-    }
-}
