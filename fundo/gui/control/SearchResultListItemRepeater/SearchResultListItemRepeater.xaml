@@ -8,112 +8,149 @@
     xmlns:model="using:fundo.core"
     mc:Ignorable="d">
 
-    <Border Padding="20,8"
-            Background="{ThemeResource LayerFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            BorderThickness="1">
-        <ScrollViewer x:Name="RepeaterScrollViewer">
-            <ItemsRepeater x:Name="Repeater"
-                           Tapped="ItemsRepeater_Tapped"
-                           RightTapped="ItemsRepeater_RightTapped"
-                           DoubleTapped="ItemsRepeater_DoubleTapped">
-                <ItemsRepeater.Layout>
-                    <StackLayout Spacing="2"/>
-                </ItemsRepeater.Layout>
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="model:DetachedFileInfo">
-                        <Border Padding="8,4" CornerRadius="4" Margin="0,1"
-                                Background="Transparent">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Image Source="{x:Bind FileImage, Mode=OneWay}"
-                                       Width="32" Height="32" Margin="0,0,8,0"/>
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{x:Bind Name}"
-                                               FontSize="18"
-                                               Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
-                                    <TextBlock Text="{x:Bind FullName}"
-                                               FontSize="10"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock Text="{x:Bind CreationTime}"
-                                               FontSize="10"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                    <TextBlock Text="{x:Bind FileSizeString}"
-                                               FontSize="10"
-                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+    <Grid>
+        <Border Padding="20,8"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+            <ScrollViewer x:Name="RepeaterScrollViewer">
+                <ItemsRepeater x:Name="Repeater"
+                               Tapped="ItemsRepeater_Tapped"
+                               RightTapped="ItemsRepeater_RightTapped"
+                               DoubleTapped="ItemsRepeater_DoubleTapped">
+                    <ItemsRepeater.Layout>
+                        <StackLayout Spacing="2"/>
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="model:DetachedFileInfo">
+                            <Border Padding="8,4" CornerRadius="4" Margin="0,1"
+                                    Background="Transparent">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Image Source="{x:Bind FileImage, Mode=OneWay}"
+                                           Width="32" Height="32" Margin="0,0,8,0"/>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="{x:Bind Name}"
+                                                   FontSize="18"
+                                                   Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                                        <TextBlock Text="{x:Bind FullName}"
+                                                   FontSize="10"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind CreationTime}"
+                                                   FontSize="10"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind FileSizeString}"
+                                                   FontSize="10"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    </StackPanel>
                                 </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-                <ItemsRepeater.ContextFlyout>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+                <ScrollViewer.ContextFlyout>
                     <MenuFlyout Opening="ContextMenuFlyout_Opening">
-                        <MenuFlyoutItem x:Name="OpenFileMenuItem"
-                                        Text="Open File..."
-                                        IsEnabled="False"
-                                        Click="OpenFileMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="OpenFile"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="LocateFileMenuItem"
-                                        Text="Locate File..."
-                                        IsEnabled="False"
-                                        Click="LocateFileMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="OpenLocal"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="CopyFileMenuItem"
-                                        Text="Copy"
-                                        IsEnabled="False"
-                                        Click="CopyFileMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="Copy"/>
-                            </MenuFlyoutItem.Icon>
-                            <MenuFlyoutItem.KeyboardAccelerators>
-                                <KeyboardAccelerator Modifiers="Control" Key="C"/>
-                            </MenuFlyoutItem.KeyboardAccelerators>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="ToggleSelectionModeMenuItem"
-                                        Text="Enable multi-selection"
-                                        Click="ToggleSelectionModeMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="Bullets"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
-                        <MenuFlyoutItem x:Name="SortByNameMenuItem"
-                                        Text="Sort by name"
-                                        Click="SortByNameMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="Sort"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="SortByDirectoryMenuItem"
-                                        Text="Sort by directory"
-                                        Click="SortByDirectoryMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="OpenLocal"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="SortBySizeMenuItem"
-                                        Text="Sort by size"
-                                        Click="SortBySizeMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="Page"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem x:Name="SortByDateMenuItem"
-                                        Text="Sort by date"
-                                        Click="SortByDateMenuItem_Click">
-                            <MenuFlyoutItem.Icon>
-                                <SymbolIcon Symbol="Calendar"/>
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                    </MenuFlyout>
-                </ItemsRepeater.ContextFlyout>
-            </ItemsRepeater>
-        </ScrollViewer>
-    </Border>
+                            <MenuFlyoutItem x:Name="OpenFileMenuItem"
+                                            Text="Open File..."
+                                            IsEnabled="False"
+                                            Click="OpenFileMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="OpenFile"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="LocateFileMenuItem"
+                                            Text="Locate File..."
+                                            IsEnabled="False"
+                                            Click="LocateFileMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="OpenLocal"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="CopyFileMenuItem"
+                                            Text="Copy"
+                                            IsEnabled="False"
+                                            Click="CopyFileMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Copy"/>
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="C"/>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Name="FilterByNameMenuItem"
+                                            Text="Filter by file name..."
+                                            Click="FilterByNameMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Filter"/>
+                                </MenuFlyoutItem.Icon>
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Modifiers="Control" Key="F"/>
+                                </MenuFlyoutItem.KeyboardAccelerators>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="ClearFilterMenuItem"
+                                            Text="Clear filter"
+                                            IsEnabled="False"
+                                            Click="ClearFilterMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Clear"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Name="ToggleSelectionModeMenuItem"
+                                            Text="Enable multi-selection"
+                                            Click="ToggleSelectionModeMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Bullets"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutItem x:Name="SortByNameMenuItem"
+                                            Text="Sort by name"
+                                            Click="SortByNameMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Sort"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="SortByDirectoryMenuItem"
+                                            Text="Sort by directory"
+                                            Click="SortByDirectoryMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="OpenLocal"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="SortBySizeMenuItem"
+                                            Text="Sort by size"
+                                            Click="SortBySizeMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Page"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="SortByDateMenuItem"
+                                            Text="Sort by date"
+                                            Click="SortByDateMenuItem_Click">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Calendar"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </ScrollViewer.ContextFlyout>
+                        </ScrollViewer>
+        </Border>
+
+        <Popup x:Name="FilterPopup"
+               IsLightDismissEnabled="True"
+               Closed="FilterPopup_Closed">
+            <Border Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="8"
+                    MinWidth="300">
+                <TextBox x:Name="FilterTextBox"
+                         PlaceholderText="Filter by file name..."
+                         TextChanged="FilterTextBox_TextChanged"
+                         KeyDown="FilterTextBox_KeyDown"/>
+            </Border>
+        </Popup>
+    </Grid>
 </UserControl>

@@ -1,4 +1,5 @@
 using fundo.core;
+using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -21,6 +22,7 @@ namespace fundo.gui.control
         private bool _multiSelectMode = false;
         private Brush? _selectedBrush;
         private static readonly SolidColorBrush TransparentBrush = new(Microsoft.UI.Colors.Transparent);
+        private DispatcherQueueTimer? _filterDebounceTimer;
 
         public SearchResultListItemRepeater()
         {
@@ -211,6 +213,12 @@ namespace fundo.gui.control
                 ? "Enable single-selection"
                 : "Enable multi-selection";
 
+            bool hasFilter = !string.IsNullOrEmpty(_dataProvider.FileNameFilter);
+            FilterByNameMenuItem.Text = hasFilter
+                ? $"Filter: \"{_dataProvider.FileNameFilter}\""
+                : "Filter by file name...";
+            ClearFilterMenuItem.IsEnabled = hasFilter;
+
             string arrow = _dataProvider.SortDirection == SearchResultSortDirection.Ascending ? " \u2191" : " \u2193";
             SortByNameMenuItem.Text = "Sort by name" + (_dataProvider.SortField == SearchResultSortField.FileName ? arrow : "");
             SortByDirectoryMenuItem.Text = "Sort by directory" + (_dataProvider.SortField == SearchResultSortField.Directory ? arrow : "");
@@ -238,6 +246,58 @@ namespace fundo.gui.control
         private void SortByDirectoryMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.Directory);
         private void SortBySizeMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileSize);
         private void SortByDateMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileDate);
+
+        private void FilterByNameMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            FilterTextBox.Text = _dataProvider.FileNameFilter;
+
+            var popupChild = (FrameworkElement)FilterPopup.Child;
+            popupChild.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            FilterPopup.HorizontalOffset = ActualWidth - popupChild.DesiredSize.Width - 20;
+            FilterPopup.VerticalOffset = ActualHeight - popupChild.DesiredSize.Height - 20;
+            FilterPopup.IsOpen = true;
+            FilterTextBox.Focus(FocusState.Programmatic);
+            FilterTextBox.SelectAll();
+        }
+
+        private void ClearFilterMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            _dataProvider.SetFileNameFilter(string.Empty);
+        }
+
+        #endregion
+
+        #region Filter Popup
+
+        private void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _filterDebounceTimer?.Stop();
+
+            _filterDebounceTimer = DispatcherQueue.CreateTimer();
+            _filterDebounceTimer.Interval = TimeSpan.FromMilliseconds(250);
+            _filterDebounceTimer.IsRepeating = false;
+            _filterDebounceTimer.Tick += (_, _) =>
+            {
+                _dataProvider.SetFileNameFilter(FilterTextBox.Text);
+            };
+            _filterDebounceTimer.Start();
+        }
+
+        private void FilterTextBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Escape)
+            {
+                FilterPopup.IsOpen = false;
+                e.Handled = true;
+            }
+        }
+
+        private void FilterPopup_Closed(object sender, object e)
+        {
+            _filterDebounceTimer?.Stop();
+            _dataProvider.SetFileNameFilter(FilterTextBox.Text);
+        }
 
         #endregion
 

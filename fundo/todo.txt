@@ -27,9 +27,9 @@ Version 1.0
 Settings:
 	- Index erstellen - ok
 	- Daemon Modus per Scheduled Task konfigurierbar
-- Volltextsuche (oder filterung?) in der Ergebnisliste
-- Sortierung in der Ergebnisliste
-- Ergebnisliste mit lazy loading
+- Volltextsuche (oder filterung?) in der Ergebnisliste - ok
+- Sortierung in der Ergebnisliste - ok
+- Ergebnisliste mit lazy loading - ok
 - Immer nur eine Instanz von Fundo erlauben - ok
 	- Kommunikation an erste Instanz z.b. bei Kommandozeilenparametern
 - Manual-Seite
@@ -43,7 +43,7 @@ Settings:
 - MetaInformationen zum Index in den Settings anzeigen
 - Suche Abbrechbar - ok
 - Suche nach * heißt kein Dateinamenfilter
-- Mehrfachselektion in Ergebnisliste
+- Mehrfachselektion in Ergebnisliste - ok
 - Automatisches Software-update?
 	- Nachfragen im Windows-Store ob Update verfügbar ist
 	- Konfiguration in Settingspage
