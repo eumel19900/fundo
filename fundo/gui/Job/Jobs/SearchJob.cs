@@ -1,3 +1,4 @@
+using fundo.core;
 using fundo.core.Search;
 using fundo.core.Search.Filter;
 using System;
@@ -15,14 +16,14 @@ namespace fundo.gui.Job.Jobs
         private readonly SearchEngine _searchEngine;
         private readonly List<DirectoryInfo> _rootSearchDirectories;
         private readonly List<SearchFilter> _filters;
-        private readonly List<SearchResultItem> _results = new();
+        private readonly List<DetachedFileInfo> _results = new();
 
         public override string JobName => "File Search";
 
         /// <summary>
         /// The search results collected during execution.
         /// </summary>
-        public IReadOnlyList<SearchResultItem> Results => _results;
+        public IReadOnlyList<DetachedFileInfo> Results => _results;
 
         public SearchJob(SearchEngine searchEngine, List<DirectoryInfo> rootSearchDirectories, List<SearchFilter> filters)
         {

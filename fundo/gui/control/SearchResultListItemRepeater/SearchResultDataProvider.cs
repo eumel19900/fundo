@@ -1,4 +1,4 @@
-using fundo.core.Search;
+using fundo.core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +31,7 @@ namespace fundo.gui.control
     /// </summary>
     internal class SearchResultDataProvider
     {
-        private List<SearchResultItem> _allItems = new();
+        private List<DetachedFileInfo> _allItems = new();
         private int[] _viewIndices = Array.Empty<int>();
 
         private string _fileNameFilter = string.Empty;
@@ -71,7 +71,7 @@ namespace fundo.gui.control
         /// <summary>
         /// Gets the item at the given view index.
         /// </summary>
-        public SearchResultItem GetAt(int viewIndex)
+        public DetachedFileInfo GetAt(int viewIndex)
         {
             return _allItems[_viewIndices[viewIndex]];
         }
@@ -79,9 +79,9 @@ namespace fundo.gui.control
         /// <summary>
         /// Replaces all items with the given collection.
         /// </summary>
-        public void SetItems(IReadOnlyList<SearchResultItem> items)
+        public void SetItems(IReadOnlyList<DetachedFileInfo> items)
         {
-            _allItems = new List<SearchResultItem>(items);
+            _allItems = new List<DetachedFileInfo>(items);
             RebuildView();
         }
 
@@ -153,8 +153,8 @@ namespace fundo.gui.control
             {
                 string filter = _fileNameFilter;
                 indices = indices.Where(i =>
-                    _allItems[i].FileName != null &&
-                    _allItems[i].FileName.Contains(filter, StringComparison.OrdinalIgnoreCase));
+                    _allItems[i].Name != null &&
+                    _allItems[i].Name.Contains(filter, StringComparison.OrdinalIgnoreCase));
             }
 
             int[] filtered = indices.ToArray();
@@ -169,17 +169,17 @@ namespace fundo.gui.control
             ViewChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private int CompareItems(SearchResultItem x, SearchResultItem y)
+        private int CompareItems(DetachedFileInfo x, DetachedFileInfo y)
         {
             return _sortField switch
             {
-                SearchResultSortField.FileName => string.Compare(x.FileName, y.FileName, StringComparison.OrdinalIgnoreCase),
+                SearchResultSortField.FileName => string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase),
                 SearchResultSortField.Directory => string.Compare(
-                    x.FileInfo?.DirectoryName ?? string.Empty,
-                    y.FileInfo?.DirectoryName ?? string.Empty,
+                    x.DirectoryName ?? string.Empty,
+                    y.DirectoryName ?? string.Empty,
                     StringComparison.OrdinalIgnoreCase),
-                SearchResultSortField.FileSize => x.FileSize.CompareTo(y.FileSize),
-                SearchResultSortField.FileDate => x.FileDate.CompareTo(y.FileDate),
+                SearchResultSortField.FileSize => x.Length.CompareTo(y.Length),
+                SearchResultSortField.FileDate => x.CreationTime.CompareTo(y.CreationTime),
                 _ => 0
             };
         }

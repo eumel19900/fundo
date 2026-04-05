@@ -19,7 +19,7 @@ namespace fundo.core.Persistence
         {
         }
 
-        public async IAsyncEnumerable<SearchResultItem> SearchAsync(
+        public async IAsyncEnumerable<DetachedFileInfo> SearchAsync(
             DirectoryInfo startDirectory,
             [EnumeratorCancellation] CancellationToken cancellationToken,
             List<SearchFilter> searchFilters)
@@ -59,19 +59,7 @@ namespace fundo.core.Persistence
                 cancellationToken.ThrowIfCancellationRequested();
 
                 FileInfo fileInfo;
-                try
-                {
-                    fileInfo = new FileInfo(entity.Path);
-                }
-                catch
-                {
-                    continue;
-                }
-
-                if (!fileInfo.Exists)
-                {
-                    continue;
-                }
+                fileInfo = new FileInfo(entity.Path);
 
                 bool allowed = true;
                 if (searchFilters != null && searchFilters.Count > 0)
@@ -94,7 +82,7 @@ namespace fundo.core.Persistence
                     continue;
                 }
 
-                SearchResultItem result = new SearchResultItem(fileInfo);
+                DetachedFileInfo result = new DetachedFileInfo(entity);
                 yield return result;
             }
         }

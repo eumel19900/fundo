@@ -1,4 +1,4 @@
-using fundo.core.Search;
+using fundo.core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -34,7 +34,7 @@ namespace fundo.gui.control
 
         internal SearchResultDataProvider DataProvider => _dataProvider;
 
-        internal void SetItems(IReadOnlyList<SearchResultItem> items)
+        internal void SetItems(IReadOnlyList<DetachedFileInfo> items)
         {
             _selectedIndices.Clear();
             _visuallySelectedIndices.Clear();
@@ -99,7 +99,7 @@ namespace fundo.gui.control
             UpdateSelectionVisuals();
         }
 
-        private List<SearchResultItem> GetSelectedItems()
+        private List<DetachedFileInfo> GetSelectedItems()
         {
             return _selectedIndices
                 .Where(i => i >= 0 && i < _dataProvider.Count)
@@ -254,7 +254,7 @@ namespace fundo.gui.control
                 {
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
-                        FileName = item.FileInfo.FullName,
+                        FileName = item.FullName,
                         UseShellExecute = true
                     });
                 }
@@ -268,7 +268,7 @@ namespace fundo.gui.control
         private async Task LocateSelectedFiles()
         {
             var directories = GetSelectedItems()
-                .Select(item => item.FileInfo.DirectoryName)
+                .Select(item => item.DirectoryName)
                 .Where(dir => !string.IsNullOrWhiteSpace(dir))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
@@ -302,7 +302,7 @@ namespace fundo.gui.control
                 var files = new List<IStorageItem>();
                 foreach (var item in items)
                 {
-                    var file = await StorageFile.GetFileFromPathAsync(item.FileInfo.FullName);
+                    var file = await StorageFile.GetFileFromPathAsync(item.FullName);
                     files.Add(file);
                 }
 

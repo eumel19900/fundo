@@ -33,17 +33,5 @@ namespace fundo.core.Persistence.Entity
 
         public FileEntity() { }
 
-        public FileEntity(string fileName, string path, long fileSize, DateTime creationTime,
-            DateTime modifiedTime, DateTime lastAccessTime, string fileType, FileAttribute fileAttributes = FileAttribute.None)
-        {
-            FileName = fileName;
-            Path = path;
-            FileSize = fileSize;
-            CreationTime = creationTime;
-            ModifiedTime = modifiedTime;
-            LastAccessTime = lastAccessTime;
-            FileType = fileType;
-            FileAttributes = fileAttributes;
-        }
     }
 }

@@ -19,7 +19,7 @@ namespace fundo.core.Search
         /// </summary>
         EngineType Kind { get; }
 
-        public IAsyncEnumerable<SearchResultItem> SearchAsync(DirectoryInfo startDirectory, 
+        public IAsyncEnumerable<DetachedFileInfo> SearchAsync(DirectoryInfo startDirectory, 
             CancellationToken cancellationToken, 
             List<SearchFilter> searchFilters);
 

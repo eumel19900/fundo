@@ -19,14 +19,12 @@ namespace fundo.core.Search
 
         public SearchEngine.EngineType Kind => SearchEngine.EngineType.Native;
 
-        public Boolean LoadFileIcons { get; set; } = true;
-
         public void reset()
         {
             directoriesSearched = 0;
         }
 
-        public async IAsyncEnumerable<SearchResultItem> SearchAsync(DirectoryInfo startDirectory,
+        public async IAsyncEnumerable<DetachedFileInfo> SearchAsync(DirectoryInfo startDirectory,
             [EnumeratorCancellation] CancellationToken cancellationToken,
             List<SearchFilter> searchFilters)
         {
@@ -38,7 +36,7 @@ namespace fundo.core.Search
             }
 
             // Use a bounded channel to stream results from a background producer to the async iterator consumer.
-            var channel = Channel.CreateBounded<SearchResultItem>(new BoundedChannelOptions(256)
+            var channel = Channel.CreateBounded<DetachedFileInfo>(new BoundedChannelOptions(256)
             {
                 SingleReader = true,
                 SingleWriter = true,
@@ -102,7 +100,7 @@ namespace fundo.core.Search
 
                             try
                             {
-                                var item = new SearchResultItem(file,LoadFileIcons);
+                                var item = new DetachedFileInfo(file, includeIoProperties: false);
                                 await writer.WriteAsync(item, cancellationToken).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException) { break; }
@@ -160,10 +158,10 @@ namespace fundo.core.Search
             }
         }
 
-        public List<SearchResultItem> Search(DirectoryInfo startDirectory,
+        public List<DetachedFileInfo> Search(DirectoryInfo startDirectory,
             List<NativeSearchFilter> searchFilters)
         {
-            List<SearchResultItem> resultList = new List<SearchResultItem>();
+            List<DetachedFileInfo> resultList = new List<DetachedFileInfo>();
             if (startDirectory == null || !startDirectory.Exists)
             {
                 return null;
@@ -217,7 +215,7 @@ namespace fundo.core.Search
 
                     try
                     {
-                        resultList.Add(new SearchResultItem(file, LoadFileIcons));
+                        resultList.Add(new DetachedFileInfo(file));
                     }
                     catch
                     {

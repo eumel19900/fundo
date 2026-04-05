@@ -1,4 +1,4 @@
-using fundo.core.Search;
+using fundo.core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace fundo.gui.control
     /// Observable wrapper around SearchResultDataProvider for use with ItemsRepeater.
     /// Implements IReadOnlyList for index-based virtualization and INotifyCollectionChanged for updates.
     /// </summary>
-    internal sealed class SearchResultDataView : IReadOnlyList<SearchResultItem>, INotifyCollectionChanged
+    internal sealed class SearchResultDataView : IReadOnlyList<DetachedFileInfo>, INotifyCollectionChanged
     {
         private readonly SearchResultDataProvider _provider;
 
@@ -27,11 +27,11 @@ namespace fundo.gui.control
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
-        public SearchResultItem this[int index] => _provider.GetAt(index);
+        public DetachedFileInfo this[int index] => _provider.GetAt(index);
 
         public int Count => _provider.Count;
 
-        public IEnumerator<SearchResultItem> GetEnumerator()
+        public IEnumerator<DetachedFileInfo> GetEnumerator()
         {
             for (int i = 0; i < _provider.Count; i++)
             {

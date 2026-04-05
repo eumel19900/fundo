@@ -75,21 +75,20 @@ namespace fundo.core.Persistence
 
             NativeSearchEngine searchEngine = new NativeSearchEngine();
             searchEngine.reset();
-            searchEngine.LoadFileIcons = false;
 
-            foreach (SearchResultItem result in searchEngine.Search(
+            foreach (DetachedFileInfo result in searchEngine.Search(
                 new DirectoryInfo(drive.DriveLetter),
                 null))
             {
                 FileEntity fileEntity = new FileEntity
                 {
-                    FileName = result.FileName,
-                    Path = result.Path,
-                    FileSize = result.FileSize,
-                    CreationTime = result.FileInfo.CreationTime,
-                    ModifiedTime = result.FileInfo.LastWriteTime,
-                    LastAccessTime = result.FileInfo.LastAccessTime,
-                    FileAttributes = FileAttributeHelper.FromSystemFileAttributes(result.FileInfo.Attributes),
+                    FileName = result.Name,
+                    Path = result.FullName,
+                    FileSize = result.Length,
+                    CreationTime = result.CreationTime,
+                    ModifiedTime = result.LastWriteTime,
+                    LastAccessTime = result.LastAccessTime,
+                    FileAttributes = FileAttributeHelper.FromSystemFileAttributes(result.Attributes),
                     StorageDeviceId = storageDeviceId,
                 };
 
