@@ -1,28 +1,43 @@
 ﻿using fundo.core.Search.Filter;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace fundo.core.Search.Filter
 {
 	public class FileNameFilter : NativeSearchFilter
-    {
-        private readonly string searchPattern;
+	{
+		private readonly string searchPattern;
+		private readonly bool useRegex;
+		private readonly Regex? regex;
 
-        public FileNameFilter(string searchPattern)
-        {
-            this.searchPattern = searchPattern ?? string.Empty;
-        }
+		public FileNameFilter(string searchPattern, bool useRegex = false)
+		{
+			this.searchPattern = searchPattern ?? string.Empty;
+			this.useRegex = useRegex;
+
+			if (useRegex && !string.IsNullOrEmpty(this.searchPattern))
+			{
+				regex = new Regex(this.searchPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			}
+		}
 
 		public bool isAllowed(FileInfo fileInfo)
-        {
-            if (fileInfo == null) return false;
+		{
+			if (fileInfo == null) return false;
 
-            // If no pattern provided, allow all
-            if (string.IsNullOrEmpty(searchPattern)) return true;
+			// If no pattern provided, allow all
+			if (string.IsNullOrEmpty(searchPattern)) return true;
 
-            var name = fileInfo.Name;
-            return WildcardMatch(name, searchPattern);
-        }
+			var name = fileInfo.Name;
+
+			if (useRegex)
+			{
+				return regex!.IsMatch(name);
+			}
+
+			return WildcardMatch(name, searchPattern);
+		}
 
         private static bool WildcardMatch(string text, string pattern)
         {

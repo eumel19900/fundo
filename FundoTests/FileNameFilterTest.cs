@@ -73,5 +73,79 @@ namespace fundo.tests.Search.Native
             Assert.IsTrue(filter.isAllowed(matching2));
             Assert.IsFalse(filter.isAllowed(notMatching));
         }
+
+        [TestMethod]
+        public void Regex_ReturnsFalse_WhenFileInfoIsNull()
+        {
+            var filter = new FileNameFilter(@"\.txt$", useRegex: true);
+
+            Assert.IsFalse(filter.isAllowed(null));
+        }
+
+        [TestMethod]
+        public void Regex_AllowsAll_WhenPatternIsEmpty()
+        {
+            var filter = new FileNameFilter(string.Empty, useRegex: true);
+            var file = new FileInfo("test.anything");
+
+            Assert.IsTrue(filter.isAllowed(file));
+        }
+
+        [TestMethod]
+        public void Regex_MatchesSimplePattern()
+        {
+            var filter = new FileNameFilter(@"\.txt$", useRegex: true);
+            var matching = new FileInfo("report.txt");
+            var notMatching = new FileInfo("image.jpg");
+
+            Assert.IsTrue(filter.isAllowed(matching));
+            Assert.IsFalse(filter.isAllowed(notMatching));
+        }
+
+        [TestMethod]
+        public void Regex_IsCaseInsensitive()
+        {
+            var filter = new FileNameFilter(@"\.TXT$", useRegex: true);
+            var file = new FileInfo("readme.txt");
+
+            Assert.IsTrue(filter.isAllowed(file));
+        }
+
+        [TestMethod]
+        public void Regex_MatchesComplexPattern()
+        {
+            var filter = new FileNameFilter(@"^log_\d{4}_\d{2}\.txt$", useRegex: true);
+            var matching = new FileInfo("log_2026_01.txt");
+            var notMatching1 = new FileInfo("log.txt");
+            var notMatching2 = new FileInfo("log_abcd_01.txt");
+
+            Assert.IsTrue(filter.isAllowed(matching));
+            Assert.IsFalse(filter.isAllowed(notMatching1));
+            Assert.IsFalse(filter.isAllowed(notMatching2));
+        }
+
+        [TestMethod]
+        public void Regex_MatchesAlternation()
+        {
+            var filter = new FileNameFilter(@"\.(txt|log)$", useRegex: true);
+            var matching1 = new FileInfo("report.txt");
+            var matching2 = new FileInfo("app.log");
+            var notMatching = new FileInfo("image.jpg");
+
+            Assert.IsTrue(filter.isAllowed(matching1));
+            Assert.IsTrue(filter.isAllowed(matching2));
+            Assert.IsFalse(filter.isAllowed(notMatching));
+        }
+
+        [TestMethod]
+        public void Regex_PartialMatchIsAllowed()
+        {
+            var filter = new FileNameFilter("report", useRegex: true);
+            var matching = new FileInfo("annual_report_2026.pdf");
+            var notMatching = new FileInfo("summary.pdf");
+
+            Assert.IsTrue(filter.isAllowed(matching));
+            Assert.IsFalse(filter.isAllowed(notMatching));
+        }
     }
 }
