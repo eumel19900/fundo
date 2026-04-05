@@ -3,7 +3,7 @@ using System.IO;
 
 namespace fundo.core.Search.Filter
 {
-    internal class FileContentFilter : NativeSearchFilter
+    internal class FileContentFilter : INativeSearchFilter
     {
         private readonly string searchText;
 
@@ -12,7 +12,7 @@ namespace fundo.core.Search.Filter
             this.searchText = searchText ?? string.Empty;
         }
 
-        public bool isAllowed(FileInfo fileInfo)
+        public bool IsAllowed(FileInfo fileInfo)
         {
             if (fileInfo == null)
             {

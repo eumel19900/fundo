@@ -2,7 +2,7 @@ using System.IO;
 
 namespace fundo.core.Search.Filter
 {
-    internal class AttributeFilter : NativeSearchFilter
+    internal class AttributeFilter : INativeSearchFilter
     {
         private readonly FileAttribute requiredAttributes;
 
@@ -11,7 +11,7 @@ namespace fundo.core.Search.Filter
             this.requiredAttributes = requiredAttributes;
         }
 
-        public bool isAllowed(FileInfo fileInfo)
+        public bool IsAllowed(FileInfo fileInfo)
         {
             if (fileInfo == null)
             {

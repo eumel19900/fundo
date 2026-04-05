@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace fundo.core.Search
 {
-    internal interface SearchEngine
+    internal interface ISearchEngine
     {
         [Flags]
         public enum EngineType
@@ -21,11 +21,11 @@ namespace fundo.core.Search
 
         public IAsyncEnumerable<DetachedFileInfo> SearchAsync(DirectoryInfo startDirectory, 
             CancellationToken cancellationToken, 
-            List<SearchFilter> searchFilters);
+            List<ISearchFilter> searchFilters);
 
         /// <summary>
         /// This resets the engine and the search statics. Call this before calling SearchAsync.
         /// </summary>
-        public void reset();
+        public void Reset();
     }
 }

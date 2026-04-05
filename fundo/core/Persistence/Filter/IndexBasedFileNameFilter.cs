@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace fundo.core.Persistence.Filter
 {
-    internal class IndexBasedFileNameFilter : IndexBasedFilter
+    internal class IndexBasedFileNameFilter : IIndexBasedFilter
     {
         private readonly string searchPattern;
 
@@ -13,7 +13,7 @@ namespace fundo.core.Persistence.Filter
             this.searchPattern = searchPattern ?? string.Empty;
         }
 
-        public IQueryable<FileEntity> addQuery(IQueryable<FileEntity> query)
+        public IQueryable<FileEntity> AddQuery(IQueryable<FileEntity> query)
         {
             if (string.IsNullOrEmpty(searchPattern))
             {

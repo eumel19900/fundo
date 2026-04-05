@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace fundo.core.Persistence.Filter
 {
-    internal class IndexBasedFileSizeFilter : IndexBasedFilter
+    internal class IndexBasedFileSizeFilter : IIndexBasedFilter
     {
         private readonly long fileSize;
         private readonly FileSizeCompareMode compareMode;
@@ -15,7 +15,7 @@ namespace fundo.core.Persistence.Filter
             this.compareMode = compareMode;
         }
 
-        public IQueryable<FileEntity> addQuery(IQueryable<FileEntity> query)
+        public IQueryable<FileEntity> AddQuery(IQueryable<FileEntity> query)
         {
             return compareMode switch
             {

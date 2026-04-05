@@ -18,9 +18,9 @@ namespace fundo.gui.page
 {
     public sealed partial class SearchPage : Page
     {
-        private SearchEngine currentSearchEngine = null;
+        private ISearchEngine currentSearchEngine = null;
         private List<DirectoryInfo> rootSearchDirectories = new();
-        private List<SearchFilter> filters = new List<SearchFilter>();
+        private List<ISearchFilter> filters = new List<ISearchFilter>();
 
         // Filter pages
         private DateFilterPage? dateFilterPage;
@@ -36,10 +36,10 @@ namespace fundo.gui.page
 
             LocationControl_SelectedDirectoryChanged(null, null);
             ContentFrame.Navigated += ContentFrame_Navigated;
-            chooseSearchEngine();
+            ChooseSearchEngine();
         }
 
-        public void chooseSearchEngine()
+        public void ChooseSearchEngine()
         {
             if (Settings.UseIndex)
             {
@@ -190,14 +190,14 @@ namespace fundo.gui.page
 
         private async void SearchButton_Clicked(object sender, RoutedEventArgs e)
         {
-            chooseSearchEngine();
+            ChooseSearchEngine();
 
 
             //Setup filters
             filters.Clear();
             switch (currentSearchEngine.Kind)
             {
-                case SearchEngine.EngineType.Native:
+                case ISearchEngine.EngineType.Native:
                     if (SearchPatternTextBox.Text != "")
                     {
                         filters.Add(new FileNameFilter(SearchPatternTextBox.Text, useRegex: RegexCheckBox.IsChecked == true));
@@ -209,8 +209,8 @@ namespace fundo.gui.page
                     if (dateFilterPage?.DateFilterEnabled == true)
                     {
                         filters.Add(new DateFilter(
-                            dateFilterPage.startTime,
-                            dateFilterPage.endTime,
+                            dateFilterPage.StartTime,
+                            dateFilterPage.EndTime,
                             dateFilterPage.CreationTimeEnabled,
                             dateFilterPage.ModifiedTimeEnabled,
                             dateFilterPage.LastAccessTimeEnabled));
@@ -221,7 +221,7 @@ namespace fundo.gui.page
                     }
                     break;
 
-                case SearchEngine.EngineType.IndexBased:
+                case ISearchEngine.EngineType.IndexBased:
                     if (SearchPatternTextBox.Text != "")
                     {
                         filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text));
@@ -233,8 +233,8 @@ namespace fundo.gui.page
                     if (dateFilterPage?.DateFilterEnabled == true)
                     {
                         filters.Add(new IndexBasedDateFilter(
-                            dateFilterPage.startTime,
-                            dateFilterPage.endTime,
+                            dateFilterPage.StartTime,
+                            dateFilterPage.EndTime,
                             dateFilterPage.CreationTimeEnabled,
                             dateFilterPage.ModifiedTimeEnabled,
                             dateFilterPage.LastAccessTimeEnabled));
@@ -254,7 +254,7 @@ namespace fundo.gui.page
             SearchInfoTextBlock.Text = "Searching...";
             SearchButton.IsEnabled = false;
 
-            SearchJob job = new SearchJob(currentSearchEngine, new List<DirectoryInfo>(rootSearchDirectories), new List<SearchFilter>(filters))
+            SearchJob job = new SearchJob(currentSearchEngine, new List<DirectoryInfo>(rootSearchDirectories), new List<ISearchFilter>(filters))
             {
                 Priority = JobPriority.Normal,
                 BlocksUI = true

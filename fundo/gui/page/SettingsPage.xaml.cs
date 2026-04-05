@@ -83,7 +83,7 @@ namespace fundo.gui.page
             Settings.AutomaticIndexUpdatePreferredTime = ScheduledIndexUpdatePreferredTime;
             Settings.AutomaticIndexUpdateOnlyWhenIdle = RunScheduledIndexUpdateOnlyWhenIdle;
 
-            new SearchIndexService().updateDriveList(drives);
+            new SearchIndexService().UpdateDriveList(drives);
         }
        
 

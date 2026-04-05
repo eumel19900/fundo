@@ -25,7 +25,7 @@ namespace fundo.core.Persistence
 
         }
 
-        public void updateDriveList(List<Drive> drives)
+        public void UpdateDriveList(List<Drive> drives)
         {
             if (drives == null || drives.Count == 0)
             {
@@ -53,7 +53,7 @@ namespace fundo.core.Persistence
             }
         }
 
-        public void clearIndex()
+        public void ClearIndex()
         {
             SearchIndexStore.DeleteAllFiles();
         }
@@ -74,7 +74,7 @@ namespace fundo.core.Persistence
             List<FileEntity> batch = new List<FileEntity>(batchSize);
 
             NativeSearchEngine searchEngine = new NativeSearchEngine();
-            searchEngine.reset();
+            searchEngine.Reset();
             searchEngine.IncludeIoProperties = true;
 
             var asyncEnumerable = searchEngine.SearchAsync(

@@ -29,7 +29,7 @@ public sealed partial class DateFilterPage : Page
     public bool ModifiedTimeEnabled => DateTypeComboBox.SelectedIndex == 1;
     public bool LastAccessTimeEnabled => DateTypeComboBox.SelectedIndex == 2;
 
-    public DateTime startTime
+    public DateTime StartTime
     {
         get
         {
@@ -37,7 +37,7 @@ public sealed partial class DateFilterPage : Page
         }
     }
 
-    public DateTime endTime
+    public DateTime EndTime
     {
         get
         {

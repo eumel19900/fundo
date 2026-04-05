@@ -13,9 +13,9 @@ namespace fundo.gui.Job.Jobs
     /// </summary>
     internal class SearchJob : JobBase
     {
-        private readonly SearchEngine _searchEngine;
+        private readonly ISearchEngine _searchEngine;
         private readonly List<DirectoryInfo> _rootSearchDirectories;
-        private readonly List<SearchFilter> _filters;
+        private readonly List<ISearchFilter> _filters;
         private readonly List<DetachedFileInfo> _results = new();
 
         public override string JobName => "File Search";
@@ -25,7 +25,7 @@ namespace fundo.gui.Job.Jobs
         /// </summary>
         public IReadOnlyList<DetachedFileInfo> Results => _results;
 
-        public SearchJob(SearchEngine searchEngine, List<DirectoryInfo> rootSearchDirectories, List<SearchFilter> filters)
+        public SearchJob(ISearchEngine searchEngine, List<DirectoryInfo> rootSearchDirectories, List<ISearchFilter> filters)
         {
             _searchEngine = searchEngine ?? throw new ArgumentNullException(nameof(searchEngine));
             _rootSearchDirectories = rootSearchDirectories ?? throw new ArgumentNullException(nameof(rootSearchDirectories));
@@ -34,7 +34,7 @@ namespace fundo.gui.Job.Jobs
 
         protected override void Execute()
         {
-            _searchEngine.reset();
+            _searchEngine.Reset();
             //SetIndeterminate(true);
             ReportStatus("Searching", "Preparing search...");
 

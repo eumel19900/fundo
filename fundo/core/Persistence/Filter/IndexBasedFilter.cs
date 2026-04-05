@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace fundo.core.Persistence.Filter
 {
-    internal interface IndexBasedFilter : SearchFilter
+    internal interface IIndexBasedFilter : ISearchFilter
     {
-        public IQueryable<FileEntity> addQuery(IQueryable<FileEntity> query);
+        public IQueryable<FileEntity> AddQuery(IQueryable<FileEntity> query);
     }
 }

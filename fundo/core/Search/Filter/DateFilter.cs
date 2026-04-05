@@ -5,24 +5,24 @@ using System.IO;
 
 namespace fundo.core.Search.Filter
 {
-	internal class DateFilter : NativeSearchFilter
-    {
-        private readonly DateTime startTime;
-        private readonly DateTime endTime;
-        private readonly bool useCreationTime;
-        private readonly bool useModifiedTime;
-        private readonly bool useLastAccessTime;
+	internal class DateFilter : INativeSearchFilter
+	{
+		private readonly DateTime startTime;
+		private readonly DateTime endTime;
+		private readonly bool useCreationTime;
+		private readonly bool useModifiedTime;
+		private readonly bool useLastAccessTime;
 
-        public DateFilter(DateTime startTime, DateTime endTime, bool useCreationTime, bool useModifiedTime, bool useLastAccessTime)
-        {
-            this.startTime = startTime;
-            this.endTime = endTime;
-            this.useCreationTime = useCreationTime;
-            this.useModifiedTime = useModifiedTime;
-            this.useLastAccessTime = useLastAccessTime;
-        }
+		public DateFilter(DateTime startTime, DateTime endTime, bool useCreationTime, bool useModifiedTime, bool useLastAccessTime)
+		{
+			this.startTime = startTime;
+			this.endTime = endTime;
+			this.useCreationTime = useCreationTime;
+			this.useModifiedTime = useModifiedTime;
+			this.useLastAccessTime = useLastAccessTime;
+		}
 
-        public bool isAllowed(FileInfo fileInfo)
+		public bool IsAllowed(FileInfo fileInfo)
         {
             if (fileInfo == null)
             {

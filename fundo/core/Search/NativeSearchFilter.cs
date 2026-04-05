@@ -2,7 +2,7 @@
 
 namespace fundo.core.Search
 {
-    internal interface NativeSearchFilter : SearchFilter
+    internal interface INativeSearchFilter : ISearchFilter
     {
         /// <summary>
         /// Checks whether this file is allowed by the filter.
@@ -10,6 +10,6 @@ namespace fundo.core.Search
         /// </summary>
         /// <param name="fileInfo">File to check.</param>
         /// <returns>true if the file passes the filter; otherwise false.</returns>
-        bool isAllowed(FileInfo fileInfo);
+        bool IsAllowed(FileInfo fileInfo);
     }
 }

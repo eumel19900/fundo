@@ -11,13 +11,13 @@ using fundo.core.Search;
 
 namespace fundo.core.Search
 {
-    internal class NativeSearchEngine : SearchEngine
+    internal class NativeSearchEngine : ISearchEngine
     {
         private int directoriesSearched = 0;
 
         public int DirectoriesSearched { get => directoriesSearched; }
 
-        public SearchEngine.EngineType Kind => SearchEngine.EngineType.Native;
+        public ISearchEngine.EngineType Kind => ISearchEngine.EngineType.Native;
 
         /// <summary>
         /// Controls whether DetachedFileInfo results include IO properties eagerly.
@@ -26,14 +26,14 @@ namespace fundo.core.Search
         /// </summary>
         public bool IncludeIoProperties { get; set; }
 
-        public void reset()
+        public void Reset()
         {
             directoriesSearched = 0;
         }
 
         public async IAsyncEnumerable<DetachedFileInfo> SearchAsync(DirectoryInfo startDirectory,
             [EnumeratorCancellation] CancellationToken cancellationToken,
-            List<SearchFilter> searchFilters)
+            List<ISearchFilter> searchFilters)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -89,7 +89,7 @@ namespace fundo.core.Search
                                 {
                                     foreach (var filter in searchFilters)
                                     {
-                                        if (filter is NativeSearchFilter nativeFilter && !nativeFilter.isAllowed(file))
+                                        if (filter is INativeSearchFilter nativeFilter && !nativeFilter.IsAllowed(file))
                                         {
                                             allowed = false;
                                             break;

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace fundo.core.Persistence.Filter
 {
-    internal class IndexBasedDateFilter : IndexBasedFilter
+    internal class IndexBasedDateFilter : IIndexBasedFilter
     {
         private readonly DateTime startTime;
         private readonly DateTime endTime;
@@ -26,7 +26,7 @@ namespace fundo.core.Persistence.Filter
             this.useLastAccessTime = useLastAccessTime;
         }
 
-        public IQueryable<FileEntity> addQuery(IQueryable<FileEntity> query)
+        public IQueryable<FileEntity> AddQuery(IQueryable<FileEntity> query)
         {
             if (!useCreationTime && !useModifiedTime && !useLastAccessTime)
             {

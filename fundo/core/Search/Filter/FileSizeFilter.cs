@@ -5,7 +5,7 @@ using System.Text;
 
 namespace fundo.core.Search.Filter
 {
-    internal class FileSizeFilter : NativeSearchFilter
+    internal class FileSizeFilter : INativeSearchFilter
     {
         private long fileSize;
         private FileSizeCompareMode compareMode;
@@ -16,7 +16,7 @@ namespace fundo.core.Search.Filter
             this.compareMode = compareMode;
         }
 
-        public bool isAllowed(FileInfo fileInfo)
+        public bool IsAllowed(FileInfo fileInfo)
         {
             if (fileInfo == null)
             {

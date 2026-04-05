@@ -4,7 +4,7 @@ using System.Text;
 
 namespace fundo.core.Search
 {
-    internal interface SearchFilter
+    internal interface ISearchFilter
     {
     }
 }

@@ -11,18 +11,18 @@ using System.Threading;
 
 namespace fundo.core.Persistence
 {
-    internal class IndexBasedSearchEngine : SearchEngine
+    internal class IndexBasedSearchEngine : ISearchEngine
     {
-        public SearchEngine.EngineType Kind => SearchEngine.EngineType.IndexBased;
+        public ISearchEngine.EngineType Kind => ISearchEngine.EngineType.IndexBased;
 
-        public void reset()
+        public void Reset()
         {
         }
 
         public async IAsyncEnumerable<DetachedFileInfo> SearchAsync(
             DirectoryInfo startDirectory,
             [EnumeratorCancellation] CancellationToken cancellationToken,
-            List<SearchFilter> searchFilters)
+            List<ISearchFilter> searchFilters)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -44,9 +44,9 @@ namespace fundo.core.Persistence
                 {
                     foreach (var filter in searchFilters)
                     {
-                        if (filter is IndexBasedFilter indexBasedFilter)
+                        if (filter is IIndexBasedFilter indexBasedFilter)
                         {
-                            query = indexBasedFilter.addQuery(query);
+                            query = indexBasedFilter.AddQuery(query);
                         }
                     }
                 }
@@ -66,9 +66,9 @@ namespace fundo.core.Persistence
                 {
                     foreach (var filter in searchFilters)
                     {
-                        if (filter is NativeSearchFilter nativeSearchFilter)
+                        if (filter is INativeSearchFilter nativeSearchFilter)
                         {
-                            allowed = nativeSearchFilter.isAllowed(fileInfo);
+                            allowed = nativeSearchFilter.IsAllowed(fileInfo);
                             if (!allowed)
                             {
                                 break;

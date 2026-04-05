@@ -43,7 +43,7 @@ namespace fundo.gui.Job.Jobs
 
             
             ReportStatus("Preparing", "Clearing existing index...");
-            searchIndexService.clearIndex();
+            searchIndexService.ClearIndex();
 
             int driveCount = _drivesToIndex.Count;
             int currentDrive = 0;

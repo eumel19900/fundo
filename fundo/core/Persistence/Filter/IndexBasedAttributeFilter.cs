@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace fundo.core.Persistence.Filter
 {
-    internal class IndexBasedAttributeFilter : IndexBasedFilter
+    internal class IndexBasedAttributeFilter : IIndexBasedFilter
     {
         private readonly byte requiredAttributesValue;
 
@@ -12,7 +12,7 @@ namespace fundo.core.Persistence.Filter
             requiredAttributesValue = FileAttributeHelper.ToByte(requiredAttributes);
         }
 
-        public IQueryable<FileEntity> addQuery(IQueryable<FileEntity> query)
+        public IQueryable<FileEntity> AddQuery(IQueryable<FileEntity> query)
         {
             if (requiredAttributesValue == 0)
             {

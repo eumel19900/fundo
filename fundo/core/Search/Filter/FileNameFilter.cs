@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace fundo.core.Search.Filter
 {
-	public class FileNameFilter : NativeSearchFilter
+	public class FileNameFilter : INativeSearchFilter
 	{
 		private readonly string searchPattern;
 		private readonly bool useRegex;
@@ -18,11 +18,18 @@ namespace fundo.core.Search.Filter
 
 			if (useRegex && !string.IsNullOrEmpty(this.searchPattern))
 			{
-				regex = new Regex(this.searchPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+				try
+				{
+					regex = new Regex(this.searchPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+				}
+				catch
+				{
+					this.useRegex = false; // Fallback to wildcard matching if regex is invalid
+				}
 			}
 		}
 
-		public bool isAllowed(FileInfo fileInfo)
+		public bool IsAllowed(FileInfo fileInfo)
 		{
 			if (fileInfo == null) return false;
 
