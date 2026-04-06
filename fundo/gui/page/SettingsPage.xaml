@@ -134,6 +134,46 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
+
+                <!-- Global shortcut configuration section -->
+                <Expander Header="Global shortcut"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          IsExpanded="False">
+                    <StackPanel Spacing="8"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock Text="A global shortcut lets you open the Fundo main window from any application using a keyboard shortcut. The shortcut works system-wide, even when Fundo is minimized or running in the background."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <TextBlock Text="To configure the shortcut, enable it below and click 'Record shortcut'. Then press the desired key combination (for example Ctrl+F3 or Win+F3). Modifier keys such as Ctrl, Alt, Shift and Win can be combined with a regular key."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <CheckBox x:Name="EnableGlobalHotkeyCheckBox"
+                                  IsChecked="{x:Bind IsGlobalHotkeyEnabled, Mode=TwoWay}"
+                                  Content="Enable global shortcut" />
+
+                        <StackPanel Spacing="4"
+                                    Margin="24,0,0,0">
+                            <TextBlock Text="Shortcut" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBox x:Name="HotkeyTextBox"
+                                         IsReadOnly="True"
+                                         Text="{x:Bind GlobalHotkeyKeys, Mode=OneTime}"
+                                         IsEnabled="{Binding IsChecked, ElementName=EnableGlobalHotkeyCheckBox}"
+                                         Width="200"
+                                         PlaceholderText="No shortcut set" />
+                                <Button x:Name="RecordHotkeyButton"
+                                        Content="Record shortcut"
+                                        IsEnabled="{Binding IsChecked, ElementName=EnableGlobalHotkeyCheckBox}"
+                                        Click="RecordHotkeyButton_Click"
+                                        KeyDown="RecordHotkeyButton_KeyDown"
+                                        LostFocus="RecordHotkeyButton_LostFocus" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Expander>
             </StackPanel>
             </Border>
         </Grid>

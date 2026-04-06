@@ -57,3 +57,14 @@ Implementiere für das neue Control ein Contextmenu, dass dem Contextmenu aus de
 Erweitere dieses Context-Menu zusätzlich um die Sortierfunktionen, die ich oben beschrieben habe. Filterung soll im Context-menu zunächst nicht implementiert werden.
 Bedenke dass das SearchResultItem auch ein Icon enthält, dass mit einer Lazy-Loading Mechanik geladen wird.
 Abschließend ersetze bitte das SearchResultListControl in der SearchPage durch das neue UserControl.
+
+
+Globaler Shortcut
+Claude Opus 4.6:
+Ich möchte dass der Anwender das MainWindow über einen globalen Shortcut öffnen kann... Füge den Code dafür in der Klasse für das MainWindow ein.
+Standardmäßig soll der Shortcut Windowstaste+F3 sein.
+Der Shortcut soll aber über die Klasse Settings konfigurierbar sein. Beachte dass die in Settings hinterlegten Parameter über den SearchIndexStore mittels SearchIndexStore.GetPropertyValue(key) und SearchIndexStore.SetPropertyValue() als key-Value-Paare gespeichert werden.
+Die Shortcuts sollen als Kombination mehrerer Tasten konfiguriert werden können wie etwa: strg+windowstaste+F3 oder strg+F3.
+
+Der Anwender nimmt die Konfiguration in der Bereits vorhandenen SettingsPage vor. Die SettingsPage ist mittels Expander-Elementen in Sektionen untergliedert. Für die Konfiguration des Shortscuts zum öffnen des MainWindows soll hier eine neue Section (als weiterer Expander) hinzugefügt werden. Hier muss der Anwender den Globalen Shortcut aktivieren und deaktivieren können (standardmäßig aktiviert) und die Tastenkombination erfassen können.
+Außerdem muss dem Anwender hier erklärt werden was ein globaler Shortcut ist und wie dieser hier in der SettingsPage konfiguriert wird.

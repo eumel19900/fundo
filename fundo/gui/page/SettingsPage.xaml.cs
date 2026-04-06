@@ -3,6 +3,7 @@ using fundo.core.Persistence;
 using fundo.gui.Job;
 using fundo.gui.Job.Jobs;
 using fundo.tool;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -19,6 +20,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -33,6 +36,7 @@ namespace fundo.gui.page
     {
         private List<Drive> drives;
         private bool settingsSaved = false;
+        private bool _isRecordingHotkey;
 
         public ScheduledIndexUpdateInterval[] ScheduledIndexUpdateIntervals { get; } = Enum.GetValues<ScheduledIndexUpdateInterval>();
 
@@ -43,6 +47,10 @@ namespace fundo.gui.page
         public TimeSpan ScheduledIndexUpdatePreferredTime { get; set; } = Settings.AutomaticIndexUpdatePreferredTime;
 
         public bool RunScheduledIndexUpdateOnlyWhenIdle { get; set; } = Settings.AutomaticIndexUpdateOnlyWhenIdle;
+
+        public bool IsGlobalHotkeyEnabled { get; set; } = Settings.GlobalHotkeyEnabled;
+
+        public string GlobalHotkeyKeys { get; set; } = Settings.GlobalHotkeyKeys;
 
         public SettingsPage()
         {
@@ -83,7 +91,12 @@ namespace fundo.gui.page
             Settings.AutomaticIndexUpdatePreferredTime = ScheduledIndexUpdatePreferredTime;
             Settings.AutomaticIndexUpdateOnlyWhenIdle = RunScheduledIndexUpdateOnlyWhenIdle;
 
+            Settings.GlobalHotkeyEnabled = IsGlobalHotkeyEnabled;
+            Settings.GlobalHotkeyKeys = GlobalHotkeyKeys;
+
             new SearchIndexService().UpdateDriveList(drives);
+
+            App.MainWindowInstance?.UpdateGlobalHotkey();
         }
        
 
@@ -140,5 +153,77 @@ namespace fundo.gui.page
             };
             await JobScheduler.Instance.ScheduleAndWaitAsync(job);
         }
+
+        private void RecordHotkeyButton_Click(object sender, RoutedEventArgs e)
+        {
+            _isRecordingHotkey = true;
+            RecordHotkeyButton.Content = "Press shortcut...";
+        }
+
+        private void RecordHotkeyButton_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (!_isRecordingHotkey)
+            {
+                return;
+            }
+
+            VirtualKey key = e.Key;
+
+            if (key is VirtualKey.Control or VirtualKey.Shift or VirtualKey.Menu
+                or VirtualKey.LeftWindows or VirtualKey.RightWindows
+                or VirtualKey.LeftControl or VirtualKey.RightControl
+                or VirtualKey.LeftShift or VirtualKey.RightShift
+                or VirtualKey.LeftMenu or VirtualKey.RightMenu)
+            {
+                return;
+            }
+
+            List<string> parts = [];
+
+            var ctrlState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Control);
+            var altState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Menu);
+            var shiftState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.Shift);
+            var winLState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.LeftWindows);
+            var winRState = InputKeyboardSource.GetKeyStateForCurrentThread(VirtualKey.RightWindows);
+
+            if (ctrlState.HasFlag(CoreVirtualKeyStates.Down))
+            {
+                parts.Add("Ctrl");
+            }
+            if (altState.HasFlag(CoreVirtualKeyStates.Down))
+            {
+                parts.Add("Alt");
+            }
+            if (shiftState.HasFlag(CoreVirtualKeyStates.Down))
+            {
+                parts.Add("Shift");
+            }
+            if (winLState.HasFlag(CoreVirtualKeyStates.Down) || winRState.HasFlag(CoreVirtualKeyStates.Down))
+            {
+                parts.Add("Win");
+            }
+
+            string keyName = HotkeyHelper.MapVirtualKeyToName(key);
+            if (!string.IsNullOrEmpty(keyName))
+            {
+                parts.Add(keyName);
+                GlobalHotkeyKeys = string.Join("+", parts);
+                HotkeyTextBox.Text = GlobalHotkeyKeys;
+            }
+
+            _isRecordingHotkey = false;
+            RecordHotkeyButton.Content = "Record shortcut";
+            e.Handled = true;
+        }
+
+        private void RecordHotkeyButton_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (_isRecordingHotkey)
+            {
+                _isRecordingHotkey = false;
+                RecordHotkeyButton.Content = "Record shortcut";
+            }
+        }
+
     }
 }

@@ -138,12 +138,18 @@ internal sealed class NotifyIconService : IDisposable
             return;
         }
 
+        string message = "The app was minimized to the notification area and continues running there.";
+        if (core.Settings.GlobalHotkeyEnabled)
+        {
+            message += $"\nPress {core.Settings.GlobalHotkeyKeys} to open Fundo again.";
+        }
+
         NOTIFYICONDATA notifyIconData = _notifyIconData;
         notifyIconData.uFlags = NifInfo;
         notifyIconData.dwInfoFlags = NiifInfo;
         notifyIconData.uTimeoutOrVersion = 10000;
         notifyIconData.szInfoTitle = "Fundo is still running";
-        notifyIconData.szInfo = "The app was minimized to the notification area and continues running there.";
+        notifyIconData.szInfo = message;
 
         if (Shell_NotifyIcon(NimModify, ref notifyIconData))
         {
