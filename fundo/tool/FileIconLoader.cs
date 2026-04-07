@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml.Media;
@@ -19,6 +20,10 @@ namespace fundo.tool
     {
         // cache generated PNG bytes per normalized extension to avoid repeated conversion
         private static readonly ConcurrentDictionary<string, byte[]> _pngCache = new();
+
+        // one-time warm-up ensures shell DLLs (comctl32, GdiPlus) are loaded before concurrent calls
+        private static readonly SemaphoreSlim _warmupGate = new(1, 1);
+        private static volatile bool _shellWarmedUp;
 
         // SHGetFileInfo flags
         private const uint SHGFI_ICON = 0x000000100;
@@ -129,6 +134,30 @@ namespace fundo.tool
             if (_pngCache.TryGetValue(key, out var cachedBytes))
             {
                 return cachedBytes;
+            }
+
+            // Ensure shell DLLs are loaded once before allowing concurrent access
+            if (!_shellWarmedUp)
+            {
+                await _warmupGate.WaitAsync().ConfigureAwait(false);
+                try
+                {
+                    if (!_shellWarmedUp)
+                    {
+                        await Task.Run(() => GetIcon(".txt", true)?.Dispose()).ConfigureAwait(false);
+                        _shellWarmedUp = true;
+                    }
+                }
+                finally
+                {
+                    _warmupGate.Release();
+                }
+
+                // check cache again — warm-up call may have populated it
+                if (_pngCache.TryGetValue(key, out cachedBytes))
+                {
+                    return cachedBytes;
+                }
             }
 
             return await Task.Run(() =>

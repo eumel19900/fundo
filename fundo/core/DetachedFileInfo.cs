@@ -1,6 +1,8 @@
 using fundo.core.Persistence.Entity;
 using fundo.tool;
+using Microsoft.UI.Dispatching;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -26,6 +28,13 @@ namespace fundo.core
         private string _linkTarget;
         private ImageSource? _fileImage;
         private bool _imageLoadStarted;
+        private int _imageLoadRetries;
+
+        // shared BitmapImage cache per extension — accessed only on UI thread
+        private static readonly Dictionary<string, ImageSource> s_imageCache = new();
+
+        // items waiting for an image load to complete — accessed only on UI thread
+        private static readonly Dictionary<string, List<DetachedFileInfo>> s_pendingItems = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -124,7 +133,32 @@ namespace fundo.core
                 if (!_imageLoadStarted && !string.IsNullOrEmpty(FullName))
                 {
                     _imageLoadStarted = true;
-                    _ = LoadImageAsync(FullName);
+                    var ext = (Path.GetExtension(FullName) ?? "").ToLowerInvariant();
+
+                    if (s_imageCache.TryGetValue(ext, out var cached))
+                    {
+                        _fileImage = cached;
+                    }
+                    else
+                    {
+                        var dispatcher = DispatcherQueue.GetForCurrentThread();
+                        if (dispatcher != null)
+                        {
+                            if (s_pendingItems.TryGetValue(ext, out var list))
+                            {
+                                list.Add(this);
+                            }
+                            else
+                            {
+                                s_pendingItems[ext] = [this];
+                                _ = LoadImageAsync(FullName, ext, dispatcher);
+                            }
+                        }
+                        else
+                        {
+                            _imageLoadStarted = false;
+                        }
+                    }
                 }
                 return _fileImage;
             }
@@ -250,51 +284,69 @@ namespace fundo.core
             _initializeIoPropertiesOnDemand = false;
         }
 
-        private async Task LoadImageAsync(string filePath)
+        private async Task LoadImageAsync(string filePath, string ext, DispatcherQueue dispatcher)
         {
             try
             {
                 var pngBytes = await FileIconLoader.GetPngBytesAsync(filePath, false).ConfigureAwait(false);
-                if (pngBytes == null || pngBytes.Length == 0) return;
 
-                var disp = App.MainWindowInstance?.DispatcherQueue;
-                if (disp != null)
+                if (pngBytes == null || pngBytes.Length == 0)
                 {
-                    disp.TryEnqueue(async () =>
+                    dispatcher.TryEnqueue(() =>
                     {
-                        try
+                        if (s_pendingItems.TryGetValue(ext, out var items))
                         {
-                            var bmp = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage();
-                            using var ms = new MemoryStream(pngBytes);
-                            var ras = ms.AsRandomAccessStream();
-                            await bmp.SetSourceAsync(ras);
-                            FileImage = bmp;
-                        }
-                        catch
-                        {
-                            // ignore UI-thread image creation failures
+                            foreach (var item in items)
+                            {
+                                if (item._imageLoadRetries < 3)
+                                {
+                                    item._imageLoadRetries++;
+                                    item._imageLoadStarted = false;
+                                }
+                            }
+                            s_pendingItems.Remove(ext);
                         }
                     });
+                    return;
                 }
-                else
+
+                dispatcher.TryEnqueue(async () =>
                 {
                     try
                     {
+                        if (s_imageCache.TryGetValue(ext, out var existing))
+                        {
+                            NotifyPendingItems(ext, existing);
+                            return;
+                        }
+
                         var bmp = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage();
                         using var ms = new MemoryStream(pngBytes);
                         var ras = ms.AsRandomAccessStream();
                         await bmp.SetSourceAsync(ras);
-                        FileImage = bmp;
+                        s_imageCache[ext] = bmp;
+                        NotifyPendingItems(ext, bmp);
                     }
-                    catch
+                    catch (Exception)
                     {
-                        // ignore
+                        s_pendingItems.Remove(ext);
                     }
-                }
+                });
             }
             catch
             {
-                // ignore image load failures
+            }
+        }
+
+        private static void NotifyPendingItems(string ext, ImageSource image)
+        {
+            if (s_pendingItems.TryGetValue(ext, out var items))
+            {
+                foreach (var item in items)
+                {
+                    item.FileImage = image;
+                }
+                s_pendingItems.Remove(ext);
             }
         }
     }
