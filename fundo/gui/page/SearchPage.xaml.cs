@@ -204,7 +204,7 @@ namespace fundo.gui.page
                     }
                     if (sizeFilterPage?.SizeFilterEnabled == true)
                     {
-                        filters.Add(new FileSizeFilter(sizeFilterPage.FileSizeKib, sizeFilterPage.CompareMode));
+                        filters.Add(new FileSizeFilter(sizeFilterPage.FileSizeBytes, sizeFilterPage.CompareMode));
                     }
                     if (dateFilterPage?.DateFilterEnabled == true)
                     {
@@ -228,7 +228,7 @@ namespace fundo.gui.page
                     }
                     if (sizeFilterPage?.SizeFilterEnabled == true)
                     {
-                        filters.Add(new IndexBasedFileSizeFilter(sizeFilterPage.FileSizeKib, sizeFilterPage.CompareMode));
+                        filters.Add(new IndexBasedFileSizeFilter(sizeFilterPage.FileSizeBytes, sizeFilterPage.CompareMode));
                     }
                     if (dateFilterPage?.DateFilterEnabled == true)
                     {

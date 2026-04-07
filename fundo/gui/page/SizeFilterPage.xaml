@@ -31,13 +31,24 @@
 
             <NumberBox
                 x:Name="FileSizeValueNumberbox"
-                Header="Filesize in KiB"
+                Header="Filesize"
                 Value="10000"
                 SpinButtonPlacementMode="Inline"
                 SmallChange="10"
                 LargeChange="100"
                 Width="200"
                 IsEnabled="{Binding IsChecked, ElementName=FilterBySizeCheckbox}"/>
+
+            <ComboBox x:Name="FileSizeUnitCombobox"
+                      Header="Unit"
+                      Width="120"
+                      SelectedIndex="1"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterBySizeCheckbox}">
+                <x:String>Bytes</x:String>
+                <x:String>KiB</x:String>
+                <x:String>MiB</x:String>
+                <x:String>GiB</x:String>
+            </ComboBox>
         </StackPanel>
     </Grid>
 </Page>

@@ -39,7 +39,7 @@ Settings:
 - Suche Abbrechbar - ok
 - Suche nach * heißt kein Dateinamenfilter
 - Mehrfachselektion in Ergebnisliste - ok
-- Masseinheit im Dateigrößenfilter konfigurierbar (KiB, MiB, GiB, ...)
+- Masseinheit im Dateigrößenfilter konfigurierbar (KiB, MiB, GiB, ...) - ok
 - Dateifilter Tabs in Expander einklammern
 
 Bugs/Sonstiges:

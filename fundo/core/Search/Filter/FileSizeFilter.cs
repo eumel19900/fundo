@@ -12,7 +12,7 @@ namespace fundo.core.Search.Filter
 
         public FileSizeFilter(long fileSize, FileSizeCompareMode compareMode)
         {
-            this.fileSize = fileSize * 1024;
+            this.fileSize = fileSize;
             this.compareMode = compareMode;
         }
 

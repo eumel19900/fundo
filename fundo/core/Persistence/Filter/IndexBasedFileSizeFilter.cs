@@ -11,7 +11,7 @@ namespace fundo.core.Persistence.Filter
 
         public IndexBasedFileSizeFilter(long fileSize, FileSizeCompareMode compareMode)
         {
-            this.fileSize = fileSize * 1024;
+            this.fileSize = fileSize;
             this.compareMode = compareMode;
         }
 

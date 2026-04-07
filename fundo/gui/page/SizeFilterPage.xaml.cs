@@ -11,7 +11,21 @@ namespace fundo.gui;
 /// </summary>
 public sealed partial class SizeFilterPage : Page
 {
-    public long FileSizeKib => (long) FileSizeValueNumberbox.Value;
+    public long FileSizeBytes
+    {
+        get
+        {
+            long value = (long)FileSizeValueNumberbox.Value;
+            return FileSizeUnitCombobox.SelectedIndex switch
+            {
+                0 => value,
+                1 => value * 1024L,
+                2 => value * 1024L * 1024L,
+                3 => value * 1024L * 1024L * 1024L,
+                _ => value * 1024L
+            };
+        }
+    }
     public bool SizeFilterEnabled =>
         FilterBySizeCheckbox.IsChecked == true;
 
