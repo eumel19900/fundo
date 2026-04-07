@@ -247,7 +247,12 @@ namespace fundo.gui.page
             }
             if (fileContentFilterPage?.ContentFilterEnabled == true)
             {
-                filters.Add(new FileContentFilter(fileContentFilterPage.ContentSearchText));
+                filters.Add(new FileContentFilter(
+                    fileContentFilterPage.ContentSearchText,
+                    fileContentFilterPage.CaseSensitive,
+                    fileContentFilterPage.UseRegex,
+                    fileContentFilterPage.WholeWord,
+                    fileContentFilterPage.InvertMatch));
             }
 
 

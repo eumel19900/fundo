@@ -15,11 +15,12 @@ Version 1.0
 	- Dateiflags/attribute: versteckt, system, archiv, - ok
 	- Dateibesitzer?
 	- Volltextsuche - ok
-		- case sensitive
-		- regex
-		- ganzes wort
-		- enthält nicht?
+		- case sensitive - ok
+		- regex - ok
+		- ganzes wort - ok
+		- enthält nicht - ok
 		- Fortschrittsanzeige
+		- Multithreading
  - Popupmenu in Ergebnisliste: - ok
 	- Datei öffnen (selbe Aktion wie doppelklick) - ok
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...) - ok
