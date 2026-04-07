@@ -1,12 +1,7 @@
 Version 1.0
 - Suchkriterien:
-	- Profile speichern Suchparameter
 	- Dateinamen - ok
-		- Regex
-	- Liste an Dateinamen zur Suche
-	- Dateinamensuche mit dialog
-		- Liste an Suchnamen
-		- Regex (pro Eintrag)
+		- Regex - ok
 	- Datum von bis - ok
 		- letzter Zugriff - ok
 		- erstellt am - ok
@@ -86,3 +81,7 @@ Version 1.2
 		- Indexierung von Archivdateien
 		- Volltextsuche in Archivdateien
 		- Konfiguration der Archivsuche in den Settings
+
+Version 1.3
+	- Profile speichern Suchparameter
+	- Liste an Dateinamen zur Suche
