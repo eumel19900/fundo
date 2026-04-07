@@ -224,7 +224,7 @@ namespace fundo.gui.page
                 case ISearchEngine.EngineType.IndexBased:
                     if (SearchPatternTextBox.Text != "")
                     {
-                        filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text));
+                        filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text, useRegex: RegexCheckBox.IsChecked == true));
                     }
                     if (sizeFilterPage?.SizeFilterEnabled == true)
                     {

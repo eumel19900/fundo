@@ -1,30 +1,46 @@
 ﻿using fundo.core.Persistence.Entity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace fundo.core.Persistence.Filter
 {
     internal class IndexBasedFileNameFilter : IIndexBasedFilter
     {
         private readonly string searchPattern;
+        private readonly bool useRegex;
 
-        public IndexBasedFileNameFilter(string searchPattern)
+        public IndexBasedFileNameFilter(string searchPattern, bool useRegex = false)
         {
             this.searchPattern = searchPattern ?? string.Empty;
+            this.useRegex = useRegex;
+
+            if (useRegex && !string.IsNullOrEmpty(this.searchPattern))
+            {
+                try
+                {
+                    _ = new Regex(this.searchPattern);
+                }
+                catch
+                {
+                    this.useRegex = false;
+                }
+            }
         }
 
         public IQueryable<FileEntity> AddQuery(IQueryable<FileEntity> query)
         {
             if (string.IsNullOrEmpty(searchPattern))
             {
-                // Kein Pattern gesetzt -> Query unverändert lassen.
                 return query;
             }
 
-            string likePattern = ConvertWildcardPatternToLike(searchPattern);
+            if (useRegex)
+            {
+                return query.Where(f => SearchIndexContext.Regexp(searchPattern, f.FileName));
+            }
 
-            // Verwende EF.Functions.Like, damit die Filterung von der Datenbank
-            // (und damit ggf. vom Index) ausgewertet werden kann.
+            string likePattern = ConvertWildcardPatternToLike(searchPattern);
             return query.Where(f => EF.Functions.Like(f.FileName, likePattern));
         }
 

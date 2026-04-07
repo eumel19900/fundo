@@ -1,5 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using fundo.core.Persistence.Entity;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Text.RegularExpressions;
 
 namespace fundo.core.Persistence
 {
@@ -9,14 +12,29 @@ namespace fundo.core.Persistence
         public DbSet<StorageDevice> StorageDevices { get; set; } = null!;
         public DbSet<PropertyEntry> PropertyEntries { get; set; } = null!;
 
+        public static bool Regexp(string pattern, string input) => throw new NotSupportedException();
+
         public SearchIndexContext(DbContextOptions<SearchIndexContext> options) : base(options)
         {
+            if (Database.GetDbConnection() is SqliteConnection sqlite)
+            {
+                sqlite.Open();
+
+                sqlite.CreateFunction(
+                    "REGEXP",
+                    (string pattern, string input) =>
+                        input != null && Regex.IsMatch(input, pattern)
+                );
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.HasDbFunction(
+                typeof(SearchIndexContext).GetMethod(nameof(Regexp))!)
+                .HasName("REGEXP");
             // FileEntity
             var file = modelBuilder.Entity<FileEntity>();
             file.HasKey(f => f.Id);
