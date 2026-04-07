@@ -39,9 +39,6 @@ Settings:
 - Suche Abbrechbar - ok
 - Suche nach * heißt kein Dateinamenfilter
 - Mehrfachselektion in Ergebnisliste - ok
-- Automatisches Software-update?
-	- Nachfragen im Windows-Store ob Update verfügbar ist
-	- Konfiguration in Settingspage
 - Masseinheit im Dateigrößenfilter konfigurierbar (KiB, MiB, GiB, ...)
 - Dateifilter Tabs in Expander einklammern
 

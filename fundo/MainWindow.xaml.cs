@@ -52,7 +52,7 @@ namespace fundo
                 }
 
                 WindowPlacementHelper.PlaceWindow(
-                    this, AppWindow, 0.8, 3.0 / 4.0);
+                    this, AppWindow, 0.95, 3.5 / 4.0);
             }
             finally
             {
