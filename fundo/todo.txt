@@ -48,7 +48,7 @@ Settings:
 Bugs/Sonstiges:
 	- WindowPlacementHelper: Seit dem Refactoring mit der Hauptfensternavigation
 			funktioniert die Berechnung der Fenstergröße auf Basis der Suchfiltertabs nicht mehr.
-			Muss angepasst werden, damit das wieder geht :-)
+			Muss angepasst werden, damit das wieder geht :-) - ok
 	- SearchPage: Inhalt wird verworfen, wenn der Anwender zurück auf die Seite navigiert
 			(warum wird hier eine neue Instanz der Seite erstellt?) - ok
 	- Die SearchFilter dürfen nicht mit FileInfo-Objekten arbeiten, weil diese bereits auf die Datei zugreifen - ok

@@ -49,10 +49,10 @@ namespace fundo
                 {
                     // Initialize JobScheduler with XamlRoot for dialogs
                     JobScheduler.Instance.Initialize(root.XamlRoot);
-
-                    // Use the helper to place and size the window in a DPI-aware way
-                    WindowPlacementHelper.PlacePortraitWindowEnsureNavTabsVisible(this, AppWindow, FilterNavigationView, 0.8);
                 }
+
+                WindowPlacementHelper.PlaceWindow(
+                    this, AppWindow, 0.8, 3.0 / 4.0);
             }
             finally
             {

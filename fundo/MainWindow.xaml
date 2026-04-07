@@ -45,9 +45,6 @@
 
             <Frame x:Name="MainWindowContentFrame" Margin="32,0,0,0"/>
         </NavigationView>
-
-        <!-- Job status bar for background operations --><!--
-        <job:JobStatusBar Grid.Row="1" x:Name="MainJobStatusBar"/>-->
     </Grid>
 
 </Window>
