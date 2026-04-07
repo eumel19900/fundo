@@ -37,7 +37,6 @@ Settings:
 	- Konfiguration in Settingspage - ok
 - Autostart von Fundo
 	- Konfiguration in Settingspage
-- Dateisuche auch in Archiv-Dateien
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
 - MetaInformationen zum Index in den Settings anzeigen
@@ -47,8 +46,8 @@ Settings:
 - Automatisches Software-update?
 	- Nachfragen im Windows-Store ob Update verfügbar ist
 	- Konfiguration in Settingspage
-
-
+- Masseinheit im Dateigrößenfilter konfigurierbar (KiB, MiB, GiB, ...)
+- Dateifilter Tabs in Expander einklammern
 
 Bugs/Sonstiges:
 	- WindowPlacementHelper: Seit dem Refactoring mit der Hauptfensternavigation
@@ -56,12 +55,17 @@ Bugs/Sonstiges:
 			Muss angepasst werden, damit das wieder geht :-)
 	- SearchPage: Inhalt wird verworfen, wenn der Anwender zurück auf die Seite navigiert
 			(warum wird hier eine neue Instanz der Seite erstellt?) - ok
-	- Die SearchFilter dürfen nicht mit FileInfo-Objekten arbeiten, weil diese bereits auf die Datei zugreifen
-	- FileIconLoader: Refactoring, performance optimierungen. Lazy Loading. Warum werden bilder als png gecacht?
+	- Die SearchFilter dürfen nicht mit FileInfo-Objekten arbeiten, weil diese bereits auf die Datei zugreifen - ok
+	- FileIconLoader: Refactoring, performance optimierungen. Lazy Loading. Warum werden bilder als png gecacht? - ok
 	- Infomeldung über index darf nur beim Programmstart einmal angezeigt werden, nicht immer wieder - ok
 	- Settingspage lässt sich manchmal nicht öffnen, vermutlich wegen IO-Hängern - ok
-	- Wechseln der SearchEngine in der SettingsPage muss sich sofort in der Anwendung auswirken
+	- Wechseln der SearchEngine in der SettingsPage muss sich sofort in der Anwendung auswirken - ok
 	- Performance in index basierter suche viel zu langsam - ok
+
+Vor dem Release:
+	 - Mailadresse in AboutPage ersetzen
+
+
 
 Version 1.1 - Für Fotografen
  - Bilder:
@@ -75,3 +79,9 @@ Version 1.1 - Für Fotografen
 		- EXIF
 		- IPTC
 		- XMP
+
+Version 1.2
+	- Suche in Archivdateien (zip, rar, 7z, tar.gz, etc.)
+		- Indexierung von Archivdateien
+		- Volltextsuche in Archivdateien
+		- Konfiguration der Archivsuche in den Settings
