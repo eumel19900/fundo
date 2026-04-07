@@ -70,4 +70,15 @@ Die Shortcuts sollen als Kombination mehrerer Tasten konfiguriert werden können
 Der Anwender nimmt die Konfiguration in der Bereits vorhandenen SettingsPage vor. Die SettingsPage ist mittels Expander-Elementen in Sektionen untergliedert.
 Für die Konfiguration des Shortscuts zum öffnen des MainWindows soll hier eine neue Section (als weiterer Expander) hinzugefügt werden.
 Hier muss der Anwender den Globalen Shortcut aktivieren und deaktivieren können (standardmäßig aktiviert) und die Tastenkombination erfassen können.
-außerdem muss dem Anwender hier erklärt werden was ein globaler Shortcut ist und wie dieser hier in der SettingsPage konfiguriert wird.
+Außerdem muss dem Anwender hier erklärt werden was ein globaler Shortcut ist und wie dieser hier in der SettingsPage konfiguriert wird.
+
+
+Neue Parameter für die Volltextsuche
+Claude Opus 4.6:
+Die Klasse FileContentFilter filtert dateien auf basis des Dateiinhalts (Volltextsuche). Der FileContentFilter soll weitere Flags bekommen:
+•	"Case sensitive" Volltextsuche
+•	Suche als Regex (sollte der als searchText angegebene String als Regex nicht kompatibel sein, soll Regex automatisch deaktiviert werden, ein Fehlerhafter Regulärer Ausdruck soll keinen Fehler verursachen)
+•	Suche als ganzes World
+•	"enhält nicht" der angegebene Searchtext darf nicht in der Datei vorkommen
+Die neuen Flags sollen in der Klasse hinzugefügt werden und über den Konstruktur der Klasse instanziiert werden.
+In SearchPage.SearchButton_Clicked() wird der FileContentFilter instanziiert auf basis der Parameter die der Anwender in FileContentFilterPage angegeben hat (bislang nur der Suchtext) Die FileContentFilterPage soll ebenfalls angepasst werden, sodass die neuen Flags vom Anwender angegeben werden können

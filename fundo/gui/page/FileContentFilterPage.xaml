@@ -12,16 +12,35 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <CheckBox x:Name="FilterByContentCheckbox" Content="Filter by filecontent" Grid.Row="0"/>
 
-        <StackPanel Spacing="5" Grid.Row="1" Orientation="Horizontal" x:Name="FileSizeTypeCombobox">
+        <StackPanel Spacing="5" Grid.Row="1">
             <TextBox x:Name="FileContentTextbox"
                      Header="Filecontent to search for"
                      PlaceholderText="Enter some text here..."
                      Width="600"
+                     HorizontalAlignment="Left"
                      IsEnabled="{Binding IsChecked, ElementName=FilterByContentCheckbox}" />
+        </StackPanel>
+
+        <StackPanel Spacing="5" Grid.Row="2" Orientation="Horizontal">
+            <CheckBox x:Name="CaseSensitiveCheckbox"
+                      Content="Case sensitive"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByContentCheckbox}" />
+            <CheckBox x:Name="UseRegexCheckbox"
+                      Content="Regular expression"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByContentCheckbox}"
+                      Checked="UseRegexCheckbox_Changed"
+                      Unchecked="UseRegexCheckbox_Changed" />
+            <CheckBox x:Name="WholeWordCheckbox"
+                      Content="Whole word"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByContentCheckbox}" />
+            <CheckBox x:Name="InvertMatchCheckbox"
+                      Content="Does not contain"
+                      IsEnabled="{Binding IsChecked, ElementName=FilterByContentCheckbox}" />
         </StackPanel>
     </Grid>
 </Page>
