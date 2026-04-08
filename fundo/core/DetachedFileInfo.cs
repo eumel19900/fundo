@@ -205,19 +205,12 @@ namespace fundo.core
         {
         }
 
-        public DetachedFileInfo(FileInfo fileInfo, bool includeIoProperties = true)
+        public DetachedFileInfo(FileInfo fileInfo)
         {
             Name = fileInfo.Name;
             FullName = fileInfo.FullName;
             Extension = fileInfo.Extension;
             DirectoryName = fileInfo.DirectoryName;
-
-            if (!includeIoProperties)
-            {
-                _ioPropertiesInitialized = false;
-                _initializeIoPropertiesOnDemand = true;
-                return;
-            }
 
             SetIoProperties(fileInfo);
         }

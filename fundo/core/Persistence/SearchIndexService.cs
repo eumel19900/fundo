@@ -75,7 +75,6 @@ namespace fundo.core.Persistence
 
             NativeSearchEngine searchEngine = new NativeSearchEngine();
             searchEngine.Reset();
-            searchEngine.IncludeIoProperties = true;
 
             var asyncEnumerable = searchEngine.SearchAsync(
                 new DirectoryInfo(drive.DriveLetter), cancellationToken, null);

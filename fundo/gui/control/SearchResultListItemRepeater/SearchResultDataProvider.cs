@@ -2,6 +2,7 @@ using fundo.core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace fundo.gui.control
 {
@@ -160,33 +161,67 @@ namespace fundo.gui.control
 
             int[] filtered = indices.ToArray();
 
-            Array.Sort(filtered, (a, b) =>
+            SortIndices(filtered);
+
+            if (_sortDirection == SearchResultSortDirection.Descending)
             {
-                int cmp = CompareItems(_allItems[a], _allItems[b]);
-                return _sortDirection == SearchResultSortDirection.Descending ? -cmp : cmp;
-            });
+                Array.Reverse(filtered);
+            }
 
             _viewIndices = filtered;
             ViewChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private int CompareItems(DetachedFileInfo x, DetachedFileInfo y)
+        private void SortIndices(int[] indices)
         {
-            return _sortField switch
+            if (indices.Length <= 1)
             {
-                SearchResultSortField.FileName => string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase),
-                SearchResultSortField.Directory => string.Compare(
-                    x.DirectoryName ?? string.Empty,
-                    y.DirectoryName ?? string.Empty,
-                    StringComparison.OrdinalIgnoreCase),
-                SearchResultSortField.FileSize => x.Length.CompareTo(y.Length),
-                SearchResultSortField.FileDate => x.CreationTime.CompareTo(y.CreationTime),
-                SearchResultSortField.FileType => string.Compare(
-                    x.Extension ?? string.Empty,
-                    y.Extension ?? string.Empty,
-                    StringComparison.OrdinalIgnoreCase),
-                _ => 0
-            };
+                return;
+            }
+
+            switch (_sortField)
+            {
+                case SearchResultSortField.FileSize:
+                {
+                    long[] keys = new long[indices.Length];
+                    Parallel.For(0, indices.Length, i =>
+                        keys[i] = _allItems[indices[i]].Length);
+                    Array.Sort(keys, indices);
+                    break;
+                }
+                case SearchResultSortField.FileDate:
+                {
+                    long[] keys = new long[indices.Length];
+                    Parallel.For(0, indices.Length, i =>
+                        keys[i] = _allItems[indices[i]].CreationTime.Ticks);
+                    Array.Sort(keys, indices);
+                    break;
+                }
+                case SearchResultSortField.FileName:
+                {
+                    string[] keys = new string[indices.Length];
+                    for (int i = 0; i < indices.Length; i++)
+                        keys[i] = _allItems[indices[i]].Name ?? string.Empty;
+                    Array.Sort(keys, indices, StringComparer.OrdinalIgnoreCase);
+                    break;
+                }
+                case SearchResultSortField.Directory:
+                {
+                    string[] keys = new string[indices.Length];
+                    for (int i = 0; i < indices.Length; i++)
+                        keys[i] = _allItems[indices[i]].DirectoryName ?? string.Empty;
+                    Array.Sort(keys, indices, StringComparer.OrdinalIgnoreCase);
+                    break;
+                }
+                case SearchResultSortField.FileType:
+                {
+                    string[] keys = new string[indices.Length];
+                    for (int i = 0; i < indices.Length; i++)
+                        keys[i] = _allItems[indices[i]].Extension ?? string.Empty;
+                    Array.Sort(keys, indices, StringComparer.OrdinalIgnoreCase);
+                    break;
+                }
+            }
         }
     }
 }

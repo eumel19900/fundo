@@ -19,13 +19,6 @@ namespace fundo.core.Search
 
         public ISearchEngine.EngineType Kind => ISearchEngine.EngineType.Native;
 
-        /// <summary>
-        /// Controls whether DetachedFileInfo results include IO properties eagerly.
-        /// When false (default), IO properties are loaded lazily on first access.
-        /// Set to true when all IO properties will be accessed for every result (e.g., indexing).
-        /// </summary>
-        public bool IncludeIoProperties { get; set; }
-
         public void Reset()
         {
             directoriesSearched = 0;
@@ -107,7 +100,7 @@ namespace fundo.core.Search
 
                             try
                             {
-                                var item = new DetachedFileInfo(file, includeIoProperties: IncludeIoProperties);
+                                var item = new DetachedFileInfo(file);
                                 await writer.WriteAsync(item, cancellationToken).ConfigureAwait(false);
                             }
                             catch (OperationCanceledException) { break; }

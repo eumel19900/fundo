@@ -22,17 +22,20 @@ Version 1.0
 	- Kopieren der Datei in Zwischenablage - ok
 Settings:
 	- Index erstellen - ok
-	- Daemon Modus per Scheduled Task konfigurierbar
+	- Daemon Modus per Scheduled Task konfigurierbar - wird gestrichen... als App nicht möglich
 - Volltextsuche (oder filterung?) in der Ergebnisliste - ok
 - Sortierung in der Ergebnisliste - ok
 - Ergebnisliste mit lazy loading - ok
 - Immer nur eine Instanz von Fundo erlauben - ok
-	- Kommunikation an erste Instanz z.b. bei Kommandozeilenparametern
+	- Kommunikation an erste Instanz z.b. bei Kommandozeilenparametern - gestrichen, es wird keine Kommandozeilenparameter geben
 - Manual-Seite
 - Global-Hotkeys zum Öffnen das MainWindows - ok
 	- Konfiguration in Settingspage - ok
 - Autostart von Fundo
 	- Konfiguration in Settingspage
+- Index-Aktualisierung:
+	- Zeitgesteuertes aktualisieren vom Index (mit Konfiguration in den Settings)
+	- Fortschrittsanzeige in der Notification Area während der Aktualisierung
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
 - MetaInformationen zum Index in den Settings anzeigen
@@ -54,6 +57,8 @@ Bugs/Sonstiges:
 	- Settingspage lässt sich manchmal nicht öffnen, vermutlich wegen IO-Hängern - ok
 	- Wechseln der SearchEngine in der SettingsPage muss sich sofort in der Anwendung auswirken - ok
 	- Performance in index basierter suche viel zu langsam - ok
+	- Sortierung langam:
+		- Sortierung von 1.3 Mio Ergebniseinträgen dauert > 120 Sekunden, wenn man nach größe sortiert - ok
 
 Vor dem Release:
 	 - Mailadresse in AboutPage ersetzen
@@ -72,6 +77,7 @@ Version 1.1 - Für Fotografen
 		- EXIF
 		- IPTC
 		- XMP
+	Thumbnails laden über shellfile: https://stackoverflow.com/questions/1439719/c-sharp-get-thumbnail-from-file-via-windows-api
 
 Version 1.2
 	- Suche in Archivdateien (zip, rar, 7z, tar.gz, etc.)
