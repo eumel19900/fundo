@@ -14,6 +14,8 @@ namespace fundo.gui.Job
     {
         private CancellationTokenSource? _cancellationTokenSource;
         private readonly DispatcherQueue _dispatcherQueue;
+        private long _lastStatusDispatchTick;
+        private const long MinStatusIntervalMs = 100;
 
         /// <summary>
         /// Unique identifier for this job instance.
@@ -173,11 +175,8 @@ namespace fundo.gui.Job
         /// </summary>
         protected void ReportProgress(int progress)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Status.Progress = progress;
-                RaiseStatusChanged();
-            });
+            Status.Progress = progress;
+            ThrottledDispatch();
         }
 
         /// <summary>
@@ -186,12 +185,9 @@ namespace fundo.gui.Job
         /// </summary>
         protected void ReportProgress(int progress, int maxProgress)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Status.MaxProgress = maxProgress;
-                Status.Progress = progress;
-                RaiseStatusChanged();
-            });
+            Status.MaxProgress = maxProgress;
+            Status.Progress = progress;
+            ThrottledDispatch();
         }
 
         /// <summary>
@@ -200,11 +196,8 @@ namespace fundo.gui.Job
         /// </summary>
         protected void ReportTitle(string title)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Status.Title = title;
-                RaiseStatusChanged();
-            });
+            Status.Title = title;
+            ThrottledDispatch();
         }
 
         /// <summary>
@@ -213,11 +206,8 @@ namespace fundo.gui.Job
         /// </summary>
         protected void ReportDescription(string description)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Status.Description = description;
-                RaiseStatusChanged();
-            });
+            Status.Description = description;
+            ThrottledDispatch();
         }
 
         /// <summary>
@@ -226,12 +216,9 @@ namespace fundo.gui.Job
         /// </summary>
         protected void ReportStatus(string title, string description)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Status.Title = title;
-                Status.Description = description;
-                RaiseStatusChanged();
-            });
+            Status.Title = title;
+            Status.Description = description;
+            ThrottledDispatch();
         }
 
         /// <summary>
@@ -240,13 +227,10 @@ namespace fundo.gui.Job
         /// </summary>
         protected void ReportStatus(int progress, string title, string description)
         {
-            _dispatcherQueue.TryEnqueue(() =>
-            {
-                Status.Progress = progress;
-                Status.Title = title;
-                Status.Description = description;
-                RaiseStatusChanged();
-            });
+            Status.Progress = progress;
+            Status.Title = title;
+            Status.Description = description;
+            ThrottledDispatch();
         }
 
         /// <summary>
@@ -255,11 +239,20 @@ namespace fundo.gui.Job
         /// </summary>
         protected void SetIndeterminate(bool isIndeterminate)
         {
-            _dispatcherQueue.TryEnqueue(() =>
+            Status.IsIndeterminate = isIndeterminate;
+            ThrottledDispatch();
+        }
+
+        private void ThrottledDispatch()
+        {
+            long now = Environment.TickCount64;
+            if (now - _lastStatusDispatchTick < MinStatusIntervalMs)
             {
-                Status.IsIndeterminate = isIndeterminate;
-                RaiseStatusChanged();
-            });
+                return;
+            }
+
+            _lastStatusDispatchTick = now;
+            _dispatcherQueue.TryEnqueue(() => RaiseStatusChanged());
         }
 
         private void RaiseStatusChanged()
