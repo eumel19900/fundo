@@ -6,18 +6,19 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
-  IgnorableNamespaces="uap rescap systemai">
+  xmlns:uap18="http://schemas.microsoft.com/appx/manifest/uap/windows10/18"
+  IgnorableNamespaces="uap rescap systemai uap18">
 
   <Identity
     Name="6a777b6b-47b6-4788-84bf-8acae6c6af09"
-    Publisher="CN=rober"
-    Version="1.0.0.0" />
+    Publisher="CN=Robert wermuth"
+    Version="1.0.4.0" />
 
   <mp:PhoneIdentity PhoneProductId="6a777b6b-47b6-4788-84bf-8acae6c6af09" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>fundo (Package)</DisplayName>
-    <PublisherDisplayName>rober</PublisherDisplayName>
+    <DisplayName>Fundo</DisplayName>
+    <PublisherDisplayName>Robert Wermuth</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -33,7 +34,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="$targetentrypoint$">
+      EntryPoint="$targetentrypoint$" uap18:TrustLevel="appContainer" uap18:RuntimeBehavior="windowsApp">
       <uap:VisualElements
         DisplayName="fundo (Package)"
         Description="fundo (Package)"
@@ -42,6 +43,8 @@
         Square44x44Logo="Images\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Images\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="portrait"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
