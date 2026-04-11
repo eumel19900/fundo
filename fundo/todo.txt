@@ -8,14 +8,13 @@ Version 1.0
 		- geändert am - ok
 	- Dateigröße von bis - ok
 	- Dateiflags/attribute: versteckt, system, archiv, - ok
-	- Dateibesitzer?
 	- Volltextsuche - ok
 		- case sensitive - ok
 		- regex - ok
 		- ganzes wort - ok
 		- enthält nicht - ok
-		- Fortschrittsanzeige
-		- Multithreading
+		- Fortschrittsanzeige - ok
+		- Multithreading - ok
  - Popupmenu in Ergebnisliste: - ok
 	- Datei öffnen (selbe Aktion wie doppelklick) - ok
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...) - ok
@@ -43,6 +42,7 @@ Settings:
 	- Fortschrittsanzeige in der Notification Area während der Aktualisierung
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
+	- Indizierte Suche nur auf indizierten Laufwerken, sonst Fallback zur nativen Suche
 - MetaInformationen zum Index in den Settings anzeigen
 - Suche Abbrechbar - ok
 - Suche nach * heißt kein Dateinamenfilter
@@ -66,7 +66,9 @@ Bugs/Sonstiges:
 		- Sortierung von 1.3 Mio Ergebniseinträgen dauert > 120 Sekunden, wenn man nach größe sortiert - ok
 
 Vor dem Release:
-	 - Mailadresse in AboutPage ersetzen
+	 - Mailadresse in AboutPage ersetzen - ok
+	 - App Icons, Logo
+	 - Deployment als MXIX
 
 
 
@@ -93,3 +95,4 @@ Version 1.2
 Version 1.3
 	- Profile speichern Suchparameter
 	- Liste an Dateinamen zur Suche
+	- Filter auf Dateibesitzer
