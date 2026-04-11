@@ -61,7 +61,7 @@ Bugs/Sonstiges:
 		- Sortierung von 1.3 Mio Ergebniseinträgen dauert > 120 Sekunden, wenn man nach größe sortiert - ok
 
 Vor dem Release:
-	 - Mailadresse in AboutPage ersetzen
+	 - Mailadresse in AboutPage ersetzen - ok
 	 - Deployment als MXIX
 
 

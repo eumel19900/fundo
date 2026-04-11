@@ -35,9 +35,23 @@
                     <TextBlock Text="Made in 2026"
                                FontWeight="SemiBold" />
                     <TextBlock Text="Robert Wermuth" />
-                    <TextBlock Text="robert.wermuth@gmail.com"
+                    <TextBlock Text="fundo.search@gmail.com"
                                Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                IsTextSelectionEnabled="True" />
+                </StackPanel>
+
+                <Rectangle Height="1"
+                           Fill="{ThemeResource CardStrokeColorDefaultBrush}"
+                           Margin="0,8,0,0" />
+
+                <StackPanel Orientation="Vertical" Spacing="8">
+                    <TextBlock Text="License"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="Fundo is published under the Beerware License: &quot;As long as you retain this notice you can do whatever you want with this stuff. If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.&quot;"
+                               TextWrapping="WrapWholeWords" />
+                    <TextBlock Text="If you enjoy Fundo, feel invited to buy me a beer someday. Feel free to send your questions, suggestions, and bug reports by email to fundo.search@gmail.com."
+                               TextWrapping="WrapWholeWords"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
             </StackPanel>
         </Border>
