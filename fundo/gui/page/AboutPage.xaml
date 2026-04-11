@@ -49,6 +49,13 @@
                         <TextBlock Text="If you enjoy Fundo, feel invited to buy me a beer someday. Feel free to send your questions, suggestions, and bug reports by email to fundo.search@gmail.com."
                                    TextWrapping="WrapWholeWords"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text=" "
+                                   TextWrapping="WrapWholeWords"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="Fundo on Github: https://github.com/eumel19900/fundo"
+                                   TextWrapping="WrapWholeWords"
+                                   IsTextSelectionEnabled="True"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
                 </StackPanel>
 
