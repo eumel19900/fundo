@@ -29,6 +29,11 @@ Settings:
 - Immer nur eine Instanz von Fundo erlauben - ok
 	- Kommunikation an erste Instanz z.b. bei Kommandozeilenparametern - gestrichen, es wird keine Kommandozeilenparameter geben
 - Manual-Seite
+	- Erklärung von Suchkriterien (Regex, Jokerzeichen)
+	- Suchlocation
+	- Ergebnisliste
+	- Indizierung
+	- Einstellungen
 - Global-Hotkeys zum Öffnen das MainWindows - ok
 	- Konfiguration in Settingspage - ok
 - Autostart von Fundo
@@ -43,7 +48,7 @@ Settings:
 - Suche nach * heißt kein Dateinamenfilter
 - Mehrfachselektion in Ergebnisliste - ok
 - Masseinheit im Dateigrößenfilter konfigurierbar (KiB, MiB, GiB, ...) - ok
-- Dateifilter Tabs in Expander einklammern
+- Dateifilter Tabs in Expander einklammern?
 
 Bugs/Sonstiges:
 	- WindowPlacementHelper: Seit dem Refactoring mit der Hauptfensternavigation
