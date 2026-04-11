@@ -67,7 +67,9 @@ Example release publish command:
 
 ## License
 
-`Fundo` is published under the GNU General Public License v3.0.
+`Fundo` is licensed under the GNU General Public License v3.0.
+
+For more information, see the LICENSE file.
 
 If you enjoy the software, you are warmly invited to buy the author a beer someday.
 
@@ -93,3 +95,5 @@ Most of the source code is created by copilot. Vibe coding ftw :-)
 ![Search locations](screenshot/3.png)
 
 ![Settings](screenshot/4.png)
+
+SPDX-License-Identifier: GPL-3.0-or-later
