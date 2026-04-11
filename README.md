@@ -10,6 +10,7 @@ Current functionality includes:
 
 - search by file name
 - optional regular expressions for file name matching
+- search in multiple locations add once
 - search by date ranges
   - last access time
   - creation time
@@ -83,3 +84,12 @@ Questions, suggestions, and bug reports are welcome:
 Most of the source code is created by copilot. Vibe coding ftw :-)
 
 `Fundo` is not published in the Microsoft Store yet, but it is planned for the next weeks.
+
+## Screenshots
+![Search](screenshot/1.png)
+
+![Contextmenu](screenshot/2.png)
+
+![Search locations](screenshot/3.png)
+
+![Settings](screenshot/4.png)
