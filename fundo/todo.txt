@@ -13,8 +13,8 @@ Version 1.0
 		- regex - ok
 		- ganzes wort - ok
 		- enthält nicht - ok
-		- Fortschrittsanzeige
-		- Multithreading
+		- Fortschrittsanzeige - ok
+		- Multithreading - ok
  - Popupmenu in Ergebnisliste: - ok
 	- Datei öffnen (selbe Aktion wie doppelklick) - ok
 	- Beeinhaltendes Verzeichnis im Explorer öffnen (Gehe zu...) - ok
@@ -62,6 +62,7 @@ Bugs/Sonstiges:
 
 Vor dem Release:
 	 - Mailadresse in AboutPage ersetzen - ok
+	 - App Icons, Logo
 	 - Deployment als MXIX
 
 

@@ -10,7 +10,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -192,6 +191,7 @@ namespace fundo.gui.page
         {
             ChooseSearchEngine();
 
+            FileContentFilter? fileContentFilter = null;
 
             //Setup filters
             filters.Clear();
@@ -245,14 +245,15 @@ namespace fundo.gui.page
                     }
                     break;
             }
+
             if (fileContentFilterPage?.ContentFilterEnabled == true)
             {
-                filters.Add(new FileContentFilter(
+                fileContentFilter = new FileContentFilter(
                     fileContentFilterPage.ContentSearchText,
                     fileContentFilterPage.CaseSensitive,
                     fileContentFilterPage.UseRegex,
                     fileContentFilterPage.WholeWord,
-                    fileContentFilterPage.InvertMatch));
+                    fileContentFilterPage.InvertMatch);
             }
 
 
@@ -267,9 +268,24 @@ namespace fundo.gui.page
 
             await JobScheduler.Instance.ScheduleAndWaitAsync(job);
 
-            SearchResultList.SetItems(job.Results);
+            IReadOnlyList<DetachedFileInfo> searchResults = job.Results;
+
+            if (fileContentFilter != null)
+            {
+                FullTextSearchJob fullTextSearchJob = new(searchResults, fileContentFilter)
+                {
+                    Priority = JobPriority.Normal,
+                    BlocksUI = true
+                };
+
+                SearchInfoTextBlock.Text = "Filtering results by file content...";
+                await JobScheduler.Instance.ScheduleAndWaitAsync(fullTextSearchJob);
+                searchResults = fullTextSearchJob.Results;
+            }
+
+            SearchResultList.SetItems(searchResults);
             SearchButton.IsEnabled = true;
-            SearchInfoTextBlock.Text = "Finished search. Found " + job.Results.Count + " items";
+            SearchInfoTextBlock.Text = "Finished search. Found " + searchResults.Count + " items";
         }
 
 
