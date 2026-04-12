@@ -1,4 +1,5 @@
 using fundo.gui.Job;
+using fundo.gui.Job.Jobs;
 using fundo.gui.page;
 using fundo.tool;
 using Microsoft.UI;
@@ -8,6 +9,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -25,6 +27,7 @@ namespace fundo
         private AboutPage aboutPage;
         private ManualPage manualPage;
         private HotkeyHelper? _hotkeyHelper;
+        private bool _isCloseConfirmed;
 
         private const int SwMinimize = 6;
 
@@ -47,6 +50,7 @@ namespace fundo
             _hotkeyHelper = new HotkeyHelper(
                 WindowNative.GetWindowHandle(this),
                 () => DispatcherQueue.TryEnqueue(this.Activate));
+            AppWindow.Closing += AppWindow_Closing;
             this.Closed += MainWindow_Closed;
 
             // Defer sizing until the window content is loaded so UI elements (like NavigationView) are available
@@ -134,6 +138,42 @@ namespace fundo
 
         public void UpdateGlobalHotkey() => _hotkeyHelper?.Update();
 
+        internal async Task<bool> ConfirmCloseAsync()
+        {
+            if (_isCloseConfirmed)
+            {
+                return true;
+            }
+
+            if (JobScheduler.Instance.CurrentJob is not DriveIndexingJob)
+            {
+                return true;
+            }
+
+            if (Content is not FrameworkElement root)
+            {
+                return false;
+            }
+
+            ContentDialog dialog = new()
+            {
+                Title = "Indexing is still running",
+                Content = "A drive indexing job is still running. Do you really want to close Fundo? The current indexing job will be interrupted.",
+                PrimaryButtonText = "Close Fundo",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Close,
+                XamlRoot = root.XamlRoot
+            };
+
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+            {
+                return false;
+            }
+
+            _isCloseConfirmed = true;
+            return true;
+        }
+
         internal void ConnectToIndexUpdateService(ScheduledIndexUpdateService service)
         {
             service.IndexingStateChanged += UpdateSearchPageAccess;
@@ -151,6 +191,25 @@ namespace fundo
             }
         }
 
-        private void MainWindow_Closed(object sender, WindowEventArgs args) => _hotkeyHelper?.Dispose();
+        private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            if (_isCloseConfirmed || JobScheduler.Instance.CurrentJob is not DriveIndexingJob)
+            {
+                return;
+            }
+
+            args.Cancel = true;
+
+            if (await ConfirmCloseAsync())
+            {
+                Close();
+            }
+        }
+
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            AppWindow.Closing -= AppWindow_Closing;
+            _hotkeyHelper?.Dispose();
+        }
     }
 }

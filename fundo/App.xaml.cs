@@ -169,9 +169,14 @@ namespace fundo
             BringMainWindowToFront();
         }
 
-        private static void CloseApplicationFromNotifyIcon()
+        private static async void CloseApplicationFromNotifyIcon()
         {
             if (Application.Current is not App app)
+            {
+                return;
+            }
+
+            if (MainWindowInstance != null && !await MainWindowInstance.ConfirmCloseAsync())
             {
                 return;
             }
