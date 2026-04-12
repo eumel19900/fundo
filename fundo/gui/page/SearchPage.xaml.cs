@@ -238,7 +238,7 @@ namespace fundo.gui.page
             switch (engineType)
             {
                 case ISearchEngine.EngineType.Native:
-                    if (SearchPatternTextBox.Text != "")
+                    if (SearchPatternTextBox.Text != "" && SearchPatternTextBox.Text != "*")
                     {
                         filters.Add(new FileNameFilter(SearchPatternTextBox.Text, useRegex: RegexCheckBox.IsChecked == true));
                     }
@@ -262,7 +262,7 @@ namespace fundo.gui.page
                     break;
 
                 case ISearchEngine.EngineType.IndexBased:
-                    if (SearchPatternTextBox.Text != "")
+                    if (SearchPatternTextBox.Text != "" && SearchPatternTextBox.Text != "*")
                     {
                         filters.Add(new IndexBasedFileNameFilter(SearchPatternTextBox.Text, useRegex: RegexCheckBox.IsChecked == true));
                     }

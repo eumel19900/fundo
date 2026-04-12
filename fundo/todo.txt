@@ -41,7 +41,7 @@ Settings:
 	- Indizierte Suche nur auf indizierten Laufwerken, sonst Fallback zur nativen Suche - ok
 - MetaInformationen zum Index in den Settings anzeigen - ok
 - Suche Abbrechbar - ok
-- Suche nach * heißt kein Dateinamenfilter
+- Suche nach * heißt kein Dateinamenfilter - ok
 - Mehrfachselektion in Ergebnisliste - ok
 - Masseinheit im Dateigrößenfilter konfigurierbar (KiB, MiB, GiB, ...) - ok
 - Dateifilter Tabs in Expander einklammern? - wird nicht gemacht
@@ -82,13 +82,13 @@ Version 1.1 - Für Fotografen
 		- XMP
 	Thumbnails laden über shellfile: https://stackoverflow.com/questions/1439719/c-sharp-get-thumbnail-from-file-via-windows-api
 
-Version 1.2
+Version 1.2 - Archivdateien
 	- Suche in Archivdateien (zip, rar, 7z, tar.gz, etc.)
 		- Indexierung von Archivdateien
 		- Volltextsuche in Archivdateien
 		- Konfiguration der Archivsuche in den Settings
 
-Version 1.3
+Version 1.3 - Suchprofile
 	- Profile speichern Suchparameter
 	- Liste an Dateinamen zur Suche
 		- Liste an Dateierweiterungen (vordefiniert)
