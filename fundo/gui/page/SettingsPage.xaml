@@ -88,6 +88,7 @@
                                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                                 <TextBlock Text="{x:Bind IndexedFileCountDisplay}" FontSize="12"
                                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="" FontSize="8" TextTrimming="CharacterEllipsis" />    <!-- empty line -->
                                             </StackPanel>
                                         </StackPanel>
 

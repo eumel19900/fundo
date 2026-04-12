@@ -21,6 +21,7 @@ namespace fundo
         private SearchPage searchPage;
         private SettingsPage settingsPage;
         private AboutPage aboutPage;
+        private ManualPage manualPage;
         private HotkeyHelper? _hotkeyHelper;
 
         public MainWindow()
@@ -80,6 +81,10 @@ namespace fundo
                         MainWindowContentFrame.Navigate(typeof(AboutPage));
                         break;
 
+                    case "manual":
+                        MainWindowContentFrame.Navigate(typeof(ManualPage));
+                        break;
+
                     case "Settings":
                         MainWindowContentFrame.Navigate(typeof(SettingsPage));
                         break;
@@ -100,6 +105,10 @@ namespace fundo
             else if (e.SourcePageType == typeof(AboutPage))
             {
                 aboutPage = e.Content as AboutPage;
+            }
+            else if (e.SourcePageType == typeof(ManualPage))
+            {
+                manualPage = e.Content as ManualPage;
             }
         }
 

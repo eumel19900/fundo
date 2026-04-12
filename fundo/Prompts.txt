@@ -107,3 +107,24 @@ Das soll nun grundsätzlich anders:
  - Überarbeite hierfür auch die Art wie die Filter instanziiert und übergeben werden.
 
 
+
+Claude Opus 4.6:
+Schau dir die ManualPage an.
+Hier soll das Anwenderhandbuch für den Anwender sein.
+
+Schreibe einen Text in dem du dem Anwender hier erklärst wie Fundo zu bedienen ist, außerdem müssen die relevantesten Features erklärt werden.
+Es ist alles in englisch zu schreiben.
+
+In dem Handbuch sollen Screenshots angezeigt werden. Diese liegen in res/
+
+Beginne damit, dass du das MainWindow beschreibst. Verwende hier den Screenshot "MainWindow.png"
+
+Beschreibe danach das KontextMenu der Ergebnisliste für die Dateisuche. Der Anwender kann hier das Suchergebnis filtern und sortieren. Der Anwender kann Dateien öffnen und zu dem Datei-Verzeichnis springen. Das muss alles erklärt werden. Verwende hier den Screenshot "ContextMenu.png".
+
+Es soll als nächstes darauf eingegangen werden wie das LocationControl zur Angabe der Such-Verzeichnisse verwendet wird.
+Der Anwender kann in das Textfeld einfach den Pfad angeben, wie er es aus anderen Programmen gewohnt ist, er kann aber auch den "..."-Button wählen, um eine Liste mit Verzeichnissen zu pflegen. Verwende hier den Screenshot "SelectDirectories.png".
+
+Als letztes soll die SettingsPage erklärt werden. Verwende hierfür den Screenshot "Settings.png".
+Es soll insbesondere die Konfiguration der Indizierung erklärt werden. Wichtig ist, den Anwender darauf hinzuweisen, dass eine Indizierung für die meisten Anwender nicht vorteilhaft ist. Die Indizierung ist nur bei sehr langsamen Datenträgern wie beispielsweise einer Samba-Freigabe sinnvoll.
+Die anderen Einstellungsmöglichkeiten in der SettingsPage sollen aber ebenfalls erklärt werden.
+

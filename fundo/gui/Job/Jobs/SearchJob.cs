@@ -48,6 +48,10 @@ namespace fundo.gui.Job.Jobs
                 {
                     ReportTitle($"Searching in directory {directoryIndex} of {_rootSearchDirectories.Count}...");
                 }
+                else
+                {
+                    ReportTitle($"Searching in directory {rootDir.Name}...");
+                }
 
                 var asyncEnumerable = _searchEngine.SearchAsync(rootDir, CancellationToken, _filters);
                 var enumerator = asyncEnumerable.GetAsyncEnumerator(CancellationToken);

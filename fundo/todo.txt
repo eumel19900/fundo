@@ -27,7 +27,7 @@ Settings:
 - Ergebnisliste mit lazy loading - ok
 - Immer nur eine Instanz von Fundo erlauben - ok
 	- Kommunikation an erste Instanz z.b. bei Kommandozeilenparametern - gestrichen, es wird keine Kommandozeilenparameter geben
-- Manual-Seite
+- Manual-Seite - ok
 - Global-Hotkeys zum Öffnen das MainWindows - ok
 	- Konfiguration in Settingspage - ok
 - Autostart von Fundo
@@ -36,15 +36,15 @@ Settings:
 	- Zeitgesteuertes aktualisieren vom Index (mit Konfiguration in den Settings)
 		- Während der Indizierung kann in Fundo nur die Settingspage geöffnet werden
 	- Fortschrittsanzeige in der Notification Area während der Aktualisierung - ok
-- Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
-	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
-	- Indizierte Suche nur auf indizierten Laufwerken, sonst Fallback zur nativen Suche
-- MetaInformationen zum Index in den Settings anzeigen
+- Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index - ok
+	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde - ok
+	- Indizierte Suche nur auf indizierten Laufwerken, sonst Fallback zur nativen Suche - ok
+- MetaInformationen zum Index in den Settings anzeigen - ok
 - Suche Abbrechbar - ok
 - Suche nach * heißt kein Dateinamenfilter
 - Mehrfachselektion in Ergebnisliste - ok
 - Masseinheit im Dateigrößenfilter konfigurierbar (KiB, MiB, GiB, ...) - ok
-- Dateifilter Tabs in Expander einklammern
+- Dateifilter Tabs in Expander einklammern? - wird nicht gemacht
 
 Bugs/Sonstiges:
 	- WindowPlacementHelper: Seit dem Refactoring mit der Hauptfensternavigation
@@ -91,4 +91,5 @@ Version 1.2
 Version 1.3
 	- Profile speichern Suchparameter
 	- Liste an Dateinamen zur Suche
+		- Liste an Dateierweiterungen (vordefiniert)
 	- Filter auf Dateibesitzer

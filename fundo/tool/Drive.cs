@@ -23,7 +23,7 @@ namespace fundo.tool
         public long StorageDeviceId { get; set; }
 
         public string IndexedAtDisplay => IndexedAt.HasValue
-            ? IndexedAt.Value.ToString("g")
+            ? "Indexed at: " + IndexedAt.Value.ToString("g")
             : "Not indexed";
 
         public string IndexedFileCountDisplay => IndexedFileCount > 0
