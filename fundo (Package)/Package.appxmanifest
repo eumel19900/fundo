@@ -13,7 +13,7 @@
   <Identity
     Name="RobertWermuth.Fundo"
     Publisher="CN=625CFFC4-BE6A-4E47-8AFD-7C33764183F5"
-    Version="1.0.5.0" />
+    Version="1.0.7.0" />
 
   <mp:PhoneIdentity PhoneProductId="6a777b6b-47b6-4788-84bf-8acae6c6af09" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
