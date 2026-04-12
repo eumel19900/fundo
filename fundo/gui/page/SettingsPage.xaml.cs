@@ -52,6 +52,8 @@ namespace fundo.gui.page
 
         public string GlobalHotkeyKeys { get; set; } = Settings.GlobalHotkeyKeys;
 
+        public bool IsAutostartEnabled { get; set; } = Settings.AutostartEnabled;
+
         public SettingsPage()
         {
             InitializeComponent();
@@ -93,6 +95,9 @@ namespace fundo.gui.page
 
             Settings.GlobalHotkeyEnabled = IsGlobalHotkeyEnabled;
             Settings.GlobalHotkeyKeys = GlobalHotkeyKeys;
+
+            Settings.AutostartEnabled = IsAutostartEnabled;
+            _ = AutostartService.ApplyAutostartSettingAsync(IsAutostartEnabled);
 
             new SearchIndexService().UpdateDriveList(drives);
 

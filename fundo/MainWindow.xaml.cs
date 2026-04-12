@@ -6,6 +6,8 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.Runtime.InteropServices;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -23,6 +25,19 @@ namespace fundo
         private AboutPage aboutPage;
         private ManualPage manualPage;
         private HotkeyHelper? _hotkeyHelper;
+
+        private const int SwMinimize = 6;
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        /// <summary>
+        /// When set to <c>true</c> before the window content is loaded, the window
+        /// will be minimized automatically after placement. The existing
+        /// <see cref="NotifyIconService"/> will then hide it to the notification area.
+        /// </summary>
+        public bool StartMinimized { get; set; }
 
         public MainWindow()
         {
@@ -54,6 +69,11 @@ namespace fundo
 
                 WindowPlacementHelper.PlaceWindow(
                     this, AppWindow, 0.95, 3.5 / 4.0);
+
+                if (StartMinimized)
+                {
+                    ShowWindow(WindowNative.GetWindowHandle(this), SwMinimize);
+                }
             }
             finally
             {

@@ -198,6 +198,27 @@
                         </StackPanel>
                     </StackPanel>
                 </Expander>
+
+                <!-- Autostart configuration section -->
+                <Expander Header="Autostart"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          IsExpanded="False">
+                    <StackPanel Spacing="8"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock Text="When autostart is enabled, Fundo launches automatically when you sign in to Windows. The application starts minimized to the notification area so it is ready for use without interrupting your workflow."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <TextBlock Text="You can open Fundo at any time by clicking its icon in the notification area or by pressing the global shortcut (if configured)."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <CheckBox x:Name="EnableAutostartCheckBox"
+                                  IsChecked="{x:Bind IsAutostartEnabled, Mode=TwoWay}"
+                                  Content="Launch Fundo automatically when you sign in" />
+                    </StackPanel>
+                </Expander>
             </StackPanel>
             </Border>
         </Grid>

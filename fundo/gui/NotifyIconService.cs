@@ -126,6 +126,15 @@ internal sealed class NotifyIconService : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Marks the minimize-to-tray hint as already shown so the next minimize
+    /// will not display the notification balloon.
+    /// </summary>
+    public void SuppressMinimizeHint()
+    {
+        _hasShownMinimizeToTrayHint = true;
+    }
+
     private void ShowNotifyIconContextMenu()
     {
         IntPtr menu = CreatePopupMenu();

@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using fundo.core;
 using fundo.gui;
+using fundo.tool;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -32,6 +33,7 @@ namespace fundo
     {
         private Window? _window;
         private NotifyIconService? _notifyIconService;
+        private bool _isAutostartLaunch;
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -76,8 +78,17 @@ namespace fundo
                 return;
             }
 
+            _isAutostartLaunch = AutostartService.IsAutostartLaunch();
+
             EnsureMainWindowIsOpen();
             InitializeNotifyIcon();
+
+            if (_isAutostartLaunch)
+            {
+                _notifyIconService?.SuppressMinimizeHint();
+            }
+
+            _ = AutostartService.ApplyAutostartSettingAsync(Settings.AutostartEnabled);
         }
 
         private void InitializeNotifyIcon()
@@ -109,6 +120,11 @@ namespace fundo
             if (MainWindowInstance != null)
             {
                 MainWindowInstance.Closed += (_, _) => _notifyIconService?.Dispose();
+
+                if (_isAutostartLaunch)
+                {
+                    MainWindowInstance.StartMinimized = true;
+                }
             }
             _window.Activate();
         }
