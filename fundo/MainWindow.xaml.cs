@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using WinRT.Interop;
@@ -46,6 +47,7 @@ namespace fundo
         {
             InitializeComponent();
             AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
+            SetWindowIcon();
 
             _hotkeyHelper = new HotkeyHelper(
                 WindowNative.GetWindowHandle(this),
@@ -172,6 +174,15 @@ namespace fundo
 
             _isCloseConfirmed = true;
             return true;
+        }
+
+        private void SetWindowIcon()
+        {
+            string iconPath = Path.Combine(AppContext.BaseDirectory, "fundo.ico");
+            if (File.Exists(iconPath))
+            {
+                AppWindow.SetIcon(iconPath);
+            }
         }
 
         internal void ConnectToIndexUpdateService(ScheduledIndexUpdateService service)

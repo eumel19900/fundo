@@ -4,9 +4,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Folder Name="/Projektmappenelemente/">
-    <File Path="fundo/fundo.ico" />
-  </Folder>
+  <Folder Name="/Projektmappenelemente/" />
   <Project Path="fundo (Package)/fundo (Package).wapproj" Type="c7167f0d-bc9f-4e6e-afe1-012c56b48db5">
     <Deploy />
   </Project>
