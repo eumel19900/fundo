@@ -150,11 +150,6 @@
                                             ClockIdentifier="24HourClock"
                                             MinuteIncrement="15" />
                             </StackPanel>
-
-                            <CheckBox x:Name="RunScheduledIndexUpdateOnlyWhenIdleCheckBox"
-                                      IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
-                                      IsChecked="{x:Bind RunScheduledIndexUpdateOnlyWhenIdle, Mode=TwoWay}"
-                                      Content="Only run automatic updates when the computer is idle" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>

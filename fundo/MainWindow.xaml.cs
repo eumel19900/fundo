@@ -134,6 +134,23 @@ namespace fundo
 
         public void UpdateGlobalHotkey() => _hotkeyHelper?.Update();
 
+        internal void ConnectToIndexUpdateService(ScheduledIndexUpdateService service)
+        {
+            service.IndexingStateChanged += UpdateSearchPageAccess;
+            UpdateSearchPageAccess();
+        }
+
+        private void UpdateSearchPageAccess()
+        {
+            bool isIndexing = App.IndexUpdateService?.IsIndexing ?? false;
+            SearchPageNav.IsEnabled = !isIndexing;
+
+            if (isIndexing && MainWindowContentFrame.CurrentSourcePageType == typeof(SearchPage))
+            {
+                FilterNavigationView.SelectedItem = FilterNavigationView.SettingsItem;
+            }
+        }
+
         private void MainWindow_Closed(object sender, WindowEventArgs args) => _hotkeyHelper?.Dispose();
     }
 }

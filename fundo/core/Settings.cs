@@ -9,7 +9,6 @@ namespace fundo.core
         private const string AutomaticIndexUpdateEnabledKey = "AutomaticIndexUpdateEnabled";
         private const string AutomaticIndexUpdateIntervalKey = "AutomaticIndexUpdateInterval";
         private const string AutomaticIndexUpdatePreferredTimeKey = "AutomaticIndexUpdatePreferredTime";
-        private const string AutomaticIndexUpdateOnlyWhenIdleKey = "AutomaticIndexUpdateOnlyWhenIdle";
         private const string GlobalHotkeyEnabledKey = "GlobalHotkeyEnabled";
         private const string GlobalHotkeyKeysKey = "GlobalHotkeyKeys";
         private const string AutostartEnabledKey = "AutostartEnabled";
@@ -73,18 +72,6 @@ namespace fundo.core
             set
             {
                 SearchIndexStore.SetPropertyValue(AutomaticIndexUpdatePreferredTimeKey, value.ToString("c"));
-            }
-        }
-
-        public static bool AutomaticIndexUpdateOnlyWhenIdle
-        {
-            get
-            {
-                return GetBooleanValue(AutomaticIndexUpdateOnlyWhenIdleKey);
-            }
-            set
-            {
-                SetBooleanValue(AutomaticIndexUpdateOnlyWhenIdleKey, value);
             }
         }
 

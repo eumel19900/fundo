@@ -46,8 +46,6 @@ namespace fundo.gui.page
 
         public TimeSpan ScheduledIndexUpdatePreferredTime { get; set; } = Settings.AutomaticIndexUpdatePreferredTime;
 
-        public bool RunScheduledIndexUpdateOnlyWhenIdle { get; set; } = Settings.AutomaticIndexUpdateOnlyWhenIdle;
-
         public bool IsGlobalHotkeyEnabled { get; set; } = Settings.GlobalHotkeyEnabled;
 
         public string GlobalHotkeyKeys { get; set; } = Settings.GlobalHotkeyKeys;
@@ -91,8 +89,7 @@ namespace fundo.gui.page
             Settings.AutomaticIndexUpdateEnabled = IsScheduledIndexUpdateEnabled;
             Settings.AutomaticIndexUpdateInterval = SelectedScheduledIndexUpdateInterval;
             Settings.AutomaticIndexUpdatePreferredTime = ScheduledIndexUpdatePreferredTime;
-            Settings.AutomaticIndexUpdateOnlyWhenIdle = RunScheduledIndexUpdateOnlyWhenIdle;
-
+            
             Settings.GlobalHotkeyEnabled = IsGlobalHotkeyEnabled;
             Settings.GlobalHotkeyKeys = GlobalHotkeyKeys;
 

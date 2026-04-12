@@ -30,11 +30,11 @@ Settings:
 - Manual-Seite - ok
 - Global-Hotkeys zum Öffnen das MainWindows - ok
 	- Konfiguration in Settingspage - ok
-- Autostart von Fundo
-	- Konfiguration in Settingspage
+- Autostart von Fundo - ok
+	- Konfiguration in Settingspage - ok
 - Index-Aktualisierung:
-	- Zeitgesteuertes aktualisieren vom Index (mit Konfiguration in den Settings)
-		- Während der Indizierung kann in Fundo nur die Settingspage geöffnet werden
+	- Zeitgesteuertes aktualisieren vom Index (mit Konfiguration in den Settings) - ok
+		- Während der Indizierung kann in Fundo nur die Settingspage geöffnet werden - ok
 	- Fortschrittsanzeige in der Notification Area während der Aktualisierung - ok
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index - ok
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde - ok
