@@ -58,6 +58,12 @@ namespace fundo.core.Persistence
             SearchIndexStore.DeleteAllFiles();
         }
 
+        public void ClearIndexForDevice(long storageDeviceId)
+        {
+            SearchIndexStore.DeleteAllFilesInStorageDevice(storageDeviceId);
+            SearchIndexStore.UpdateStorageDeviceIndexedAt(storageDeviceId, null);
+        }
+
         public void UpdateDriveIndex(Drive drive, CancellationToken cancellationToken = default)
         {
             StorageDevice? storageDevice = SearchIndexStore.GetStorageDeviceByStorageName(drive.NtPath);
@@ -69,6 +75,9 @@ namespace fundo.core.Persistence
             long storageDeviceId = storageDevice.Id;
             storageDevice = null;
 
+            // Clear existing files for this device before re-indexing
+            SearchIndexStore.DeleteAllFilesInStorageDevice(storageDeviceId);
+            SearchIndexStore.UpdateStorageDeviceIndexedAt(storageDeviceId, null);
 
             const int batchSize = 10000;
             List<FileEntity> batch = new List<FileEntity>(batchSize);
@@ -83,6 +92,8 @@ namespace fundo.core.Persistence
             {
                 while (enumerator.MoveNextAsync().AsTask().GetAwaiter().GetResult())
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var result = enumerator.Current;
                     FileEntity fileEntity = new FileEntity
                     {
@@ -110,11 +121,22 @@ namespace fundo.core.Persistence
                 enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
             }
 
+            if (cancellationToken.IsCancellationRequested)
+            {
+                // Indexing was cancelled - roll back to avoid incomplete index
+                SearchIndexStore.DeleteAllFilesInStorageDevice(storageDeviceId);
+                SearchIndexStore.UpdateStorageDeviceIndexedAt(storageDeviceId, null);
+                return;
+            }
+
             if (batch.Count > 0)
             {
                 SearchIndexStore.AddFilesBulk(batch);
                 batch.Clear();
             }
+
+            // Mark indexing as completed
+            SearchIndexStore.UpdateStorageDeviceIndexedAt(storageDeviceId, DateTime.Now);
         }
     }
 }

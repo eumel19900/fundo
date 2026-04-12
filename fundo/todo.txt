@@ -34,7 +34,8 @@ Settings:
 	- Konfiguration in Settingspage
 - Index-Aktualisierung:
 	- Zeitgesteuertes aktualisieren vom Index (mit Konfiguration in den Settings)
-	- Fortschrittsanzeige in der Notification Area während der Aktualisierung
+		- Während der Indizierung kann in Fundo nur die Settingspage geöffnet werden
+	- Fortschrittsanzeige in der Notification Area während der Aktualisierung - ok
 - Fehlertoleranz bei fehlendem oder kaputten/unvollständigem index
 	- Unvollständigen index verhinden: Index löschen wenn Indizierung abgebrochen wurde
 	- Indizierte Suche nur auf indizierten Laufwerken, sonst Fallback zur nativen Suche

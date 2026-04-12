@@ -152,6 +152,28 @@ namespace fundo.gui.page
                 BlocksUI = true
             };
             await JobScheduler.Instance.ScheduleAndWaitAsync(job);
+            await LoadDrivesAsync();
+        }
+
+        private async void DeleteDriveIndexButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button || button.Tag is not Drive drive)
+            {
+                return;
+            }
+
+            if (drive.StorageDeviceId == 0)
+            {
+                return;
+            }
+
+            button.IsEnabled = false;
+            await Task.Run(() =>
+            {
+                new SearchIndexService().ClearIndexForDevice(drive.StorageDeviceId);
+            });
+
+            await LoadDrivesAsync();
         }
 
         private void RecordHotkeyButton_Click(object sender, RoutedEventArgs e)

@@ -64,17 +64,40 @@
                         <ListView x:Name="IndexedDrivesListView"
                                   BorderThickness="1"
                                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                  Height="200"  
+                                  Height="280"  
                                   IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:Drive">
-                                    <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
-                                        <StackPanel>
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox Grid.Column="0"
+                                                  IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                                  VerticalAlignment="Center" />
+
+                                        <StackPanel Grid.Column="1">
                                             <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" />
                                             <TextBlock Text="{x:Bind NtPath}" FontSize="12" TextTrimming="CharacterEllipsis" />
                                             <TextBlock Text="{x:Bind VolumeGuid}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                            <StackPanel Orientation="Horizontal" Spacing="16">
+                                                <TextBlock Text="{x:Bind IndexedAtDisplay}" FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind IndexedFileCountDisplay}" FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            </StackPanel>
                                         </StackPanel>
-                                    </CheckBox>
+
+                                        <Button Grid.Column="2"
+                                                Content="Delete index"
+                                                VerticalAlignment="Center"
+                                                Click="DeleteDriveIndexButton_Click"
+                                                Tag="{x:Bind}"
+                                                ToolTipService.ToolTip="Delete indexed files for this drive" />
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>

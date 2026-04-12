@@ -11,15 +11,14 @@ using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace fundo.gui.page
 {
     public sealed partial class SearchPage : Page
     {
-        private ISearchEngine currentSearchEngine = null;
         private List<DirectoryInfo> rootSearchDirectories = new();
-        private List<ISearchFilter> filters = new List<ISearchFilter>();
 
         // Filter pages
         private DateFilterPage? dateFilterPage;
@@ -35,20 +34,18 @@ namespace fundo.gui.page
 
             LocationControl_SelectedDirectoryChanged(null, null);
             ContentFrame.Navigated += ContentFrame_Navigated;
-            ChooseSearchEngine();
+            UpdateSearchEngineInfoBar();
         }
 
-        public void ChooseSearchEngine()
+        private void UpdateSearchEngineInfoBar()
         {
             if (Settings.UseIndex)
             {
-                currentSearchEngine = new IndexBasedSearchEngine();
                 SearchEngineInfoBar.Message =
-                    "Fundo is using the index-based searching backend. You may get outdated results. This can be changed in the settings.";
+                    "Fundo prefers index-based search where available and falls back to native search for non-indexed directories. This can be changed in the settings.";
             }
             else
             {
-                currentSearchEngine = new NativeSearchEngine();
                 SearchEngineInfoBar.Message =
                     "Fundo will search directly in your filesystem. This can be slow. You can change to index based file search in the settings.";
             }
@@ -61,27 +58,8 @@ namespace fundo.gui.page
                 needsSearchEngineInfoBarUpdate = false;
             }
 
-            UpdateMainWindowTitle();
-
             // nach 10 Sekunden automatisch schließen (nicht blocking)
             _ = AutoCloseSearchEngineInfoBarAsync(TimeSpan.FromSeconds(10));
-        }
-
-        private void UpdateMainWindowTitle()
-        {
-            if (App.MainWindowInstance == null)
-            {
-                return;
-            }
-
-            string engineName = currentSearchEngine switch
-            {
-                IndexBasedSearchEngine => "Index-based search",
-                NativeSearchEngine => "Native file search",
-                _ => "Unknown"
-            };
-
-            App.MainWindowInstance.Title = $"Fundo – {engineName}";
         }
 
         private async Task AutoCloseSearchEngineInfoBarAsync(TimeSpan delay)
@@ -189,13 +167,75 @@ namespace fundo.gui.page
 
         private async void SearchButton_Clicked(object sender, RoutedEventArgs e)
         {
-            ChooseSearchEngine();
+            UpdateSearchEngineInfoBar();
 
             FileContentFilter? fileContentFilter = null;
 
-            //Setup filters
-            filters.Clear();
-            switch (currentSearchEngine.Kind)
+            if (fileContentFilterPage?.ContentFilterEnabled == true)
+            {
+                fileContentFilter = new FileContentFilter(
+                    fileContentFilterPage.ContentSearchText,
+                    fileContentFilterPage.CaseSensitive,
+                    fileContentFilterPage.UseRegex,
+                    fileContentFilterPage.WholeWord,
+                    fileContentFilterPage.InvertMatch);
+            }
+
+            SearchInfoTextBlock.Text = "Searching...";
+            SearchButton.IsEnabled = false;
+
+            List<DetachedFileInfo> allResults = new();
+
+            foreach (DirectoryInfo rootDir in rootSearchDirectories)
+            {
+                ISearchEngine searchEngine = ChooseSearchEngineForDirectory(rootDir);
+                List<ISearchFilter> filters = BuildFilters(searchEngine.Kind);
+
+                SearchJob job = new SearchJob(searchEngine, [rootDir], filters)
+                {
+                    Priority = JobPriority.Normal,
+                    BlocksUI = true
+                };
+
+                await JobScheduler.Instance.ScheduleAndWaitAsync(job);
+                allResults.AddRange(job.Results);
+            }
+
+            IReadOnlyList<DetachedFileInfo> searchResults = allResults;
+
+            if (fileContentFilter != null)
+            {
+                FullTextSearchJob fullTextSearchJob = new(searchResults, fileContentFilter)
+                {
+                    Priority = JobPriority.Normal,
+                    BlocksUI = true
+                };
+
+                SearchInfoTextBlock.Text = "Filtering results by file content...";
+                await JobScheduler.Instance.ScheduleAndWaitAsync(fullTextSearchJob);
+                searchResults = fullTextSearchJob.Results;
+            }
+
+            SearchResultList.SetItems(searchResults);
+            SearchButton.IsEnabled = true;
+            SearchInfoTextBlock.Text = "Finished search. Found " + searchResults.Count + " items";
+        }
+
+        private static ISearchEngine ChooseSearchEngineForDirectory(DirectoryInfo directory)
+        {
+            if (Settings.UseIndex && SearchIndexStore.IsPathCoveredByIndexedStorageDevice(directory.FullName))
+            {
+                return new IndexBasedSearchEngine();
+            }
+
+            return new NativeSearchEngine();
+        }
+
+        private List<ISearchFilter> BuildFilters(ISearchEngine.EngineType engineType)
+        {
+            List<ISearchFilter> filters = new();
+
+            switch (engineType)
             {
                 case ISearchEngine.EngineType.Native:
                     if (SearchPatternTextBox.Text != "")
@@ -246,46 +286,7 @@ namespace fundo.gui.page
                     break;
             }
 
-            if (fileContentFilterPage?.ContentFilterEnabled == true)
-            {
-                fileContentFilter = new FileContentFilter(
-                    fileContentFilterPage.ContentSearchText,
-                    fileContentFilterPage.CaseSensitive,
-                    fileContentFilterPage.UseRegex,
-                    fileContentFilterPage.WholeWord,
-                    fileContentFilterPage.InvertMatch);
-            }
-
-
-            SearchInfoTextBlock.Text = "Searching...";
-            SearchButton.IsEnabled = false;
-
-            SearchJob job = new SearchJob(currentSearchEngine, new List<DirectoryInfo>(rootSearchDirectories), new List<ISearchFilter>(filters))
-            {
-                Priority = JobPriority.Normal,
-                BlocksUI = true
-            };
-
-            await JobScheduler.Instance.ScheduleAndWaitAsync(job);
-
-            IReadOnlyList<DetachedFileInfo> searchResults = job.Results;
-
-            if (fileContentFilter != null)
-            {
-                FullTextSearchJob fullTextSearchJob = new(searchResults, fileContentFilter)
-                {
-                    Priority = JobPriority.Normal,
-                    BlocksUI = true
-                };
-
-                SearchInfoTextBlock.Text = "Filtering results by file content...";
-                await JobScheduler.Instance.ScheduleAndWaitAsync(fullTextSearchJob);
-                searchResults = fullTextSearchJob.Results;
-            }
-
-            SearchResultList.SetItems(searchResults);
-            SearchButton.IsEnabled = true;
-            SearchInfoTextBlock.Text = "Finished search. Found " + searchResults.Count + " items";
+            return filters;
         }
 
 

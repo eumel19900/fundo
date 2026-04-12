@@ -41,28 +41,24 @@ namespace fundo.gui.Job.Jobs
                 ReportDescription(description);
             };
 
-            
-            ReportStatus("Preparing", "Clearing existing index...");
-            searchIndexService.ClearIndex();
-
             int driveCount = _drivesToIndex.Count;
             int currentDrive = 0;
             foreach (Drive drive in _drivesToIndex)
             {
                 ThrowIfCancellationRequested();
 
-                
-                ReportStatus($"Indexing drive {drive.DriveLetter}",
-                    $"Processing drive {currentDrive} of {driveCount}...");
+                string statusText = $"Indexing drive {drive.DriveLetter} ({currentDrive + 1} of {driveCount})...";
+                ReportStatus($"Indexing drive {drive.DriveLetter}", statusText);
+                NotifyIconService.UpdateTooltip(statusText);
 
-
-                searchIndexService.UpdateDriveIndex(drive);
+                searchIndexService.UpdateDriveIndex(drive, CancellationToken);
 
                 ReportProgress(++currentDrive, driveCount);
             }
             ReportProgress(driveCount, driveCount);
 
             ReportStatus("Indexing completed!", "");
+            NotifyIconService.UpdateTooltip("Fundo");
         }
     }
 }

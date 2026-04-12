@@ -40,7 +40,34 @@ namespace fundo.core.Persistence
             var options = CreateOptions();
             SearchIndexContext ctx = new SearchIndexContext(options);
             ctx.Database.EnsureCreated();
+            MigrateSchema(ctx);
             return ctx;
+        }
+
+        private static bool _schemaMigrated;
+        private static readonly object _migrationLock = new();
+
+        private static void MigrateSchema(SearchIndexContext ctx)
+        {
+            if (_schemaMigrated) return;
+
+            lock (_migrationLock)
+            {
+                if (_schemaMigrated) return;
+
+                try
+                {
+                    // Add IndexedAt column to StorageDevices if missing
+                    ctx.Database.ExecuteSqlRaw(
+                        "ALTER TABLE StorageDevices ADD COLUMN IndexedAt TEXT NULL");
+                }
+                catch
+                {
+                    // Column already exists - ignore
+                }
+
+                _schemaMigrated = true;
+            }
         }
 
         // --- PropertyEntry helpers ---
@@ -187,14 +214,88 @@ namespace fundo.core.Persistence
             if (fileList.Count == 0) return;
 
             using var ctx = CreateContext();
-            
+
             // Performance-Optimierungen für Bulk-Insert
             ctx.ChangeTracker.AutoDetectChangesEnabled = false;
-            
+
             ctx.FileEntities.AddRange(fileList);
             ctx.SaveChanges();
-            
+
             ctx.ChangeTracker.AutoDetectChangesEnabled = true;
+        }
+
+        public static void UpdateStorageDeviceIndexedAt(long storageDeviceId, DateTime? indexedAt)
+        {
+            using var ctx = CreateContext();
+            var device = ctx.StorageDevices.FirstOrDefault(d => d.Id == storageDeviceId);
+            if (device == null)
+            {
+                return;
+            }
+
+            device.IndexedAt = indexedAt;
+            ctx.SaveChanges();
+        }
+
+        public static long GetFileCountForStorageDevice(long storageDeviceId)
+        {
+            using var ctx = CreateContext();
+            return ctx.FileEntities.LongCount(f => f.StorageDeviceId == storageDeviceId);
+        }
+
+        public static List<StorageDevice> GetAllStorageDevices()
+        {
+            using var ctx = CreateContext();
+            return ctx.StorageDevices.AsNoTracking().ToList();
+        }
+
+        public static bool IsDirectoryIndexed(string directoryPath)
+        {
+            if (string.IsNullOrWhiteSpace(directoryPath))
+            {
+                return false;
+            }
+
+            using var ctx = CreateContext();
+            return ctx.StorageDevices
+                .AsNoTracking()
+                .Any(d => d.IndexedAt != null
+                    && directoryPath.StartsWith(d.StorageName)
+                    && ctx.FileEntities.Any(f => f.StorageDeviceId == d.Id));
+        }
+
+        public static bool IsPathCoveredByIndexedStorageDevice(string fullPath)
+        {
+            if (string.IsNullOrWhiteSpace(fullPath))
+            {
+                return false;
+            }
+
+            using var ctx = CreateContext();
+            var devices = ctx.StorageDevices.AsNoTracking().ToList();
+
+            foreach (var device in devices)
+            {
+                if (device.IndexedAt == null)
+                {
+                    continue;
+                }
+
+                long fileCount = ctx.FileEntities.LongCount(f => f.StorageDeviceId == device.Id);
+                if (fileCount == 0)
+                {
+                    continue;
+                }
+
+                // Check if any indexed file path starts with the search directory path
+                // This means the storage device covers the given directory
+                if (ctx.FileEntities.Any(f => f.StorageDeviceId == device.Id && f.Path.StartsWith(fullPath)))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
