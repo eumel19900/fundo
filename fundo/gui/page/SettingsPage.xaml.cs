@@ -46,11 +46,11 @@ namespace fundo.gui.page
 
         public TimeSpan ScheduledIndexUpdatePreferredTime { get; set; } = Settings.AutomaticIndexUpdatePreferredTime;
 
-        public bool RunScheduledIndexUpdateOnlyWhenIdle { get; set; } = Settings.AutomaticIndexUpdateOnlyWhenIdle;
-
         public bool IsGlobalHotkeyEnabled { get; set; } = Settings.GlobalHotkeyEnabled;
 
         public string GlobalHotkeyKeys { get; set; } = Settings.GlobalHotkeyKeys;
+
+        public bool IsAutostartEnabled { get; set; } = Settings.AutostartEnabled;
 
         public SettingsPage()
         {
@@ -89,10 +89,12 @@ namespace fundo.gui.page
             Settings.AutomaticIndexUpdateEnabled = IsScheduledIndexUpdateEnabled;
             Settings.AutomaticIndexUpdateInterval = SelectedScheduledIndexUpdateInterval;
             Settings.AutomaticIndexUpdatePreferredTime = ScheduledIndexUpdatePreferredTime;
-            Settings.AutomaticIndexUpdateOnlyWhenIdle = RunScheduledIndexUpdateOnlyWhenIdle;
-
+            
             Settings.GlobalHotkeyEnabled = IsGlobalHotkeyEnabled;
             Settings.GlobalHotkeyKeys = GlobalHotkeyKeys;
+
+            Settings.AutostartEnabled = IsAutostartEnabled;
+            _ = AutostartService.ApplyAutostartSettingAsync(IsAutostartEnabled);
 
             new SearchIndexService().UpdateDriveList(drives);
 
@@ -152,6 +154,28 @@ namespace fundo.gui.page
                 BlocksUI = true
             };
             await JobScheduler.Instance.ScheduleAndWaitAsync(job);
+            await LoadDrivesAsync();
+        }
+
+        private async void DeleteDriveIndexButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button || button.Tag is not Drive drive)
+            {
+                return;
+            }
+
+            if (drive.StorageDeviceId == 0)
+            {
+                return;
+            }
+
+            button.IsEnabled = false;
+            await Task.Run(() =>
+            {
+                new SearchIndexService().ClearIndexForDevice(drive.StorageDeviceId);
+            });
+
+            await LoadDrivesAsync();
         }
 
         private void RecordHotkeyButton_Click(object sender, RoutedEventArgs e)

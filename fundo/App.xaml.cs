@@ -18,6 +18,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using fundo.core;
 using fundo.gui;
+using fundo.tool;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -32,6 +33,10 @@ namespace fundo
     {
         private Window? _window;
         private NotifyIconService? _notifyIconService;
+        private ScheduledIndexUpdateService? _indexUpdateService;
+        private bool _isAutostartLaunch;
+
+        internal static ScheduledIndexUpdateService? IndexUpdateService { get; private set; }
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -76,8 +81,18 @@ namespace fundo
                 return;
             }
 
+            _isAutostartLaunch = AutostartService.IsAutostartLaunch();
+
             EnsureMainWindowIsOpen();
             InitializeNotifyIcon();
+            InitializeIndexUpdateService();
+
+            if (_isAutostartLaunch)
+            {
+                _notifyIconService?.SuppressMinimizeHint();
+            }
+
+            _ = AutostartService.ApplyAutostartSettingAsync(Settings.AutostartEnabled);
         }
 
         private void InitializeNotifyIcon()
@@ -91,8 +106,21 @@ namespace fundo
             _notifyIconService.Initialize(MainWindowInstance, OpenMainWindowFromNotifyIcon, CloseApplicationFromNotifyIcon);
         }
 
+        private void InitializeIndexUpdateService()
+        {
+            if (MainWindowInstance == null)
+                return;
+
+            IntPtr windowHandle = WindowNative.GetWindowHandle(MainWindowInstance);
+            _indexUpdateService = new ScheduledIndexUpdateService(windowHandle);
+            IndexUpdateService = _indexUpdateService;
+            MainWindowInstance.ConnectToIndexUpdateService(_indexUpdateService);
+            _indexUpdateService.Start();
+        }
+
         private void CurrentDomain_ProcessExit(object? sender, EventArgs e)
         {
+            _indexUpdateService?.Dispose();
             _notifyIconService?.Dispose();
         }
 
@@ -109,6 +137,11 @@ namespace fundo
             if (MainWindowInstance != null)
             {
                 MainWindowInstance.Closed += (_, _) => _notifyIconService?.Dispose();
+
+                if (_isAutostartLaunch)
+                {
+                    MainWindowInstance.StartMinimized = true;
+                }
             }
             _window.Activate();
         }
@@ -136,13 +169,19 @@ namespace fundo
             BringMainWindowToFront();
         }
 
-        private static void CloseApplicationFromNotifyIcon()
+        private static async void CloseApplicationFromNotifyIcon()
         {
             if (Application.Current is not App app)
             {
                 return;
             }
 
+            if (MainWindowInstance != null && !await MainWindowInstance.ConfirmCloseAsync())
+            {
+                return;
+            }
+
+            app._indexUpdateService?.Dispose();
             app._notifyIconService?.Dispose();
             MainWindowInstance?.Close();
             app.Exit();

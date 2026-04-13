@@ -82,3 +82,49 @@ Die Klasse FileContentFilter filtert dateien auf basis des Dateiinhalts (Volltex
 •	"enhält nicht" der angegebene Searchtext darf nicht in der Datei vorkommen
 Die neuen Flags sollen in der Klasse hinzugefügt werden und über den Konstruktur der Klasse instanziiert werden.
 In SearchPage.SearchButton_Clicked() wird der FileContentFilter instanziiert auf basis der Parameter die der Anwender in FileContentFilterPage angegeben hat (bislang nur der Suchtext) Die FileContentFilterPage soll ebenfalls angepasst werden, sodass die neuen Flags vom Anwender angegeben werden können
+
+
+Claude Opus 4.6:
+Wir wollen ein Refactoring bezüglich der indizierten Dateisuche in dem Fundo-Projekt durchführen.
+Als erstes schauen wir uns das Entity StorageDevice an.
+Hier soll ein neues Feld hinzugefügt werden: Ein Timestamp mit Datum/Uhrzeit an dem die Indizierung durchgeführt wurde.
+
+Als nächstes Schauen wir uns den DriveIndexingJob an. Hier wird zu Beginn der Indizierung seachIndexService.ClearIndex() aufgerufen, wodurch alle indizierten Dateien aus der Datenbank gelöscht werden. Das soll nun anders: ich möchte dass die indizierten Dateien pro StorageDevice gelöscht werden und nicht alle auf einmal. Lege die erforderlichen Datenbankabfragen hierzu in SearchIndexStore an.
+In SearchIndexService.UpdateDriveIndex() muss der neue Indizierungstimestamp in StorageDevice gesetzt werden.
+Der Fortschritt des DriveIndexingJob soll nun zusätzlich im Notify-Icon angezeigt werden (als Tooltip). für das Notify-Icon ist NotifyIconService verantwortlich.
+
+Schauen wir uns die SettingsPage an:
+Hier sollen in der IndexedDrivesListView-Liste zwei neue Felder angezeigt werden:
+ - Zeitpunkt der aktualisierung des Index (das neue Feld vom StorageDevice)
+ - Die Anzahl der "Files" im StorageDevice
+Es soll eine weitere Schaltfläche hinzugefügt werden um ein einzelnes StorageDevice zu löschen (die Indizierten Files aus der Datenbank zu entfernen).
+Bricht der Anwender die Indizierung ab, muss sichergestellt sein, dass der Index in der Datenbank nicht unvollständig ist (eventuell die Files pro StorageDevice wieder löschen, auch den Timestamp im StorageDevice wieder auf null setzen)
+
+Schauen wir nun in die SearchPage. In SearchButton_Clicked() wird entschieden welche SearchEngine verwendet wird auf basis der aktivierten Indizierung in den Settings.
+Das soll nun grundsätzlich anders:
+ - pro Eintrag in rootSearchDirectories soll entschieden werden ob die indizierte Suche verwendet wird, oder die Native
+ - Hat der Anwender in den Settings die indizierte Suche aktiviert, soll möglichst die indizierte Suche auch verwender werden => allerdings nur, wenn das rootSearchDirectory auch als StorageDevice in der Datenbank indiziert ist (wenn es vorhanden ist und wenn es "Files" enthält)
+ - Überarbeite hierfür auch die Art wie die Filter instanziiert und übergeben werden.
+
+
+
+Claude Opus 4.6:
+Schau dir die ManualPage an.
+Hier soll das Anwenderhandbuch für den Anwender sein.
+
+Schreibe einen Text in dem du dem Anwender hier erklärst wie Fundo zu bedienen ist, außerdem müssen die relevantesten Features erklärt werden.
+Es ist alles in englisch zu schreiben.
+
+In dem Handbuch sollen Screenshots angezeigt werden. Diese liegen in res/
+
+Beginne damit, dass du das MainWindow beschreibst. Verwende hier den Screenshot "MainWindow.png"
+
+Beschreibe danach das KontextMenu der Ergebnisliste für die Dateisuche. Der Anwender kann hier das Suchergebnis filtern und sortieren. Der Anwender kann Dateien öffnen und zu dem Datei-Verzeichnis springen. Das muss alles erklärt werden. Verwende hier den Screenshot "ContextMenu.png".
+
+Es soll als nächstes darauf eingegangen werden wie das LocationControl zur Angabe der Such-Verzeichnisse verwendet wird.
+Der Anwender kann in das Textfeld einfach den Pfad angeben, wie er es aus anderen Programmen gewohnt ist, er kann aber auch den "..."-Button wählen, um eine Liste mit Verzeichnissen zu pflegen. Verwende hier den Screenshot "SelectDirectories.png".
+
+Als letztes soll die SettingsPage erklärt werden. Verwende hierfür den Screenshot "Settings.png".
+Es soll insbesondere die Konfiguration der Indizierung erklärt werden. Wichtig ist, den Anwender darauf hinzuweisen, dass eine Indizierung für die meisten Anwender nicht vorteilhaft ist. Die Indizierung ist nur bei sehr langsamen Datenträgern wie beispielsweise einer Samba-Freigabe sinnvoll.
+Die anderen Einstellungsmöglichkeiten in der SettingsPage sollen aber ebenfalls erklärt werden.
+

@@ -1,4 +1,5 @@
 using fundo.gui.Job;
+using fundo.gui.Job.Jobs;
 using fundo.gui.page;
 using fundo.tool;
 using Microsoft.UI;
@@ -6,6 +7,10 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using WinRT.Interop;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -21,16 +26,33 @@ namespace fundo
         private SearchPage searchPage;
         private SettingsPage settingsPage;
         private AboutPage aboutPage;
+        private ManualPage manualPage;
         private HotkeyHelper? _hotkeyHelper;
+        private bool _isCloseConfirmed;
+
+        private const int SwMinimize = 6;
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        /// <summary>
+        /// When set to <c>true</c> before the window content is loaded, the window
+        /// will be minimized automatically after placement. The existing
+        /// <see cref="NotifyIconService"/> will then hide it to the notification area.
+        /// </summary>
+        public bool StartMinimized { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
+            SetWindowIcon();
 
             _hotkeyHelper = new HotkeyHelper(
                 WindowNative.GetWindowHandle(this),
                 () => DispatcherQueue.TryEnqueue(this.Activate));
+            AppWindow.Closing += AppWindow_Closing;
             this.Closed += MainWindow_Closed;
 
             // Defer sizing until the window content is loaded so UI elements (like NavigationView) are available
@@ -53,6 +75,11 @@ namespace fundo
 
                 WindowPlacementHelper.PlaceWindow(
                     this, AppWindow, 0.95, 3.5 / 4.0);
+
+                if (StartMinimized)
+                {
+                    ShowWindow(WindowNative.GetWindowHandle(this), SwMinimize);
+                }
             }
             finally
             {
@@ -80,6 +107,10 @@ namespace fundo
                         MainWindowContentFrame.Navigate(typeof(AboutPage));
                         break;
 
+                    case "manual":
+                        MainWindowContentFrame.Navigate(typeof(ManualPage));
+                        break;
+
                     case "Settings":
                         MainWindowContentFrame.Navigate(typeof(SettingsPage));
                         break;
@@ -101,10 +132,95 @@ namespace fundo
             {
                 aboutPage = e.Content as AboutPage;
             }
+            else if (e.SourcePageType == typeof(ManualPage))
+            {
+                manualPage = e.Content as ManualPage;
+            }
         }
 
         public void UpdateGlobalHotkey() => _hotkeyHelper?.Update();
 
-        private void MainWindow_Closed(object sender, WindowEventArgs args) => _hotkeyHelper?.Dispose();
+        internal async Task<bool> ConfirmCloseAsync()
+        {
+            if (_isCloseConfirmed)
+            {
+                return true;
+            }
+
+            if (JobScheduler.Instance.CurrentJob is not DriveIndexingJob)
+            {
+                return true;
+            }
+
+            if (Content is not FrameworkElement root)
+            {
+                return false;
+            }
+
+            ContentDialog dialog = new()
+            {
+                Title = "Indexing is still running",
+                Content = "A drive indexing job is still running. Do you really want to close Fundo? The current indexing job will be interrupted.",
+                PrimaryButtonText = "Close Fundo",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Close,
+                XamlRoot = root.XamlRoot
+            };
+
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+            {
+                return false;
+            }
+
+            _isCloseConfirmed = true;
+            return true;
+        }
+
+        private void SetWindowIcon()
+        {
+            string iconPath = Path.Combine(AppContext.BaseDirectory, "fundo.ico");
+            if (File.Exists(iconPath))
+            {
+                AppWindow.SetIcon(iconPath);
+            }
+        }
+
+        internal void ConnectToIndexUpdateService(ScheduledIndexUpdateService service)
+        {
+            service.IndexingStateChanged += UpdateSearchPageAccess;
+            UpdateSearchPageAccess();
+        }
+
+        private void UpdateSearchPageAccess()
+        {
+            bool isIndexing = App.IndexUpdateService?.IsIndexing ?? false;
+            SearchPageNav.IsEnabled = !isIndexing;
+
+            if (isIndexing && MainWindowContentFrame.CurrentSourcePageType == typeof(SearchPage))
+            {
+                FilterNavigationView.SelectedItem = FilterNavigationView.SettingsItem;
+            }
+        }
+
+        private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
+        {
+            if (_isCloseConfirmed || JobScheduler.Instance.CurrentJob is not DriveIndexingJob)
+            {
+                return;
+            }
+
+            args.Cancel = true;
+
+            if (await ConfirmCloseAsync())
+            {
+                Close();
+            }
+        }
+
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            AppWindow.Closing -= AppWindow_Closing;
+            _hotkeyHelper?.Dispose();
+        }
     }
 }

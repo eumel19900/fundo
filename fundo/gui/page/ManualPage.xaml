@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="fundo.gui.page.ManualPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:fundo.gui.page"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollMode="Disabled"
+                  HorizontalScrollBarVisibility="Disabled">
+        <Grid Padding="20">
+            <Border
+                Padding="24"
+                CornerRadius="8"
+                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+
+                <StackPanel Spacing="16">
+
+                    <!-- Title -->
+                    <TextBlock Text="Fundo User Manual"
+                               FontSize="28"
+                               FontWeight="SemiBold" />
+
+                    <TextBlock TextWrapping="Wrap"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        Welcome to Fundo — a fast and flexible file search tool for Windows.
+                        This manual explains how to use the application and describes its most important features.
+                    </TextBlock>
+
+                    <!-- ===== Section 1: Main Window ===== -->
+                    <Rectangle Height="1"
+                               Fill="{ThemeResource CardStrokeColorDefaultBrush}"
+                               Margin="0,8,0,0" />
+
+                    <TextBlock Text="1. The Main Window"
+                               FontSize="22"
+                               FontWeight="SemiBold" />
+
+                    <TextBlock TextWrapping="Wrap">
+                        When you launch Fundo, you are greeted by the main window. It is divided into a navigation
+                        panel on the left and a content area on the right.
+                    </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap">
+                        The navigation panel provides access to the following pages:
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Search</Run> — The primary page where you search for files by name,
+                            apply filters, and browse results.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">About</Run> — Shows version and author information.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Manual</Run> — This page. Contains the user manual you are reading right now.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Settings</Run> — Lets you configure indexing, automatic index updates,
+                            and a global keyboard shortcut.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap">
+                        On the Search page you will find the filename input field at the top, followed by the search
+                        location, filter tabs, and the search results list. Enter a file name pattern (for example
+                        <Run FontStyle="Italic">*.jpg</Run>) into the filename field, choose a directory to search,
+                        and click <Run FontWeight="SemiBold">Start search</Run>. You can also enable the
+                        <Run FontWeight="SemiBold">Regex</Run> checkbox to use regular expressions in the
+                        filename pattern.
+                    </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap">
+                        Below the search location you will find filter tabs that allow you to narrow down results
+                        by date, file size, file attributes, or file content. Each filter tab can be enabled
+                        individually.
+                    </TextBlock>
+
+                    <Image Source="ms-appx:///res/MainWindow.png"
+                           MaxWidth="800"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Left"
+                           Margin="0,8,0,0" />
+
+                    <TextBlock TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        The main window showing the Search page with filename input, location selector, filter tabs,
+                        and the results list.
+                    </TextBlock>
+
+                    <!-- ===== Section 2: Context Menu ===== -->
+                    <Rectangle Height="1"
+                               Fill="{ThemeResource CardStrokeColorDefaultBrush}"
+                               Margin="0,8,0,0" />
+
+                    <TextBlock Text="2. Search Results and Context Menu"
+                               FontSize="22"
+                               FontWeight="SemiBold" />
+
+                    <TextBlock TextWrapping="Wrap">
+                        After a search completes, matching files are displayed in the results list. Each entry shows
+                        the file icon, file name, full path, creation date, and file size.
+                    </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap">
+                        Right-click anywhere in the results list to open the context menu. The context menu provides
+                        the following actions:
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Open File</Run> — Opens the selected file with its default
+                            application. You can also double-click a result to open it.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Locate File</Run> — Opens Windows Explorer and navigates
+                            directly to the folder that contains the selected file.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Copy</Run> — Copies the selected file to the clipboard.
+                            You can also use the keyboard shortcut <Run FontWeight="SemiBold">Ctrl+C</Run>.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,0">
+                        The context menu also allows you to filter and sort the result list without running a new
+                        search:
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Filter by file name</Run> — Opens a filter input
+                            (<Run FontWeight="SemiBold">Ctrl+F</Run>) that lets you narrow the currently displayed
+                            results by file name.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Clear filter</Run> — Removes any active filter and shows all
+                            results again.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Enable multi-selection</Run> — Toggles multi-selection mode so
+                            you can select and act on multiple files at once.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,0">
+                        You can sort the results by any of the following criteria:
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Sort by name</Run> — Alphabetical order by file name.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Sort by directory</Run> — Groups files by their parent folder.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Sort by size</Run> — Orders files from smallest to largest.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Sort by date</Run> — Orders files by creation date.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Sort by type</Run> — Groups files by their file extension.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Image Source="ms-appx:///res/ContextMenu.png"
+                           MaxWidth="800"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Left"
+                           Margin="0,8,0,0" />
+
+                    <TextBlock TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        The context menu of the search results list with options to open, locate, copy, filter, and sort files.
+                    </TextBlock>
+
+                    <!-- ===== Section 3: Location Control ===== -->
+                    <Rectangle Height="1"
+                               Fill="{ThemeResource CardStrokeColorDefaultBrush}"
+                               Margin="0,8,0,0" />
+
+                    <TextBlock Text="3. Choosing Search Directories"
+                               FontSize="22"
+                               FontWeight="SemiBold" />
+
+                    <TextBlock TextWrapping="Wrap">
+                        The search location control lets you specify which directories Fundo should search.
+                        There are two ways to set your search directories:
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Type a path directly</Run> — Simply type or paste a directory
+                            path into the text field, just as you would in any other program (for example
+                            <Run FontStyle="Italic">C:\Users\Documents</Run>). This is the quickest way to set a
+                            single search directory.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Use the "..." button</Run> — Click the browse button next to
+                            the text field to open a dialog where you can manage a list of directories. In this
+                            dialog you can add, remove, and rearrange multiple directories. This is useful when
+                            you want to search across several locations at once.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,0">
+                        When multiple directories are selected, the text field displays all paths separated by
+                        semicolons and becomes read-only. To change the directories, use the "..." button again.
+                        If only a single directory is selected, you can edit the path directly in the text field.
+                    </TextBlock>
+
+                    <Image Source="ms-appx:///res/SelectDirectories.png"
+                           MaxWidth="800"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Left"
+                           Margin="0,8,0,0" />
+
+                    <TextBlock TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        The directory selection dialog opened via the "..." button. Here you can manage multiple
+                        search directories.
+                    </TextBlock>
+
+                    <!-- ===== Section 4: Settings ===== -->
+                    <Rectangle Height="1"
+                               Fill="{ThemeResource CardStrokeColorDefaultBrush}"
+                               Margin="0,8,0,0" />
+
+                    <TextBlock Text="4. Settings"
+                               FontSize="22"
+                               FontWeight="SemiBold" />
+
+                    <TextBlock TextWrapping="Wrap">
+                        Open the Settings page by clicking the gear icon in the navigation panel. The settings
+                        are organized into expandable sections.
+                    </TextBlock>
+
+                    <!-- 4.1 Search Index -->
+                    <TextBlock Text="4.1 Search Index"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="0,8,0,0" />
+
+                    <InfoBar IsOpen="True"
+                             IsClosable="False"
+                             Severity="Warning"
+                             Title="Important"
+                             Message="Indexing is not beneficial for most users. It is only recommended when searching on very slow storage devices such as a Samba/SMB network share. For local drives and fast network storage, the native file system search is typically fast enough and always returns up-to-date results." />
+
+                    <TextBlock TextWrapping="Wrap">
+                        The search index allows Fundo to pre-scan selected drives and store file metadata in a
+                        local database. When you search with indexing enabled, Fundo queries the index first for
+                        any indexed drive and falls back to the native file system search for directories that
+                        are not covered by the index.
+                    </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap">
+                        To configure indexing:
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">1.</Run> Check <Run FontWeight="SemiBold">Indexed search enabled</Run>
+                            to activate the index-based search engine.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">2.</Run> In the drive list below, check each drive that you want to include
+                            in the index. Each entry shows the drive letter, NT path, volume GUID, the date
+                            of the last indexing run, and the number of indexed files.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">3.</Run> Click <Run FontWeight="SemiBold">Rebuild Index</Run> to start
+                            a full indexing run for the selected drives. This may take some time depending on the
+                            number of files.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">4.</Run> To remove the index data for a specific drive, click the
+                            <Run FontWeight="SemiBold">Delete index</Run> button next to that drive.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,0">
+                        Keep in mind that an index is a snapshot. Files that are added, moved, or deleted after
+                        the last indexing run will not be reflected until the index is rebuilt.
+                    </TextBlock>
+
+                    <!-- 4.2 Automatic Index Update -->
+                    <TextBlock Text="4.2 Automatic Index Update"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="0,8,0,0" />
+
+                    <TextBlock TextWrapping="Wrap">
+                        If you use the search index, you can configure a scheduled task to rebuild it
+                        automatically so that results stay reasonably up to date without manual intervention.
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Enable automatic index update</Run> — Turns the scheduled
+                            task on or off.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Update interval</Run> — Choose how often the index should
+                            be refreshed (for example daily or weekly).
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Preferred execution time</Run> — Set the time of day when
+                            the update should run.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">Only run when idle</Run> — When checked, the update will
+                            only execute when the computer is idle, avoiding any impact on your work.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <!-- 4.3 Global Shortcut -->
+                    <TextBlock Text="4.3 Global Shortcut"
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               Margin="0,8,0,0" />
+
+                    <TextBlock TextWrapping="Wrap">
+                        Fundo supports a system-wide keyboard shortcut that brings the main window to the
+                        foreground from any application, even when Fundo is minimized or running in the
+                        background.
+                    </TextBlock>
+
+                    <StackPanel Spacing="4" Margin="16,0,0,0">
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">1.</Run> Check <Run FontWeight="SemiBold">Enable global shortcut</Run>.
+                        </TextBlock>
+                        <TextBlock TextWrapping="Wrap">
+                            <Run FontWeight="SemiBold">2.</Run> Click <Run FontWeight="SemiBold">Record shortcut</Run> and then
+                            press the desired key combination (for example <Run FontStyle="Italic">Ctrl+F3</Run>
+                            or <Run FontStyle="Italic">Win+F3</Run>). Modifier keys such as Ctrl, Alt, Shift, and
+                            Win can be combined with any regular key.
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock TextWrapping="Wrap" Margin="0,8,0,0">
+                        The shortcut is registered globally and remains active as long as Fundo is running.
+                    </TextBlock>
+
+                    <Image Source="ms-appx:///res/Settings.png"
+                           MaxWidth="800"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Left"
+                           Margin="0,8,0,0" />
+
+                    <TextBlock TextWrapping="Wrap"
+                               FontStyle="Italic"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        The Settings page with sections for search index configuration, automatic index updates,
+                        and global shortcut.
+                    </TextBlock>
+
+                    <!-- Spacer at bottom -->
+                    <Rectangle Height="1"
+                               Fill="Transparent"
+                               Margin="0,16,0,0" />
+
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Page>

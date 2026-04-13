@@ -64,17 +64,41 @@
                         <ListView x:Name="IndexedDrivesListView"
                                   BorderThickness="1"
                                   BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                  Height="200"  
+                                  Height="280"  
                                   IsEnabled="{Binding IsChecked, ElementName=EnableIndexedSearchCheckBox}">
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="local1:Drive">
-                                    <CheckBox IsChecked="{x:Bind IsSelected, Mode=TwoWay}">
-                                        <StackPanel>
+                                    <Grid ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox Grid.Column="0"
+                                                  IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                                  VerticalAlignment="Center" />
+
+                                        <StackPanel Grid.Column="1">
                                             <TextBlock Text="{x:Bind DriveLetter}" FontWeight="SemiBold" />
                                             <TextBlock Text="{x:Bind NtPath}" FontSize="12" TextTrimming="CharacterEllipsis" />
                                             <TextBlock Text="{x:Bind VolumeGuid}" FontSize="12" TextTrimming="CharacterEllipsis" />
+                                            <StackPanel Orientation="Horizontal" Spacing="16">
+                                                <TextBlock Text="{x:Bind IndexedAtDisplay}" FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind IndexedFileCountDisplay}" FontSize="12"
+                                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                <TextBlock Text="" FontSize="8" TextTrimming="CharacterEllipsis" />    <!-- empty line -->
+                                            </StackPanel>
                                         </StackPanel>
-                                    </CheckBox>
+
+                                        <Button Grid.Column="2"
+                                                Content="Delete index"
+                                                VerticalAlignment="Center"
+                                                Click="DeleteDriveIndexButton_Click"
+                                                Tag="{x:Bind}"
+                                                ToolTipService.ToolTip="Delete indexed files for this drive" />
+                                    </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
@@ -126,11 +150,6 @@
                                             ClockIdentifier="24HourClock"
                                             MinuteIncrement="15" />
                             </StackPanel>
-
-                            <CheckBox x:Name="RunScheduledIndexUpdateOnlyWhenIdleCheckBox"
-                                      IsEnabled="{Binding IsChecked, ElementName=EnableScheduledIndexUpdateCheckBox}"
-                                      IsChecked="{x:Bind RunScheduledIndexUpdateOnlyWhenIdle, Mode=TwoWay}"
-                                      Content="Only run automatic updates when the computer is idle" />
                         </StackPanel>
                     </StackPanel>
                 </Expander>
@@ -172,6 +191,27 @@
                                         LostFocus="RecordHotkeyButton_LostFocus" />
                             </StackPanel>
                         </StackPanel>
+                    </StackPanel>
+                </Expander>
+
+                <!-- Autostart configuration section -->
+                <Expander Header="Autostart"
+                          HorizontalAlignment="Stretch"
+                          HorizontalContentAlignment="Stretch"
+                          IsExpanded="False">
+                    <StackPanel Spacing="8"
+                                HorizontalAlignment="Stretch">
+                        <TextBlock Text="When autostart is enabled, Fundo launches automatically when you sign in to Windows. The application starts minimized to the notification area so it is ready for use without interrupting your workflow."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <TextBlock Text="You can open Fundo at any time by clicking its icon in the notification area or by pressing the global shortcut (if configured)."
+                                   TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                        <CheckBox x:Name="EnableAutostartCheckBox"
+                                  IsChecked="{x:Bind IsAutostartEnabled, Mode=TwoWay}"
+                                  Content="Launch Fundo automatically when you sign in" />
                     </StackPanel>
                 </Expander>
             </StackPanel>

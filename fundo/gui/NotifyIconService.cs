@@ -37,6 +37,8 @@ internal sealed class NotifyIconService : IDisposable
     private const uint TpmBottomAlign = 0x0020;
     private const uint TpmRightButton = 0x0002;
 
+    private static NotifyIconService? _current;
+
     private IntPtr _windowHandle;
     private IntPtr _notifyIconHandle;
     private IntPtr _previousWindowProc;
@@ -56,6 +58,7 @@ internal sealed class NotifyIconService : IDisposable
             return;
         }
 
+        _current = this;
         _openMainWindowAction = openMainWindowAction;
         _closeApplicationAction = closeApplicationAction;
 
@@ -98,11 +101,38 @@ internal sealed class NotifyIconService : IDisposable
         _isNotifyIconCreated = Shell_NotifyIcon(NimAdd, ref _notifyIconData);
     }
 
+    /// <summary>
+    /// Updates the tooltip text shown on the tray icon.
+    /// Can be called from any thread.
+    /// </summary>
+    public static void UpdateTooltip(string text)
+    {
+        var instance = _current;
+        if (instance == null || !instance._isNotifyIconCreated)
+        {
+            return;
+        }
+
+        NOTIFYICONDATA data = instance._notifyIconData;
+        data.uFlags = NifTip;
+        data.szTip = text.Length > 127 ? text[..127] : text;
+        Shell_NotifyIcon(NimModify, ref data);
+    }
+
     public void Dispose()
     {
         RemoveNotifyIcon();
         RestoreWindowProc();
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Marks the minimize-to-tray hint as already shown so the next minimize
+    /// will not display the notification balloon.
+    /// </summary>
+    public void SuppressMinimizeHint()
+    {
+        _hasShownMinimizeToTrayHint = true;
     }
 
     private void ShowNotifyIconContextMenu()

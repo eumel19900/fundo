@@ -47,6 +47,9 @@ namespace fundo.tool
                     if (storageDevice != null)
                     {
                         myDrive.IsSelected = true;
+                        myDrive.StorageDeviceId = storageDevice.Id;
+                        myDrive.IndexedAt = storageDevice.IndexedAt;
+                        myDrive.IndexedFileCount = SearchIndexStore.GetFileCountForStorageDevice(storageDevice.Id);
                     }
                     drives.Add(myDrive);
                 }

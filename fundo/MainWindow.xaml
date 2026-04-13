@@ -41,6 +41,11 @@
                         <SymbolIcon Symbol="Help" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem x:Name="ManualPageNav" Content="Manual" Tag="manual">
+                    <NavigationViewItem.Icon>
+                        <SymbolIcon Symbol="Library" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
 
             <Frame x:Name="MainWindowContentFrame" Margin="32,0,0,0"/>
