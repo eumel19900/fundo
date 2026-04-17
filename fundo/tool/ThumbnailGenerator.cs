@@ -17,7 +17,7 @@ namespace fundo.tool
     /// </summary>
     internal sealed class ThumbnailGenerator : IDisposable
     {
-        public const int MaxCacheSize = 10_000;
+        public const int MaxCacheSize = 10000;
 
         private static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -117,6 +117,12 @@ namespace fundo.tool
 
             try
             {
+                // Skip work if the request was cancelled (element scrolled off-screen)
+                if (!_pending.ContainsKey(cacheKey))
+                {
+                    return;
+                }
+
                 byte[]? pngBytes = await Task.Run(() => LoadThumbnailBytes(fullPath, thumbnailSize, _cts.Token), _cts.Token);
 
                 if (pngBytes == null || pngBytes.Length == 0)
@@ -231,6 +237,16 @@ namespace fundo.tool
         private static string CreateCacheKey(string fullPath, int thumbnailSize)
         {
             return $"{fullPath}|{thumbnailSize}";
+        }
+
+        /// <summary>
+        /// Cancels a pending thumbnail request so that its callbacks are never invoked
+        /// and queued background work for it is skipped.
+        /// </summary>
+        public void CancelPending(string fullPath, int thumbnailSize)
+        {
+            string cacheKey = CreateCacheKey(fullPath, thumbnailSize);
+            _pending.TryRemove(cacheKey, out _);
         }
 
         public void ClearCache()

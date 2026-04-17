@@ -273,6 +273,22 @@ namespace fundo.gui.control
         private void Repeater_ElementClearing(ItemsRepeater sender, ItemsRepeaterElementClearingEventArgs args)
         {
             SetElementBackground(args.Element, false);
+
+            if (_thumbnailMode)
+            {
+                var image = FindThumbnailImage(args.Element);
+                if (image != null && image.DataContext is DetachedFileInfo item)
+                {
+                    var ext = (Path.GetExtension(item.FullName) ?? "").ToLowerInvariant();
+                    if (ThumbnailGenerator.IsImageFile(ext))
+                    {
+                        // Cancel the pending background request to avoid unnecessary CPU work
+                        _thumbnailGenerator.CancelPending(item.FullName, _thumbnailImageSize);
+                        // Restore the FileImage binding that was replaced by the thumbnail
+                        image.SetBinding(Image.SourceProperty, new Microsoft.UI.Xaml.Data.Binding { Path = new PropertyPath("FileImage") });
+                    }
+                }
+            }
         }
 
         private void LoadThumbnailForElement(UIElement element, DetachedFileInfo item)

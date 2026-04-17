@@ -83,6 +83,7 @@ Version 1.1 - Für Fotografen
 		- XMP
 	- Thumbnails laden über shellfile: https://stackoverflow.com/questions/1439719/c-sharp-get-thumbnail-from-file-via-windows-api
 	- Enter startet die Suche
+	- Sortierungen kombinierbar
 	- Infodialog mit allen Infos zu den Dateien
 		- Allgemeine Dateiinformationen
 		- Bildspezifische Informationen (EXIF, IPTC, XMP) in Reitern
