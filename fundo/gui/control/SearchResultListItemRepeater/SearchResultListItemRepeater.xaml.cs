@@ -1,6 +1,7 @@
 using fundo.core;
 using fundo.tool;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using Windows.UI.Core;
 
 namespace fundo.gui.control
 {
@@ -30,6 +32,17 @@ namespace fundo.gui.control
         private bool _thumbnailMode = false;
         private readonly ThumbnailGenerator _thumbnailGenerator = new();
 
+        private const int MinThumbnailImageSize = 64;
+        private const int MaxThumbnailImageSize = 320;
+        private const int ThumbnailImageSizeStep = 16;
+        private const int ThumbnailItemPadding = 20;
+        private int _thumbnailImageSize = 120;
+        private bool _suppressScrollResizeHandling;
+        private bool _suppressNativeZoomHandling;
+        private double _lastKnownHorizontalOffset;
+        private double _lastKnownVerticalOffset;
+        private float _lastKnownZoomFactor = 1f;
+
         // DataTemplates created in code to switch between list and tile views
         private DataTemplate? _listTemplate;
         private DataTemplate? _tileTemplate;
@@ -42,6 +55,9 @@ namespace fundo.gui.control
             Repeater.ItemsSource = _dataView;
             Repeater.ElementPrepared += Repeater_ElementPrepared;
             Repeater.ElementClearing += Repeater_ElementClearing;
+            RepeaterScrollViewer.AddHandler(PointerWheelChangedEvent, new PointerEventHandler(RepeaterScrollViewer_PointerWheelChanged), true);
+            RepeaterScrollViewer.AddHandler(KeyDownEvent, new KeyEventHandler(RepeaterScrollViewer_KeyDown), true);
+            RepeaterScrollViewer.ViewChanging += RepeaterScrollViewer_ViewChanging;
             CreateTemplates();
             ApplyViewMode();
         }
@@ -65,6 +81,8 @@ namespace fundo.gui.control
         private void CreateTemplates()
         {
             string toolTipXaml = CreateFileInfoToolTipXaml();
+            int thumbnailItemWidth = _thumbnailImageSize + ThumbnailItemPadding;
+            int thumbnailItemHeight = _thumbnailImageSize + 40;
 
             _listTemplate = (DataTemplate)Microsoft.UI.Xaml.Markup.XamlReader.Load(
                 @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
@@ -90,11 +108,11 @@ namespace fundo.gui.control
             _tileTemplate = (DataTemplate)Microsoft.UI.Xaml.Markup.XamlReader.Load(
                 @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
                     <Border Padding=""4"" CornerRadius=""4"" Margin=""2"" Background=""Transparent""
-                            Width=""140"" Height=""160"">
+                            Width=""" + thumbnailItemWidth + @""" Height=""" + thumbnailItemHeight + @""">
 " + toolTipXaml + @"
                         <StackPanel HorizontalAlignment=""Center"">
                             <Image Source=""{Binding FileImage}""
-                                   Width=""120"" Height=""120"" Stretch=""Uniform""/>
+                                   Width=""" + _thumbnailImageSize + @""" Height=""" + _thumbnailImageSize + @""" Stretch=""Uniform""/>
                             <TextBlock Text=""{Binding Name}"" FontSize=""11""
                                        TextTrimming=""CharacterEllipsis"" MaxWidth=""130""
                                        HorizontalAlignment=""Center"" Margin=""0,4,0,0""
@@ -108,10 +126,13 @@ namespace fundo.gui.control
         {
             if (_thumbnailMode)
             {
+                int thumbnailItemWidth = _thumbnailImageSize + ThumbnailItemPadding;
+                int thumbnailItemHeight = _thumbnailImageSize + 40;
+
                 Repeater.Layout = new UniformGridLayout
                 {
-                    MinItemWidth = 140,
-                    MinItemHeight = 160,
+                    MinItemWidth = thumbnailItemWidth,
+                    MinItemHeight = thumbnailItemHeight,
                     MinColumnSpacing = 4,
                     MinRowSpacing = 4,
                     ItemsStretch = UniformGridLayoutItemsStretch.None
@@ -259,11 +280,16 @@ namespace fundo.gui.control
             var dispatcher = DispatcherQueue;
             if (dispatcher == null) return;
 
-            _thumbnailGenerator.RequestThumbnail(item.FullName, dispatcher, thumbnail =>
+            int requestedThumbnailSize = _thumbnailImageSize;
+            _thumbnailGenerator.RequestThumbnail(item.FullName, requestedThumbnailSize, dispatcher, thumbnail =>
             {
-                // Find the Image element within the tile and update its Source
+                if (!_thumbnailMode || requestedThumbnailSize != _thumbnailImageSize)
+                {
+                    return;
+                }
+
                 var image = FindThumbnailImage(element);
-                if (image != null)
+                if (image != null && ReferenceEquals(image.DataContext, item))
                 {
                     image.Source = thumbnail;
                 }
@@ -283,6 +309,141 @@ namespace fundo.gui.control
                     return result;
             }
             return null;
+        }
+
+        private void RepeaterScrollViewer_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            if (!_thumbnailMode || !IsControlKeyPressed())
+            {
+                return;
+            }
+
+            int delta = e.GetCurrentPoint(RepeaterScrollViewer).Properties.MouseWheelDelta;
+            if (delta == 0)
+            {
+                return;
+            }
+
+            int newSize = _thumbnailImageSize + (delta > 0 ? ThumbnailImageSizeStep : -ThumbnailImageSizeStep);
+            ApplyThumbnailSizeChange(newSize);
+            e.Handled = true;
+        }
+
+        private void RepeaterScrollViewer_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            if (_suppressScrollResizeHandling || _suppressNativeZoomHandling || !_thumbnailMode)
+            {
+                _lastKnownHorizontalOffset = e.NextView.HorizontalOffset;
+                _lastKnownVerticalOffset = e.NextView.VerticalOffset;
+                _lastKnownZoomFactor = e.NextView.ZoomFactor;
+                return;
+            }
+
+            float zoomDelta = e.NextView.ZoomFactor - _lastKnownZoomFactor;
+            if (Math.Abs(zoomDelta) > 0.001f)
+            {
+                int pinchNewSize = _thumbnailImageSize + (zoomDelta > 0 ? ThumbnailImageSizeStep : -ThumbnailImageSizeStep);
+                bool pinchChanged = ApplyThumbnailSizeChange(pinchNewSize);
+
+                _suppressNativeZoomHandling = true;
+                RepeaterScrollViewer.ChangeView(_lastKnownHorizontalOffset, _lastKnownVerticalOffset, 1f, true);
+                _ = DispatcherQueue.TryEnqueue(() =>
+                {
+                    _suppressNativeZoomHandling = false;
+                    _lastKnownZoomFactor = 1f;
+                });
+
+                if (pinchChanged)
+                {
+                    return;
+                }
+            }
+
+            if (!IsControlKeyPressed())
+            {
+                _lastKnownHorizontalOffset = e.NextView.HorizontalOffset;
+                _lastKnownVerticalOffset = e.NextView.VerticalOffset;
+                _lastKnownZoomFactor = e.NextView.ZoomFactor;
+                return;
+            }
+
+            double delta = e.NextView.VerticalOffset - _lastKnownVerticalOffset;
+            if (Math.Abs(delta) < 1)
+            {
+                _lastKnownHorizontalOffset = e.NextView.HorizontalOffset;
+                _lastKnownVerticalOffset = e.NextView.VerticalOffset;
+                _lastKnownZoomFactor = e.NextView.ZoomFactor;
+                return;
+            }
+
+            int direction = delta < 0 ? 1 : -1;
+            int newSize = _thumbnailImageSize + (direction * ThumbnailImageSizeStep);
+            bool changed = ApplyThumbnailSizeChange(newSize);
+
+            if (changed)
+            {
+                _suppressScrollResizeHandling = true;
+                RepeaterScrollViewer.ChangeView(_lastKnownHorizontalOffset, _lastKnownVerticalOffset, 1f, true);
+                _ = DispatcherQueue.TryEnqueue(() =>
+                {
+                    _suppressScrollResizeHandling = false;
+                    _lastKnownZoomFactor = 1f;
+                });
+            }
+            else
+            {
+                _lastKnownHorizontalOffset = e.NextView.HorizontalOffset;
+                _lastKnownVerticalOffset = e.NextView.VerticalOffset;
+                _lastKnownZoomFactor = e.NextView.ZoomFactor;
+            }
+        }
+
+        private void RepeaterScrollViewer_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (!_thumbnailMode || !IsControlKeyPressed())
+            {
+                return;
+            }
+
+            int? direction = e.Key switch
+            {
+                Windows.System.VirtualKey.Add => 1,
+                (Windows.System.VirtualKey)187 => 1,
+                Windows.System.VirtualKey.Subtract => -1,
+                (Windows.System.VirtualKey)189 => -1,
+                _ => null
+            };
+
+            if (!direction.HasValue)
+            {
+                return;
+            }
+
+            ApplyThumbnailSizeChange(_thumbnailImageSize + (direction.Value * ThumbnailImageSizeStep));
+            e.Handled = true;
+        }
+
+        private bool ApplyThumbnailSizeChange(int newSize)
+        {
+            newSize = Math.Clamp(newSize, MinThumbnailImageSize, MaxThumbnailImageSize);
+            if (newSize == _thumbnailImageSize)
+            {
+                return false;
+            }
+
+            _thumbnailImageSize = newSize;
+            _thumbnailGenerator.ClearCache();
+            CreateTemplates();
+            ApplyViewMode();
+            Repeater.ItemsSource = null;
+            Repeater.ItemsSource = _dataView;
+            return true;
+        }
+
+        private static bool IsControlKeyPressed()
+        {
+            CoreVirtualKeyStates keyState = InputKeyboardSource.GetKeyStateForCurrentThread(Windows.System.VirtualKey.Control);
+            return (keyState & CoreVirtualKeyStates.Down) == CoreVirtualKeyStates.Down;
         }
 
         #endregion

@@ -83,6 +83,9 @@ Version 1.1 - Für Fotografen
 		- XMP
 	- Thumbnails laden über shellfile: https://stackoverflow.com/questions/1439719/c-sharp-get-thumbnail-from-file-via-windows-api
 	- Enter startet die Suche
+	- Infodialog mit allen Infos zu den Dateien
+		- Allgemeine Dateiinformationen
+		- Bildspezifische Informationen (EXIF, IPTC, XMP) in Reitern
 
 Version 1.2 - Archivdateien
 	- Suche in Archivdateien (zip, rar, 7z, tar.gz, etc.)

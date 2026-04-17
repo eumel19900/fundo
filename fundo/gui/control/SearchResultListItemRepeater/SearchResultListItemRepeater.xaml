@@ -13,7 +13,10 @@
                 Background="{ThemeResource LayerFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1">
-            <ScrollViewer x:Name="RepeaterScrollViewer">
+            <ScrollViewer x:Name="RepeaterScrollViewer"
+                          ZoomMode="Enabled"
+                          MinZoomFactor="0.1"
+                          MaxZoomFactor="10">
                 <ItemsRepeater x:Name="Repeater"
                                Tapped="ItemsRepeater_Tapped"
                                RightTapped="ItemsRepeater_RightTapped"

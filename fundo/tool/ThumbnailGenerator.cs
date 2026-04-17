@@ -18,20 +18,19 @@ namespace fundo.tool
     internal sealed class ThumbnailGenerator : IDisposable
     {
         public const int MaxCacheSize = 10_000;
-        public const int ThumbnailSize = 120;
 
         private static readonly HashSet<string> ImageExtensions = new(StringComparer.OrdinalIgnoreCase)
         {
             ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp", ".ico", ".tif", ".tiff"
         };
 
-        // LRU cache: key = full file path
+        // LRU cache: key = full file path + size
         private readonly object _cacheLock = new();
         private readonly Dictionary<string, ImageSource> _cache = new();
         private readonly LinkedList<string> _lruOrder = new();
         private readonly Dictionary<string, LinkedListNode<string>> _lruNodes = new();
 
-        // Pending requests: path -> list of callbacks
+        // Pending requests: full file path + size -> list of callbacks
         private readonly ConcurrentDictionary<string, List<Action<ImageSource>>> _pending = new();
 
         private readonly SemaphoreSlim _semaphore;
@@ -51,13 +50,15 @@ namespace fundo.tool
         /// <summary>
         /// Tries to get a cached thumbnail synchronously. Returns null if not cached.
         /// </summary>
-        public ImageSource? TryGetCached(string fullPath)
+        public ImageSource? TryGetCached(string fullPath, int thumbnailSize)
         {
+            string cacheKey = CreateCacheKey(fullPath, thumbnailSize);
+
             lock (_cacheLock)
             {
-                if (_cache.TryGetValue(fullPath, out var img))
+                if (_cache.TryGetValue(cacheKey, out var img))
                 {
-                    TouchLru(fullPath);
+                    TouchLru(cacheKey);
                     return img;
                 }
             }
@@ -69,14 +70,16 @@ namespace fundo.tool
         /// dispatcher thread when the thumbnail is ready. If already cached, the callback
         /// is invoked synchronously.
         /// </summary>
-        public void RequestThumbnail(string fullPath, DispatcherQueue dispatcher, Action<ImageSource> callback)
+        public void RequestThumbnail(string fullPath, int thumbnailSize, DispatcherQueue dispatcher, Action<ImageSource> callback)
         {
+            string cacheKey = CreateCacheKey(fullPath, thumbnailSize);
+
             // Check cache first
             lock (_cacheLock)
             {
-                if (_cache.TryGetValue(fullPath, out var cached))
+                if (_cache.TryGetValue(cacheKey, out var cached))
                 {
-                    TouchLru(fullPath);
+                    TouchLru(cacheKey);
                     callback(cached);
                     return;
                 }
@@ -84,9 +87,9 @@ namespace fundo.tool
 
             // Coalesce duplicate requests
             var newList = new List<Action<ImageSource>> { callback };
-            if (!_pending.TryAdd(fullPath, newList))
+            if (!_pending.TryAdd(cacheKey, newList))
             {
-                if (_pending.TryGetValue(fullPath, out var existing))
+                if (_pending.TryGetValue(cacheKey, out var existing))
                 {
                     lock (existing)
                     {
@@ -97,10 +100,10 @@ namespace fundo.tool
             }
 
             // Queue background work
-            _ = GenerateAsync(fullPath, dispatcher);
+            _ = GenerateAsync(fullPath, thumbnailSize, cacheKey, dispatcher);
         }
 
-        private async Task GenerateAsync(string fullPath, DispatcherQueue dispatcher)
+        private async Task GenerateAsync(string fullPath, int thumbnailSize, string cacheKey, DispatcherQueue dispatcher)
         {
             try
             {
@@ -108,17 +111,17 @@ namespace fundo.tool
             }
             catch (OperationCanceledException)
             {
-                _pending.TryRemove(fullPath, out _);
+                _pending.TryRemove(cacheKey, out _);
                 return;
             }
 
             try
             {
-                byte[]? pngBytes = await Task.Run(() => LoadThumbnailBytes(fullPath, _cts.Token), _cts.Token);
+                byte[]? pngBytes = await Task.Run(() => LoadThumbnailBytes(fullPath, thumbnailSize, _cts.Token), _cts.Token);
 
                 if (pngBytes == null || pngBytes.Length == 0)
                 {
-                    _pending.TryRemove(fullPath, out _);
+                    _pending.TryRemove(cacheKey, out _);
                     return;
                 }
 
@@ -127,14 +130,14 @@ namespace fundo.tool
                     try
                     {
                         var bmp = new BitmapImage();
-                        bmp.DecodePixelWidth = ThumbnailSize;
+                        bmp.DecodePixelWidth = thumbnailSize;
                         using var ms = new MemoryStream(pngBytes);
                         var ras = ms.AsRandomAccessStream();
                         await bmp.SetSourceAsync(ras);
 
-                        AddToCache(fullPath, bmp);
+                        AddToCache(cacheKey, bmp);
 
-                        if (_pending.TryRemove(fullPath, out var callbacks))
+                        if (_pending.TryRemove(cacheKey, out var callbacks))
                         {
                             lock (callbacks)
                             {
@@ -145,13 +148,13 @@ namespace fundo.tool
                     }
                     catch
                     {
-                        _pending.TryRemove(fullPath, out _);
+                        _pending.TryRemove(cacheKey, out _);
                     }
                 });
             }
             catch
             {
-                _pending.TryRemove(fullPath, out _);
+                _pending.TryRemove(cacheKey, out _);
             }
             finally
             {
@@ -159,7 +162,7 @@ namespace fundo.tool
             }
         }
 
-        private static byte[]? LoadThumbnailBytes(string fullPath, CancellationToken ct)
+        private static byte[]? LoadThumbnailBytes(string fullPath, int thumbnailSize, CancellationToken ct)
         {
             try
             {
@@ -171,13 +174,13 @@ namespace fundo.tool
                 int w, h;
                 if (original.Width >= original.Height)
                 {
-                    w = ThumbnailSize;
-                    h = Math.Max(1, (int)((double)original.Height / original.Width * ThumbnailSize));
+                    w = thumbnailSize;
+                    h = Math.Max(1, (int)((double)original.Height / original.Width * thumbnailSize));
                 }
                 else
                 {
-                    h = ThumbnailSize;
-                    w = Math.Max(1, (int)((double)original.Width / original.Height * ThumbnailSize));
+                    h = thumbnailSize;
+                    w = Math.Max(1, (int)((double)original.Width / original.Height * thumbnailSize));
                 }
 
                 using var thumb = original.GetThumbnailImage(w, h, () => false, IntPtr.Zero);
@@ -223,6 +226,11 @@ namespace fundo.tool
                 _lruOrder.Remove(node);
                 _lruOrder.AddFirst(node);
             }
+        }
+
+        private static string CreateCacheKey(string fullPath, int thumbnailSize)
+        {
+            return $"{fullPath}|{thumbnailSize}";
         }
 
         public void ClearCache()
