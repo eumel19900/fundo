@@ -1,11 +1,14 @@
 using fundo.core;
+using fundo.tool;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -24,6 +27,13 @@ namespace fundo.gui.control
         private static readonly SolidColorBrush TransparentBrush = new(Microsoft.UI.Colors.Transparent);
         private DispatcherQueueTimer? _filterDebounceTimer;
 
+        private bool _thumbnailMode = false;
+        private readonly ThumbnailGenerator _thumbnailGenerator = new();
+
+        // DataTemplates created in code to switch between list and tile views
+        private DataTemplate? _listTemplate;
+        private DataTemplate? _tileTemplate;
+
         public SearchResultListItemRepeater()
         {
             InitializeComponent();
@@ -32,9 +42,89 @@ namespace fundo.gui.control
             Repeater.ItemsSource = _dataView;
             Repeater.ElementPrepared += Repeater_ElementPrepared;
             Repeater.ElementClearing += Repeater_ElementClearing;
+            CreateTemplates();
+            ApplyViewMode();
         }
 
         internal SearchResultDataProvider DataProvider => _dataProvider;
+
+        private static string CreateFileInfoToolTipXaml()
+        {
+            return @"
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                <ScrollViewer MaxHeight=""500"" VerticalScrollBarVisibility=""Auto"">
+                                    <TextBlock MaxWidth=""700""
+                                               Text=""{Binding ToolTipText}""
+                                               TextWrapping=""WrapWholeWords""/>
+                                </ScrollViewer>
+                            </ToolTip>
+                        </ToolTipService.ToolTip>";
+        }
+
+        private void CreateTemplates()
+        {
+            string toolTipXaml = CreateFileInfoToolTipXaml();
+
+            _listTemplate = (DataTemplate)Microsoft.UI.Xaml.Markup.XamlReader.Load(
+                @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
+                    <Border Padding=""8,4"" CornerRadius=""4"" Margin=""0,1"" Background=""Transparent"">
+" + toolTipXaml + @"
+                        <StackPanel Orientation=""Horizontal"" VerticalAlignment=""Center"">
+                            <Image Source=""{Binding FileImage}""
+                                   Width=""32"" Height=""32"" Margin=""0,0,8,0""/>
+                            <StackPanel Orientation=""Vertical"">
+                                <TextBlock Text=""{Binding Name}"" FontSize=""18""
+                                           Foreground=""{ThemeResource TextFillColorPrimaryBrush}""/>
+                                <TextBlock Text=""{Binding FullName}"" FontSize=""10""
+                                           Foreground=""{ThemeResource TextFillColorSecondaryBrush}""/>
+                                <TextBlock Text=""{Binding CreationTime}"" FontSize=""10""
+                                           Foreground=""{ThemeResource TextFillColorSecondaryBrush}""/>
+                                <TextBlock Text=""{Binding FileSizeString}"" FontSize=""10""
+                                           Foreground=""{ThemeResource TextFillColorSecondaryBrush}""/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>");
+
+            _tileTemplate = (DataTemplate)Microsoft.UI.Xaml.Markup.XamlReader.Load(
+                @"<DataTemplate xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
+                    <Border Padding=""4"" CornerRadius=""4"" Margin=""2"" Background=""Transparent""
+                            Width=""140"" Height=""160"">
+" + toolTipXaml + @"
+                        <StackPanel HorizontalAlignment=""Center"">
+                            <Image Source=""{Binding FileImage}""
+                                   Width=""120"" Height=""120"" Stretch=""Uniform""/>
+                            <TextBlock Text=""{Binding Name}"" FontSize=""11""
+                                       TextTrimming=""CharacterEllipsis"" MaxWidth=""130""
+                                       HorizontalAlignment=""Center"" Margin=""0,4,0,0""
+                                       Foreground=""{ThemeResource TextFillColorPrimaryBrush}""/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>");
+        }
+
+        private void ApplyViewMode()
+        {
+            if (_thumbnailMode)
+            {
+                Repeater.Layout = new UniformGridLayout
+                {
+                    MinItemWidth = 140,
+                    MinItemHeight = 160,
+                    MinColumnSpacing = 4,
+                    MinRowSpacing = 4,
+                    ItemsStretch = UniformGridLayoutItemsStretch.None
+                };
+                Repeater.ItemTemplate = _tileTemplate;
+            }
+            else
+            {
+                Repeater.Layout = new StackLayout { Spacing = 2 };
+                Repeater.ItemTemplate = _listTemplate;
+            }
+        }
+
 
         internal void SetItems(IReadOnlyList<DetachedFileInfo> items)
         {
@@ -147,11 +237,52 @@ namespace fundo.gui.control
         private void Repeater_ElementPrepared(ItemsRepeater sender, ItemsRepeaterElementPreparedEventArgs args)
         {
             SetElementBackground(args.Element, _selectedIndices.Contains(args.Index));
+
+            if (_thumbnailMode && args.Index >= 0 && args.Index < _dataProvider.Count)
+            {
+                var item = _dataProvider.GetAt(args.Index);
+                var ext = (Path.GetExtension(item.FullName) ?? "").ToLowerInvariant();
+                if (ThumbnailGenerator.IsImageFile(ext))
+                {
+                    LoadThumbnailForElement(args.Element, item);
+                }
+            }
         }
 
         private void Repeater_ElementClearing(ItemsRepeater sender, ItemsRepeaterElementClearingEventArgs args)
         {
             SetElementBackground(args.Element, false);
+        }
+
+        private void LoadThumbnailForElement(UIElement element, DetachedFileInfo item)
+        {
+            var dispatcher = DispatcherQueue;
+            if (dispatcher == null) return;
+
+            _thumbnailGenerator.RequestThumbnail(item.FullName, dispatcher, thumbnail =>
+            {
+                // Find the Image element within the tile and update its Source
+                var image = FindThumbnailImage(element);
+                if (image != null)
+                {
+                    image.Source = thumbnail;
+                }
+            });
+        }
+
+        private static Image? FindThumbnailImage(DependencyObject parent)
+        {
+            int count = VisualTreeHelper.GetChildrenCount(parent);
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                if (child is Image img)
+                    return img;
+                var result = FindThumbnailImage(child);
+                if (result != null)
+                    return result;
+            }
+            return null;
         }
 
         #endregion
@@ -225,6 +356,8 @@ namespace fundo.gui.control
             SortBySizeMenuItem.Text = "Sort by size" + (_dataProvider.SortField == SearchResultSortField.FileSize ? arrow : "");
             SortByDateMenuItem.Text = "Sort by date" + (_dataProvider.SortField == SearchResultSortField.FileDate ? arrow : "");
             SortByTypeMenuItem.Text = "Sort by type" + (_dataProvider.SortField == SearchResultSortField.FileType ? arrow : "");
+
+            ToggleViewModeMenuItem.Text = _thumbnailMode ? "List view" : "Thumbnail view";
         }
 
         private async void OpenFileMenuItem_Click(object sender, RoutedEventArgs e) => await OpenSelectedFiles();
@@ -248,6 +381,16 @@ namespace fundo.gui.control
         private void SortBySizeMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileSize);
         private void SortByDateMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileDate);
         private void SortByTypeMenuItem_Click(object sender, RoutedEventArgs e) => _dataProvider.SetSort(SearchResultSortField.FileType);
+
+        private void ToggleViewModeMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            _thumbnailMode = !_thumbnailMode;
+            ApplyViewMode();
+
+            // Force re-render by resetting the data source
+            Repeater.ItemsSource = null;
+            Repeater.ItemsSource = _dataView;
+        }
 
         private void FilterByNameMenuItem_Click(object sender, RoutedEventArgs e)
         {

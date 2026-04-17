@@ -201,6 +201,33 @@ namespace fundo.core
             set => _linkTarget = value;
         }
 
+        public string ToolTipText
+        {
+            get
+            {
+                return string.Join(Environment.NewLine,
+                [
+                    $"Name: {Name}",
+                    $"Full path: {FullName}",
+                    $"Directory: {DirectoryName}",
+                    $"Extension: {Extension}",
+                    $"Exists: {Exists}",
+                    $"Length: {Length} bytes",
+                    $"Size: {FileSizeString}",
+                    $"Creation time: {CreationTime}",
+                    $"Creation time (UTC): {CreationTimeUtc}",
+                    $"Last access time: {LastAccessTime}",
+                    $"Last access time (UTC): {LastAccessTimeUtc}",
+                    $"Last write time: {LastWriteTime}",
+                    $"Last write time (UTC): {LastWriteTimeUtc}",
+                    $"Attributes: {Attributes}",
+                    $"Unix file mode: {UnixFileMode}",
+                    $"Read-only: {IsReadOnly}",
+                    $"Link target: {LinkTarget}"
+                ]);
+            }
+        }
+
         public DetachedFileInfo()
         {
         }

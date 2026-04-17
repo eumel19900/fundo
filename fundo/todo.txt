@@ -70,17 +70,19 @@ Vor dem Release:
 
 Version 1.1 - Für Fotografen
  - Bilder:
-	 - Ergebnisliste umschaltbar in Thumbnail-Ansicht
-		- Thumbnails lokal im Arbeitsspeicher cachen
+	 - Ergebnisliste umschaltbar in Thumbnail-Ansicht - ok
+		- Thumbnails lokal im Arbeitsspeicher cachen - ok
 		- Thumbnails optional in Datenbank cachen?
 		- Thumbnails mit Indizierung erstellen?
-		- Thumbnails in mehreren Threads erstellen
+		- Thumbnails in mehreren Threads erstellen - ok
 		- Thumbnails zweistufig erstellen: Nativen thumbnail aus Jpeg-laden, dann in passender Auflösung nachladen
+		- Thumbnails von Videodateien
 	- Suche in Metadaten von Bildern mittels Filter
 		- EXIF
 		- IPTC
 		- XMP
-	Thumbnails laden über shellfile: https://stackoverflow.com/questions/1439719/c-sharp-get-thumbnail-from-file-via-windows-api
+	- Thumbnails laden über shellfile: https://stackoverflow.com/questions/1439719/c-sharp-get-thumbnail-from-file-via-windows-api
+	- Enter startet die Suche
 
 Version 1.2 - Archivdateien
 	- Suche in Archivdateien (zip, rar, 7z, tar.gz, etc.)

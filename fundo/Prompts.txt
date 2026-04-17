@@ -128,3 +128,16 @@ Als letztes soll die SettingsPage erklärt werden. Verwende hierfür den Screens
 Es soll insbesondere die Konfiguration der Indizierung erklärt werden. Wichtig ist, den Anwender darauf hinzuweisen, dass eine Indizierung für die meisten Anwender nicht vorteilhaft ist. Die Indizierung ist nur bei sehr langsamen Datenträgern wie beispielsweise einer Samba-Freigabe sinnvoll.
 Die anderen Einstellungsmöglichkeiten in der SettingsPage sollen aber ebenfalls erklärt werden.
 
+Claude Opus 4.6:
+Schau dir den SearchResultListItemRepeater. Er wird verwendet um die Suchergebnisse dem Anwender als Liste zu präsentieren. Er verwendet einen ItemsRepeater um DetachedFileInfo-Objekte darzustellen. Es wird eine Lazy-Loading-Mechanik verwendet, um Listen von mehreren Millionen DetachedFileInfo-Objekte zu unterstützen.
+Die Darstellung erfolgt Zeilenweise, wobei in jeder Zeile ein Datei-Icon (geladen über DetachedFileInfo.FileImage-Property, der dann zum Laden der Icons pro Dateinamens-Erweiterung den FileIconLoader verwendet).
+
+Beim SearchResultListItemRepeater soll nun ein grundlegendes Refactoring durchgeführt werden: SearchResultListItemRepeater soll umschaltbar werden in einem Thumbnail-Modus. Das Umschalten erfolgt über das Kontextmenu. Im Thumbnailmodus sollen alle Dateien als Kachel, zu mehreren Dateien in einer Zeile (fensterbreite ausfüllen) dargestellt werden. Es sollen Miniaturansichten (Thumbnails) von einfachen Bild-Dateien erstellt werden. Bei anderen Dateitypen wird weiterhin, wie bisher das Icon pro Dateinamenserweiterung angzeigt. Pro Dateieintrag soll die Miniaturansicht und darunter der Dateiname angezeigt werden.
+
+Weitere Anforderungen sind folgende:
+ - Lege eine Klasse  zum Erstellen der Miniaturansichten unter tool/ an
+ - Das Laden der Minaturansichten darf den UI-Thread nicht blockieren.
+ - Aus Performance-Gründen soll zunächst das Datei-Icon pro Dateinamenserweiterung angezeigt werden, bis für die entsprechende Datei die Miniaturansicht erstellt wurde
+ - Verwende Multithreading: es sollen so viele Miniaturansichten parallel erstellt werden, wie die CPU des Computers über Threads verfügt
+- Man muss über das Kontextmenu wieder zurückschalten können in den "klassischen" Ansichtsmodus
+ - bedenke dass es sich bei der Dateiliste um Millionen Einträge handeln kann, sparsamer Umgang mit Arbeitsspeicher ist hier essentiell. Die Thumbnails sollen pro DetachedFileEntity cached werden, allerdings darf der Cache nicht beliebig groß werden. Die Cache-Größe soll auf 10.000 Dateien begrenzt sein
